@@ -1,0 +1,14 @@
+/* Happy CRM accent overrides. Import AFTER twenty-ui theme css in index.tsx:
+   import './happy-theme.css';
+   Safe: only overrides accent + link variables, no layout changes. */
+.light {
+  --t-accent-primary: color(display-p3 0.961 0.773 0.094);
+  --t-accent-secondary: color(display-p3 0.961 0.773 0.094);
+  --t-accent-tertiary: color(display-p3 0.996 0.949 0.831);
+  --t-accent-quaternary: color(display-p3 1 0.984 0.941);
+}
+
+.dark {
+  --t-accent-primary: color(display-p3 0.961 0.773 0.094);
+  --t-accent-secondary: color(display-p3 0.961 0.773 0.094);
+}
