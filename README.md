@@ -1,3 +1,10 @@
+# Happy CRM — fork de Twenty (`crm_happy`)
+
+> Fork de [twentyhq/twenty](https://github.com/twentyhq/twenty) renombrado a **Happy CRM** para uso interno Happy.
+> Branding visual aplicado, código base intacto para poder hacer merge con upstream.
+> Ver `HAPPY_REBRAND.md` para alcance y cómo correrlo.
+> Licencia original AGPL-3.0 se mantiene.
+
 <p align="center">
   <a href="https://www.twenty.com">
     <img src="./packages/twenty-website/public/images/core/logo.svg" width="100px" alt="Twenty logo" />

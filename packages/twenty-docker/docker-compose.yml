@@ -1,7 +1,8 @@
-name: twenty
+name: crm_happy
 
 services:
   server:
+    # Happy CRM: imagen base Twenty, override con TAG o DOCKER_IMAGE si publicas la tuya
     image: twentycrm/twenty:${TAG:-latest}
     volumes:
       - server-local-data:/app/packages/twenty-server/.local-storage
@@ -63,6 +64,7 @@ services:
     restart: always
 
   worker:
+    # Happy CRM: misma imagen base que server
     image: twentycrm/twenty:${TAG:-latest}
     volumes:
       - server-local-data:/app/packages/twenty-server/.local-storage

@@ -24,7 +24,7 @@
     "yarn": ">=4.0.2"
   },
   "license": "AGPL-3.0",
-  "name": "twenty-monorepo",
+  "name": "crm_happy",
   "packageManager": "yarn@4.13.0",
   "resolutions": {
     "zapier-platform-core/form-data": "4.0.6",
