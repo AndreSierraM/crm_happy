@@ -1,15 +1,15 @@
-/* @license Enterprise */
+
 
 import { FieldMetadataType, MetadataReadability } from 'twenty-shared/types';
 
 import { RelationType } from 'src/engine/metadata-modules/field-metadata/interfaces/relation-type.interface';
 
+import { resolveInheritedReadabilityChildLinks } from 'src/engine/core-modules/record-share/utils/resolve-inherited-readability-child-links.util';
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
 import { getFlatFieldMetadataMock } from 'src/engine/metadata-modules/flat-field-metadata/__mocks__/get-flat-field-metadata.mock';
 import { type FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/types/flat-field-metadata.type';
 import { getFlatObjectMetadataMock } from 'src/engine/metadata-modules/flat-object-metadata/__mocks__/get-flat-object-metadata.mock';
 import { type FlatObjectMetadata } from 'src/engine/metadata-modules/flat-object-metadata/types/flat-object-metadata.type';
-import { resolveInheritedReadabilityChildLinks } from 'src/engine/core-modules/record-share/utils/resolve-inherited-readability-child-links.util';
 
 const ATTACHMENT_OBJECT_ID = 'attachment-object-id';
 const NOTE_OBJECT_ID = 'note-object-id';

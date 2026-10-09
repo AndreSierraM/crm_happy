@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import {
-  RecordShareAccessLevel,
-  RecordSharePrincipalType,
-  RecordShareRowCause,
+    RecordShareAccessLevel,
+    RecordSharePrincipalType,
+    RecordShareRowCause,
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 

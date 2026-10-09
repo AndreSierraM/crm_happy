@@ -1,12 +1,12 @@
-/* @license Enterprise */
+
 
 import { RowLevelPermissionPredicateOperand } from 'twenty-shared/types';
 
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
 import { type FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/types/flat-field-metadata.type';
 import {
-  type RowLevelPermissionPredicateGroupInput,
-  type RowLevelPermissionPredicateInput,
+    type RowLevelPermissionPredicateGroupInput,
+    type RowLevelPermissionPredicateInput,
 } from 'src/engine/metadata-modules/row-level-permission-predicate/dtos/inputs/upsert-row-level-permission-predicates.input';
 import { RowLevelPermissionPredicateException } from 'src/engine/metadata-modules/row-level-permission-predicate/exceptions/row-level-permission-predicate.exception';
 import { type FlatRowLevelPermissionPredicateGroup } from 'src/engine/metadata-modules/row-level-permission-predicate/types/flat-row-level-permission-predicate-group.type';

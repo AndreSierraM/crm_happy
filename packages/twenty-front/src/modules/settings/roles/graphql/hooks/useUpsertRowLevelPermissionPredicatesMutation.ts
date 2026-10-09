@@ -1,13 +1,13 @@
-/* @license Enterprise */
+
 
 import { useMutation } from '@apollo/client/react';
 
 import { UPSERT_ROW_LEVEL_PERMISSION_PREDICATES } from '@/settings/roles/graphql/mutations/upsertRowLevelPermissionPredicatesMutation';
 import {
-  type RowLevelPermissionPredicate,
-  type RowLevelPermissionPredicateGroup,
-  type RowLevelPermissionPredicateGroupLogicalOperator,
-  type RowLevelPermissionPredicateOperand,
+    type RowLevelPermissionPredicate,
+    type RowLevelPermissionPredicateGroup,
+    type RowLevelPermissionPredicateGroupLogicalOperator,
+    type RowLevelPermissionPredicateOperand,
 } from '~/generated-metadata/graphql';
 
 export type UpsertRowLevelPermissionPredicatesInput = {

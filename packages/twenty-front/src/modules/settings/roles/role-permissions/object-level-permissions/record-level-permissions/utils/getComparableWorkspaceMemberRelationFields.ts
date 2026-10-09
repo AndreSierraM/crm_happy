@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { FieldMetadataType } from 'twenty-shared/types';

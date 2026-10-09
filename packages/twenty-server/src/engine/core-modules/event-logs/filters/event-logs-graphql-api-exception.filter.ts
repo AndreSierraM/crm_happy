@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Catch, type ExceptionFilter } from '@nestjs/common';
 

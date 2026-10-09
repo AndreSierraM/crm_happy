@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { isCreditTopUpInvoice } from 'src/engine/core-modules/billing/utils/is-credit-top-up-invoice.util';
 

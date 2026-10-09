@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable } from '@nestjs/common';
 
@@ -7,8 +7,8 @@ import { RecordSharePrincipalType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
 import {
-  RecordShareException,
-  RecordShareExceptionCode,
+    RecordShareException,
+    RecordShareExceptionCode,
 } from 'src/engine/core-modules/record-share/record-share.exception';
 import { type RecordShareInput } from 'src/engine/core-modules/record-share/types/record-share-input.type';
 import { buildRoleRowAccessPolicySubject } from 'src/engine/core-modules/record-share/utils/build-role-row-access-policy-subject.util';

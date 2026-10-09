@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Command, Option } from 'nest-commander';
 import { isDefined } from 'twenty-shared/utils';
@@ -7,8 +7,8 @@ import { WorkspaceActivationStatus } from 'twenty-shared/workspace';
 
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import {
-  type RunOnWorkspaceArgs,
-  WorkspaceCommandRunner,
+    type RunOnWorkspaceArgs,
+    WorkspaceCommandRunner,
 } from 'src/database/commands/command-runners/workspace.command-runner';
 import { BillingSubscriptionService } from 'src/engine/core-modules/billing/services/billing-subscription.service';
 import { StripeSubscriptionItemService } from 'src/engine/core-modules/billing/stripe/services/stripe-subscription-item.service';

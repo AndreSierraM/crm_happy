@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { useBuildServerUrl } from '@/settings/security/hooks/useBuildServerUrl';
 import { SettingsTextInput } from '@/ui/input/components/SettingsTextInput';

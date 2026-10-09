@@ -1,19 +1,19 @@
-/* @license Enterprise */
+
 
 import { msg } from '@lingui/core/macro';
 import Stripe from 'stripe';
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
-import {
-  ForbiddenError,
-  InternalServerError,
-  NotFoundError,
-  UserInputError,
-} from 'src/engine/core-modules/graphql/utils/graphql-errors.util';
 import { getBillingExceptionStatusCode } from 'src/engine/core-modules/billing/utils/get-billing-exception-status-code.util';
+import {
+    ForbiddenError,
+    InternalServerError,
+    NotFoundError,
+    UserInputError,
+} from 'src/engine/core-modules/graphql/utils/graphql-errors.util';
 
 export const billingGraphqlApiExceptionHandler = (error: Error) => {
   if (error instanceof Stripe.errors.StripeError) {

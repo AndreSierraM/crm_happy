@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';

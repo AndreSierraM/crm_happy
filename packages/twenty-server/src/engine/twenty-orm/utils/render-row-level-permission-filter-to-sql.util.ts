@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import { isNonEmptyString } from '@sniptt/guards';
 import {
-  compositeTypeDefinitions,
-  type RecordGqlOperationFilter,
+    compositeTypeDefinitions,
+    type RecordGqlOperationFilter,
 } from 'twenty-shared/types';
 import { capitalize, isDefined } from 'twenty-shared/utils';
 import { type ObjectLiteral } from 'typeorm';
@@ -19,8 +19,8 @@ import { buildFieldMapsFromFlatObjectMetadata } from 'src/engine/metadata-module
 import { isMorphOrRelationFlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/utils/is-morph-or-relation-flat-field-metadata.util';
 import { type FlatObjectMetadata } from 'src/engine/metadata-modules/flat-object-metadata/types/flat-object-metadata.type';
 import {
-  TwentyOrmException,
-  TwentyOrmExceptionCode,
+    TwentyOrmException,
+    TwentyOrmExceptionCode,
 } from 'src/engine/twenty-orm/exceptions/twenty-orm.exception';
 
 const ALWAYS_TRUE_CONDITION = '1=1';

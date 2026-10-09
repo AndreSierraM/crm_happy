@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
@@ -7,8 +7,8 @@ import { type Request } from 'express';
 import { Strategy, type StrategyOptions, type TokenSet } from 'openid-client';
 
 import {
-  AuthException,
-  AuthExceptionCode,
+    AuthException,
+    AuthExceptionCode,
 } from 'src/engine/core-modules/auth/auth.exception';
 
 export type OidcRequest = Omit<

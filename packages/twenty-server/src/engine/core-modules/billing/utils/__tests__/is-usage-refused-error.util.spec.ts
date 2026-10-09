@@ -1,13 +1,13 @@
-/* @license Enterprise */
+
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 import { isUsageRefusedError } from 'src/engine/core-modules/billing/utils/is-usage-refused-error.util';
 import {
-  UsageLimitException,
-  UsageLimitExceptionCode,
+    UsageLimitException,
+    UsageLimitExceptionCode,
 } from 'src/engine/core-modules/usage-limit/exceptions/usage-limit.exception';
 
 describe('isUsageRefusedError', () => {

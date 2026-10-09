@@ -1,10 +1,10 @@
-/* @license Enterprise */
+
 
 import { Injectable, Logger } from '@nestjs/common';
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 import { type BillingPriceEntity } from 'src/engine/core-modules/billing/entities/billing-price.entity';
 import { type BillingProductEntity } from 'src/engine/core-modules/billing/entities/billing-product.entity';

@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import { EVERYONE_PRINCIPAL_ID } from 'twenty-shared/constants';
 import {
-  RecordShareAccessLevel,
-  RecordSharePrincipalType,
+    RecordShareAccessLevel,
+    RecordSharePrincipalType,
 } from 'twenty-shared/types';
 
 import { validateShareWithPrincipalsOrThrow } from 'src/engine/core-modules/record-share/utils/validate-share-with-principals-or-throw.util';

@@ -1,10 +1,10 @@
-/* @license Enterprise */
+
 
 import {
-  type RowLevelPermissionPredicate,
-  type RowLevelPermissionPredicateGroup,
-  RowLevelPermissionPredicateGroupLogicalOperator,
-  RowLevelPermissionPredicateOperand,
+    type RowLevelPermissionPredicate,
+    type RowLevelPermissionPredicateGroup,
+    RowLevelPermissionPredicateGroupLogicalOperator,
+    RowLevelPermissionPredicateOperand,
 } from 'twenty-shared/types';
 
 import { getRestrictingRowLevelPermissionPredicates } from '@/object-record/record-field/ui/meta-types/utils/getRestrictingRowLevelPermissionPredicates';

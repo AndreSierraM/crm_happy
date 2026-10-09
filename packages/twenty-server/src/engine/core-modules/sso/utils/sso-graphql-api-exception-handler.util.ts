@@ -1,16 +1,16 @@
-/* @license Enterprise */
+
 
 import { assertUnreachable } from 'twenty-shared/utils';
 
 import {
-  ConflictError,
-  ForbiddenError,
-  NotFoundError,
-  UserInputError,
+    ConflictError,
+    ForbiddenError,
+    NotFoundError,
+    UserInputError,
 } from 'src/engine/core-modules/graphql/utils/graphql-errors.util';
 import {
-  type SsoException,
-  SsoExceptionCode,
+    type SsoException,
+    SsoExceptionCode,
 } from 'src/engine/core-modules/sso/sso.exception';
 
 export const ssoGraphqlApiExceptionHandler = (exception: SsoException) => {

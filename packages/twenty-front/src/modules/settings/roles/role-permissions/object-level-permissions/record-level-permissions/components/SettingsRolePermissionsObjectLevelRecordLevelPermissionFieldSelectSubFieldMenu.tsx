@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import { t } from '@lingui/core/macro';
 import {
-  FieldMetadataType,
-  compositeTypeDefinitions,
+    FieldMetadataType,
+    compositeTypeDefinitions,
 } from 'twenty-shared/types';
 import { getFilterTypeFromFieldType } from 'twenty-shared/utils';
 import { Dropdown } from 'twenty-ui/components/navigation';

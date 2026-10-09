@@ -1,10 +1,10 @@
-/* @license Enterprise */
+
 
 import { RecordShareAccessLevel } from 'twenty-shared/types';
 
 import {
-  buildInheritedReadabilityCondition,
-  type InheritedReadabilityParentCondition,
+    buildInheritedReadabilityCondition,
+    type InheritedReadabilityParentCondition,
 } from 'src/engine/core-modules/record-share/utils/build-inherited-readability-condition.util';
 
 const RECORD_SHARE_TABLE_EXPRESSION = '"workspace_abc"."recordShare"';

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import chalk from 'chalk';
 import { Command } from 'nest-commander';
@@ -7,8 +7,8 @@ import { WorkspaceActivationStatus } from 'twenty-shared/workspace';
 
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import {
-  type RunOnWorkspaceArgs,
-  WorkspaceCommandRunner,
+    type RunOnWorkspaceArgs,
+    WorkspaceCommandRunner,
 } from 'src/database/commands/command-runners/workspace.command-runner';
 import { BillingCustomerEntity } from 'src/engine/core-modules/billing/entities/billing-customer.entity';
 import { StripeSubscriptionService } from 'src/engine/core-modules/billing/stripe/services/stripe-subscription.service';

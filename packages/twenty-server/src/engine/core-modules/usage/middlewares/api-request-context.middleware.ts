@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable, type NestMiddleware } from '@nestjs/common';
 

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { SettingsPageContainer } from '@/settings/components/SettingsPageContainer';
 import { SettingsRadioCardContainer } from '@/settings/components/SettingsRadioCardContainer';

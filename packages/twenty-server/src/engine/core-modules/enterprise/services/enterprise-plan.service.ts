@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,28 +12,28 @@ import { IsNull, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 
 import {
-  AppTokenEntity,
-  AppTokenType,
+    AppTokenEntity,
+    AppTokenType,
 } from 'src/engine/core-modules/app-token/app-token.entity';
 import {
-  ENTERPRISE_JWT_DEV_PUBLIC_KEY,
-  ENTERPRISE_JWT_PUBLIC_KEY,
+    ENTERPRISE_JWT_DEV_PUBLIC_KEY,
+    ENTERPRISE_JWT_PUBLIC_KEY,
 } from 'src/engine/core-modules/enterprise/constants/enterprise-public-key.constant';
 import {
-  EnterpriseException,
-  EnterpriseExceptionCode,
+    EnterpriseException,
+    EnterpriseExceptionCode,
 } from 'src/engine/core-modules/enterprise/enterprise.exception';
 import {
-  type EnterpriseInstanceMetadata,
-  type EnterpriseKeyPayload,
-  type EnterpriseLicenseInfo,
-  type EnterpriseValidityPayload,
+    type EnterpriseInstanceMetadata,
+    type EnterpriseKeyPayload,
+    type EnterpriseLicenseInfo,
+    type EnterpriseValidityPayload,
 } from 'src/engine/core-modules/enterprise/types/organization-key-payload.type';
 import { isValidityTokenReloadDue } from 'src/engine/core-modules/enterprise/utils/is-validity-token-reload-due.util';
 import { NodeEnvironment } from 'src/engine/core-modules/twenty-config/interfaces/node-environment.interface';
 import {
-  ConfigVariableException,
-  ConfigVariableExceptionCode,
+    ConfigVariableException,
+    ConfigVariableExceptionCode,
 } from 'src/engine/core-modules/twenty-config/twenty-config.exception';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import { UserWorkspaceEntity } from 'src/engine/core-modules/user-workspace/user-workspace.entity';

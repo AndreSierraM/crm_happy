@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { assertUnreachable } from 'twenty-shared/utils';
 

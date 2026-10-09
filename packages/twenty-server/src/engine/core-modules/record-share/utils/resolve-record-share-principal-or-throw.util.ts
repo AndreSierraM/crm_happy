@@ -1,12 +1,12 @@
-/* @license Enterprise */
+
 
 import { msg } from '@lingui/core/macro';
 import { RecordSharePrincipalType } from 'twenty-shared/types';
 import { isDefined, isValidUuid } from 'twenty-shared/utils';
 
 import {
-  RecordShareException,
-  RecordShareExceptionCode,
+    RecordShareException,
+    RecordShareExceptionCode,
 } from 'src/engine/core-modules/record-share/record-share.exception';
 import { type RecordShareInput } from 'src/engine/core-modules/record-share/types/record-share-input.type';
 

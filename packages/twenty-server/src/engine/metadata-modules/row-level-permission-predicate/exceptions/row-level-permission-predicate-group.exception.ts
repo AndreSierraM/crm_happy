@@ -1,11 +1,11 @@
-/* @license Enterprise */
+
 
 import { type MessageDescriptor } from '@lingui/core';
 import { msg } from '@lingui/core/macro';
 
 import {
-  appendCommonExceptionCode,
-  CustomException,
+    appendCommonExceptionCode,
+    CustomException,
 } from 'src/utils/custom-exception';
 
 export const RowLevelPermissionPredicateGroupExceptionCode =

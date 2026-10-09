@@ -1,20 +1,20 @@
-/* @license Enterprise */
+
 
 import {
-  type ArgumentsHost,
-  Catch,
-  type ExceptionFilter,
+    type ArgumentsHost,
+    Catch,
+    type ExceptionFilter,
 } from '@nestjs/common';
 
 import { type Response } from 'express';
 import Stripe from 'stripe';
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
-import { HttpExceptionHandlerService } from 'src/engine/core-modules/exception-handler/http-exception-handler.service';
 import { getBillingExceptionStatusCode } from 'src/engine/core-modules/billing/utils/get-billing-exception-status-code.util';
+import { HttpExceptionHandlerService } from 'src/engine/core-modules/exception-handler/http-exception-handler.service';
 import { type CustomException } from 'src/utils/custom-exception';
 
 @Catch(BillingException, Stripe.errors.StripeError)

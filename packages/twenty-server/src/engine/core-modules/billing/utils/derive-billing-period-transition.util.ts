@@ -1,10 +1,10 @@
-/* @license Enterprise */
+
 
 import { isDefined } from 'twenty-shared/utils';
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 
 import { SubscriptionInterval } from 'src/engine/core-modules/billing/enums/billing-subscription-interval.enum';

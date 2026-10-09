@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { isNonEmptyString } from '@sniptt/guards';
 import { decodeJwtCompleteOrThrow } from 'test/integration/graphql/utils/decode-jwt-complete-or-throw.util';

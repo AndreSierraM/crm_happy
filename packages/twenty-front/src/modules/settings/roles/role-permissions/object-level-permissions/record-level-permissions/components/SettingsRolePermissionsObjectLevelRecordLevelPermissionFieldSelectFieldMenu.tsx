@@ -1,15 +1,14 @@
-/* @license Enterprise */
 
+
+import { SelectOptionIcon } from '@/ui/input/components/SelectOptionIcon';
 import { useLingui } from '@lingui/react/macro';
 import {
-  getFilterTypeFromFieldType,
-  isNonEmptyArray,
+    getFilterTypeFromFieldType,
+    isNonEmptyArray,
 } from 'twenty-shared/utils';
 import { Dropdown, useDropdownPage } from 'twenty-ui/components/navigation';
 import { useIcons } from 'twenty-ui/icon';
-import { SelectOptionIcon } from '@/ui/input/components/SelectOptionIcon';
 
-import { CoreObjectNameSingular, FieldMetadataType } from 'twenty-shared/types';
 import { useObjectMetadataItem } from '@/object-metadata/hooks/useObjectMetadataItem';
 import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { useAdvancedFilterFieldSelectDropdown } from '@/object-record/advanced-filter/hooks/useAdvancedFilterFieldSelectDropdown';
@@ -21,6 +20,7 @@ import { useFilterableFieldMetadataItems } from '@/object-record/record-filter/h
 import { RECORD_LEVEL_PERMISSION_PREDICATE_FIELD_TYPES } from '@/settings/roles/role-permissions/object-level-permissions/record-level-permissions/constants/RecordLevelPermissionPredicateFieldTypes';
 import { getComparableWorkspaceMemberRelationFields } from '@/settings/roles/role-permissions/object-level-permissions/record-level-permissions/utils/getComparableWorkspaceMemberRelationFields';
 import { useContext } from 'react';
+import { CoreObjectNameSingular, FieldMetadataType } from 'twenty-shared/types';
 
 type SettingsRolePermissionsObjectLevelRecordLevelPermissionFieldSelectFieldMenuProps =
   {

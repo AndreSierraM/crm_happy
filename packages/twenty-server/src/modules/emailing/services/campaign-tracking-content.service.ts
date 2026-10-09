@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -13,8 +13,8 @@ import { buildLogDriverUnsubscribeBaseUrl } from 'src/engine/core-modules/emaili
 import { EmailingDomainDriver } from 'src/engine/core-modules/emailing-domain/drivers/types/emailing-domain-driver.type';
 import { type EmailingDomainEmailTemplate } from 'src/engine/core-modules/emailing-domain/drivers/types/emailing-domain-email-template.type';
 import { EmailingDomainEntity } from 'src/engine/core-modules/emailing-domain/emailing-domain.entity';
-import { encodeCampaignTrackingToken } from 'src/engine/core-modules/emailing-domain/utils/encode-campaign-tracking-token.util';
 import { applyReplacementTags } from 'src/engine/core-modules/emailing-domain/utils/apply-replacement-tags.util';
+import { encodeCampaignTrackingToken } from 'src/engine/core-modules/emailing-domain/utils/encode-campaign-tracking-token.util';
 import { escapeHtml } from 'src/engine/core-modules/emailing-domain/utils/escape-html.util';
 import { ShortLinkService } from 'src/engine/core-modules/short-link/services/short-link.service';
 import { hashShortLink } from 'src/engine/core-modules/short-link/utils/hash-short-link.util';
@@ -22,9 +22,9 @@ import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twent
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { InjectWorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/inject-workspace-scoped-repository.decorator';
 import { WorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/workspace-scoped-repository';
-import { TRACKABLE_URL_PATTERN } from 'src/modules/emailing/constants/trackable-url-pattern.constant';
 import { CAMPAIGN_BATCH_VARIABLE_TAG_PATTERN } from 'src/modules/emailing/constants/campaign-batch-variable-tag-pattern.constant';
 import { CAMPAIGN_TRACKING_TAG_PREFIX_BY_MESSAGE_PART } from 'src/modules/emailing/constants/campaign-tracking-tag-prefix-by-message-part.constant';
+import { TRACKABLE_URL_PATTERN } from 'src/modules/emailing/constants/trackable-url-pattern.constant';
 import { CampaignEngagementEventService } from 'src/modules/emailing/services/campaign-engagement-event.service';
 import { MessageSuppressionService } from 'src/modules/emailing/services/message-suppression.service';
 import { collectTrackableLinkUrls } from 'src/modules/emailing/utils/collect-trackable-link-urls.util';

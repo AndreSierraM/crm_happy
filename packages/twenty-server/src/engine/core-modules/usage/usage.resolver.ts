@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
 import { Args, Query } from '@nestjs/graphql';
@@ -14,16 +14,16 @@ import { ResolverValidationPipe } from 'src/engine/core-modules/graphql/pipes/re
 import { UsageAnalyticsInput } from 'src/engine/core-modules/usage/dtos/inputs/usage-analytics.input';
 import { UsageAnalyticsDTO } from 'src/engine/core-modules/usage/dtos/usage-analytics.dto';
 import {
-  UsageAnalyticsService,
-  type UsageBreakdownItem,
+    UsageAnalyticsService,
+    type UsageBreakdownItem,
 } from 'src/engine/core-modules/usage/services/usage-analytics.service';
 import { consolidateUsageByApplication } from 'src/engine/core-modules/usage/utils/consolidate-usage-by-application.util';
 import { toDisplayCredits } from 'src/engine/core-modules/usage/utils/to-display-credits.util';
 import { UserWorkspaceEntity } from 'src/engine/core-modules/user-workspace/user-workspace.entity';
 import { type WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { AuthWorkspace } from 'src/engine/decorators/auth/auth-workspace.decorator';
-import { SettingsPermissionGuard } from 'src/engine/guards/settings-permission.guard';
 import { AuthPrincipalGuard } from 'src/engine/guards/auth-principal.guard';
+import { SettingsPermissionGuard } from 'src/engine/guards/settings-permission.guard';
 import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
 
 @MetadataResolver()

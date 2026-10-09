@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -8,8 +8,8 @@ import { Repository } from 'typeorm';
 import type Stripe from 'stripe';
 
 import {
-  type MigrationCommandOptions,
-  MigrationCommandRunner,
+    type MigrationCommandOptions,
+    MigrationCommandRunner,
 } from 'src/database/commands/command-runners/migration.command-runner';
 import { BillingMeterEntity } from 'src/engine/core-modules/billing/entities/billing-meter.entity';
 import { BillingPriceEntity } from 'src/engine/core-modules/billing/entities/billing-price.entity';

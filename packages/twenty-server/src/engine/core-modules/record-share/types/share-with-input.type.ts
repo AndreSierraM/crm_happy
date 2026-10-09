@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { type RecordShareAccessLevel } from 'twenty-shared/types';
 

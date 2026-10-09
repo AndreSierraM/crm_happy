@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { parseCreditTopUpInvoiceMetadata } from 'src/engine/core-modules/billing/utils/parse-credit-top-up-invoice-metadata.util';
 

@@ -1,10 +1,10 @@
-/* @license Enterprise */
+
 
 import { Command, CommandRunner } from 'nest-commander';
 
 import {
-  APPLICATION_RECURRING_CHARGE_CRON_PATTERN,
-  ApplicationRecurringChargeCronJob,
+    APPLICATION_RECURRING_CHARGE_CRON_PATTERN,
+    ApplicationRecurringChargeCronJob,
 } from 'src/engine/core-modules/billing/app-billing/crons/jobs/application-recurring-charge.cron.job';
 import { InjectMessageQueue } from 'src/engine/core-modules/message-queue/decorators/message-queue.decorator';
 import { MessageQueue } from 'src/engine/core-modules/message-queue/message-queue.constants';

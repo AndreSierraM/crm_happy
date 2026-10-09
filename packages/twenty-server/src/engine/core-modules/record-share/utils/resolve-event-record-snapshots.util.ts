@@ -1,13 +1,13 @@
-/* @license Enterprise */
+
 
 import {
-  type ObjectRecordBaseEvent,
-  type ObjectRecordEvent,
+    type ObjectRecordBaseEvent,
+    type ObjectRecordEvent,
 } from 'twenty-shared/database-events';
 
 import {
-  type InheritedReadabilityChildRecords,
-  type InheritedReadabilityChildRecordsCarrier,
+    type InheritedReadabilityChildRecords,
+    type InheritedReadabilityChildRecordsCarrier,
 } from 'src/engine/core-modules/record-share/types/inherited-readability-child-records.type';
 
 export type EventRecordSnapshot = {

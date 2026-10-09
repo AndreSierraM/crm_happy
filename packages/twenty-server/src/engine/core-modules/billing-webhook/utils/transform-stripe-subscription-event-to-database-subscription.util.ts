@@ -1,11 +1,11 @@
-/* @license Enterprise */
+
 
 import type Stripe from 'stripe';
 
 import { transformStripeSubscriptionScheduleEventToDatabaseSubscriptionPhase } from 'src/engine/core-modules/billing-webhook/utils/transform-stripe-subscription-schedule-event-to-database-subscription-phase.util';
 import {
-  type AutomaticTaxJson,
-  type CancellationDetailsJson,
+    type AutomaticTaxJson,
+    type CancellationDetailsJson,
 } from 'src/engine/core-modules/billing/entities/billing-subscription.entity';
 import { BillingSubscriptionCollectionMethod } from 'src/engine/core-modules/billing/enums/billing-subscription-collection-method.enum';
 import { type SubscriptionInterval } from 'src/engine/core-modules/billing/enums/billing-subscription-interval.enum';

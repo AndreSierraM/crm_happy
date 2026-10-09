@@ -1,19 +1,19 @@
-/* @license Enterprise */
+
 
 import { SelectOptionIcon } from '@/ui/input/components/SelectOptionIcon';
 
 import { t } from '@lingui/core/macro';
 import { isNonEmptyString } from '@sniptt/guards';
 import { useState } from 'react';
+import {
+    CoreObjectNameSingular,
+    FieldMetadataType,
+    compositeTypeDefinitions,
+} from 'twenty-shared/types';
+import { isDefined, isNonEmptyArray } from 'twenty-shared/utils';
 import { Dropdown } from 'twenty-ui/components/navigation';
 import { IconUserCircle, useIcons } from 'twenty-ui/icon';
 import { Field } from 'twenty-ui/primitives/input';
-import {
-  CoreObjectNameSingular,
-  FieldMetadataType,
-  compositeTypeDefinitions,
-} from 'twenty-shared/types';
-import { isDefined, isNonEmptyArray } from 'twenty-shared/utils';
 
 import { useObjectMetadataItem } from '@/object-metadata/hooks/useObjectMetadataItem';
 import { fieldMetadataItemUsedInDropdownComponentSelector } from '@/object-record/object-filter-dropdown/states/fieldMetadataItemUsedInDropdownComponentSelector';

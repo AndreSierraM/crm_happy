@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable, Logger } from '@nestjs/common';
 
@@ -7,8 +7,8 @@ import { findOrThrow, isDefined } from 'twenty-shared/utils';
 import type Stripe from 'stripe';
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 import { NOT_ENDED_SUBSCRIPTION_STATUSES } from 'src/engine/core-modules/billing/constants/not-ended-subscription-statuses.constant';
 import { type SubscriptionStatus } from 'src/engine/core-modules/billing/enums/billing-subscription-status.enum';

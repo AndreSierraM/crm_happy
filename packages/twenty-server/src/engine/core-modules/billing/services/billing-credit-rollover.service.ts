@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable } from '@nestjs/common';
 
@@ -9,8 +9,8 @@ import { isDefined } from 'twenty-shared/utils';
 import { DataSource, type EntityManager } from 'typeorm';
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 import { BillingCreditGrantService } from 'src/engine/core-modules/billing/services/billing-credit-grant.service';
 import { BillingCreditService } from 'src/engine/core-modules/billing/services/billing-credit.service';

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { isDefined } from 'twenty-shared/utils';
 

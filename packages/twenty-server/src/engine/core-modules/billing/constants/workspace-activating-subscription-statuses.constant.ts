@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { SubscriptionStatus } from 'src/engine/core-modules/billing/enums/billing-subscription-status.enum';
 

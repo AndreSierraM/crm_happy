@@ -1,18 +1,18 @@
-/* @license Enterprise */
+
 import { Injectable } from '@nestjs/common';
 
 import { msg } from '@lingui/core/macro';
 import Cloudflare from 'cloudflare';
 import {
-  type CustomHostnameCreateParams,
-  type CustomHostnameListResponse,
+    type CustomHostnameCreateParams,
+    type CustomHostnameListResponse,
 } from 'cloudflare/resources/custom-hostnames/custom-hostnames';
 import { assertIsDefinedOrThrow, isDefined } from 'twenty-shared/utils';
 
 import { type DomainValidRecords } from 'src/engine/core-modules/dns-manager/dtos/domain-valid-records';
 import {
-  DnsManagerException,
-  DnsManagerExceptionCode,
+    DnsManagerException,
+    DnsManagerExceptionCode,
 } from 'src/engine/core-modules/dns-manager/exceptions/dns-manager.exception';
 import { dnsManagerValidator } from 'src/engine/core-modules/dns-manager/validator/dns-manager.validate';
 import { DomainServerConfigService } from 'src/engine/core-modules/domain/domain-server-config/services/domain-server-config.service';

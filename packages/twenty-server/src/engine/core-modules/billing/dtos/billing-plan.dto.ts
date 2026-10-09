@@ -1,10 +1,10 @@
-/* @license Enterprise */
+
 
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import {
-  BillingLicensedProduct,
-  BillingMeteredProduct,
+    BillingLicensedProduct,
+    BillingMeteredProduct,
 } from 'src/engine/core-modules/billing/dtos/billing-product.dto';
 import { BillingPlanKey } from 'src/engine/core-modules/billing/enums/billing-plan-key.enum';
 

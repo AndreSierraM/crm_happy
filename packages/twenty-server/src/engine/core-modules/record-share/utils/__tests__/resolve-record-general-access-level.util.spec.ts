@@ -1,10 +1,10 @@
-/* @license Enterprise */
+
 
 import { EVERYONE_PRINCIPAL_ID } from 'twenty-shared/constants';
 import {
-  RecordShareAccessLevel,
-  RecordSharePrincipalType,
-  RecordShareRowCause,
+    RecordShareAccessLevel,
+    RecordSharePrincipalType,
+    RecordShareRowCause,
 } from 'twenty-shared/types';
 
 import { RecordSharingMode } from 'src/engine/core-modules/record-share/enums/record-sharing-mode.enum';

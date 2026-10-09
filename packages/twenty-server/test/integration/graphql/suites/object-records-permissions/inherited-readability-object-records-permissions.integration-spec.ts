@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { randomUUID } from 'node:crypto';
 
@@ -14,14 +14,14 @@ import { findOneRoleByLabel } from 'test/integration/metadata/suites/role/utils/
 import { getAppProviderByClassName } from 'test/integration/utils/get-app-provider-by-class-name.util';
 import { getCoreRepository } from 'test/integration/utils/get-core-repository.util';
 import {
-  MetadataReadability,
-  RecordShareAccessLevel,
-  RecordSharePrincipalType,
-  RecordShareRowCause,
+    MetadataReadability,
+    RecordShareAccessLevel,
+    RecordSharePrincipalType,
+    RecordShareRowCause,
 } from 'twenty-shared/types';
 
-import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
 import { type RecordShareStorageService } from 'src/engine/core-modules/record-share/services/record-share-storage.service';
+import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
 import { SEED_APPLE_WORKSPACE_ID } from 'src/engine/workspace-manager/dev-seeder/core/constants/seeder-workspaces.constant';
 import { WORKSPACE_MEMBER_DATA_SEED_IDS } from 'src/engine/workspace-manager/dev-seeder/data/constants/workspace-member-data-seeds.constant';
 

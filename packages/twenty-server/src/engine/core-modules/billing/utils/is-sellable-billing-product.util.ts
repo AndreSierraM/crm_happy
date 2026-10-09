@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 type SellableBillingProduct = {
   active: boolean;

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { isDefined } from 'twenty-shared/utils';
 
@@ -6,12 +6,12 @@ import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/typ
 import { findFlatEntityByIdInFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-id-in-flat-entity-maps.util';
 import { type FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/types/flat-field-metadata.type';
 import {
-  type RowLevelPermissionPredicateGroupInput,
-  type RowLevelPermissionPredicateInput,
+    type RowLevelPermissionPredicateGroupInput,
+    type RowLevelPermissionPredicateInput,
 } from 'src/engine/metadata-modules/row-level-permission-predicate/dtos/inputs/upsert-row-level-permission-predicates.input';
 import {
-  RowLevelPermissionPredicateException,
-  RowLevelPermissionPredicateExceptionCode,
+    RowLevelPermissionPredicateException,
+    RowLevelPermissionPredicateExceptionCode,
 } from 'src/engine/metadata-modules/row-level-permission-predicate/exceptions/row-level-permission-predicate.exception';
 import { type FlatRowLevelPermissionPredicateGroup } from 'src/engine/metadata-modules/row-level-permission-predicate/types/flat-row-level-permission-predicate-group.type';
 import { type FlatRowLevelPermissionPredicate } from 'src/engine/metadata-modules/row-level-permission-predicate/types/flat-row-level-permission-predicate.type';

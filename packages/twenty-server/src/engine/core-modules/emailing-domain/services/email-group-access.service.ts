@@ -1,13 +1,13 @@
-/* @license Enterprise */
+
 
 import { Injectable } from '@nestjs/common';
 
 import { BillingService } from 'src/engine/core-modules/billing/services/billing.service';
-import {
-  EmailGroupAccessException,
-  EmailGroupAccessExceptionCode,
-} from 'src/engine/core-modules/emailing-domain/exceptions/email-group-access.exception';
 import { COMMUNITY_EMAILING_DOMAIN_DRIVERS } from 'src/engine/core-modules/emailing-domain/constants/community-emailing-domain-drivers.constant';
+import {
+    EmailGroupAccessException,
+    EmailGroupAccessExceptionCode,
+} from 'src/engine/core-modules/emailing-domain/exceptions/email-group-access.exception';
 import { EnterprisePlanService } from 'src/engine/core-modules/enterprise/services/enterprise-plan.service';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 

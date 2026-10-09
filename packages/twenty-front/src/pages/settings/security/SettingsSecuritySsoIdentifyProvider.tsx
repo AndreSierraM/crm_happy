@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { getToastOptionsFromError } from '@/error-handler/utils/getToastOptionsFromError';
 import { SaveAndCancelButtons } from '@/settings/components/SaveAndCancelButtons/SaveAndCancelButtons';

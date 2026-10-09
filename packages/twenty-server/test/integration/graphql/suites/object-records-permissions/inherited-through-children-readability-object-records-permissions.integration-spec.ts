@@ -1,11 +1,11 @@
-/* @license Enterprise */
+
 
 import { randomUUID } from 'node:crypto';
 
 import { EVERYONE_PRINCIPAL_ID } from 'twenty-shared/constants';
 import {
-  type ObjectRecordDeleteEvent,
-  type ObjectRecordEvent,
+    type ObjectRecordDeleteEvent,
+    type ObjectRecordEvent,
 } from 'twenty-shared/database-events';
 
 import { createOneOperationFactory } from 'test/integration/graphql/utils/create-one-operation-factory.util';
@@ -22,16 +22,16 @@ import { findOneRoleByLabel } from 'test/integration/metadata/suites/role/utils/
 import { getAppProviderByClassName } from 'test/integration/utils/get-app-provider-by-class-name.util';
 import { getCoreRepository } from 'test/integration/utils/get-core-repository.util';
 import {
-  MetadataReadability,
-  RecordShareAccessLevel,
-  RecordSharePrincipalType,
-  RecordShareRowCause,
+    MetadataReadability,
+    RecordShareAccessLevel,
+    RecordSharePrincipalType,
+    RecordShareRowCause,
 } from 'twenty-shared/types';
 
-import { findFlatEntityByIdInFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-id-in-flat-entity-maps.util';
-import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
 import { type RecordAccessPolicyService } from 'src/engine/core-modules/record-share/services/record-access-policy.service';
 import { type RecordShareStorageService } from 'src/engine/core-modules/record-share/services/record-share-storage.service';
+import { findFlatEntityByIdInFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-id-in-flat-entity-maps.util';
+import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
 import { type WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
 import { SEED_APPLE_WORKSPACE_ID } from 'src/engine/workspace-manager/dev-seeder/core/constants/seeder-workspaces.constant';
 import { WORKSPACE_MEMBER_DATA_SEED_IDS } from 'src/engine/workspace-manager/dev-seeder/data/constants/workspace-member-data-seeds.constant';

@@ -1,19 +1,19 @@
-/* @license Enterprise */
+
 
 import {
-  IsIn,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Max,
-  Min,
-  ValidateIf,
+    IsIn,
+    IsInt,
+    IsOptional,
+    IsString,
+    IsUUID,
+    Max,
+    Min,
+    ValidateIf,
 } from 'class-validator';
 
 import {
-  USAGE_OPERATION_TYPES,
-  type UsageOperationTypeValue,
+    USAGE_OPERATION_TYPES,
+    type UsageOperationTypeValue,
 } from 'twenty-shared/application';
 import { isDefined } from 'twenty-shared/utils';
 

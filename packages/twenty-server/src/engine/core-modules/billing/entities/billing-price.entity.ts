@@ -1,16 +1,16 @@
-/* @license Enterprise */
+
 
 import { Field } from '@nestjs/graphql';
 
 import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  Relation,
-  UpdateDateColumn,
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    Relation,
+    UpdateDateColumn,
 } from 'typeorm';
 
 import type Stripe from 'stripe';

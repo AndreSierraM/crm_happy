@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { registerEnumType } from '@nestjs/graphql';
 

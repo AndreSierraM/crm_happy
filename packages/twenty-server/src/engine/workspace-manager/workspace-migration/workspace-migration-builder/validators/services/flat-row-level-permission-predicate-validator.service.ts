@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable } from '@nestjs/common';
 
@@ -6,18 +6,18 @@ import { msg, t } from '@lingui/core/macro';
 import { isNonEmptyString } from '@sniptt/guards';
 import { ALL_METADATA_NAME, STANDARD_OBJECTS } from 'twenty-shared/metadata';
 import {
-  FieldMetadataType,
-  RowLevelPermissionPredicateOperand,
-  type ViewFilterOperand,
+    FieldMetadataType,
+    RowLevelPermissionPredicateOperand,
+    type ViewFilterOperand,
 } from 'twenty-shared/types';
 import {
-  convertViewFilterValueToString,
-  getFilterTypeFromFieldType,
-  getFilterValueValidationIssue,
-  isDefined,
-  isRecordFilterOperandExpectingValue,
-  isRecordFilterValueValid,
-  jsonRelationFilterValueSchema,
+    convertViewFilterValueToString,
+    getFilterTypeFromFieldType,
+    getFilterValueValidationIssue,
+    isDefined,
+    isRecordFilterOperandExpectingValue,
+    isRecordFilterValueValid,
+    jsonRelationFilterValueSchema,
 } from 'twenty-shared/utils';
 
 import { RelationType } from 'src/engine/metadata-modules/field-metadata/interfaces/relation-type.interface';

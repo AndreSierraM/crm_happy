@@ -1,16 +1,16 @@
-/* @license Enterprise */
+
 
 import { assertUnreachable } from 'twenty-shared/utils';
 
 import {
-  ForbiddenError,
-  InternalServerError,
-  NotFoundError,
-  UserInputError,
+    ForbiddenError,
+    InternalServerError,
+    NotFoundError,
+    UserInputError,
 } from 'src/engine/core-modules/graphql/utils/graphql-errors.util';
 import {
-  type RowLevelPermissionPredicateException,
-  RowLevelPermissionPredicateExceptionCode,
+    type RowLevelPermissionPredicateException,
+    RowLevelPermissionPredicateExceptionCode,
 } from 'src/engine/metadata-modules/row-level-permission-predicate/exceptions/row-level-permission-predicate.exception';
 
 export const rowLevelPermissionPredicateGraphqlApiExceptionHandler = (

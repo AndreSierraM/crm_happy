@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,9 +7,10 @@ import { type Repository } from 'typeorm';
 
 import type Stripe from 'stripe';
 
+import { isString } from '@sniptt/guards';
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 import { BillingCustomerEntity } from 'src/engine/core-modules/billing/entities/billing-customer.entity';
 import { BillingWebhookEvent } from 'src/engine/core-modules/billing/enums/billing-webhook-events.enum';
@@ -17,7 +18,6 @@ import { StripeCustomerService } from 'src/engine/core-modules/billing/stripe/se
 import { InjectWorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/inject-workspace-scoped-repository.decorator';
 import { WorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/workspace-scoped-repository';
 import { isDefined } from 'twenty-shared/utils';
-import { isString } from '@sniptt/guards';
 @Injectable()
 export class BillingWebhookCustomerService {
   protected readonly logger = new Logger(BillingWebhookCustomerService.name);

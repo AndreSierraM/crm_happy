@@ -1,10 +1,10 @@
-/* @license Enterprise */
 
-import {
-  FieldMetadataType,
-  type RowLevelPermissionPredicateValue,
-} from 'twenty-shared/types';
+
 import { isNonEmptyString } from '@sniptt/guards';
+import {
+    FieldMetadataType,
+    type RowLevelPermissionPredicateValue,
+} from 'twenty-shared/types';
 import { isDefined, isPlainObject } from 'twenty-shared/utils';
 
 import { type UserWorkspaceAuthContext } from 'src/engine/core-modules/auth/types/workspace-auth-context.type';

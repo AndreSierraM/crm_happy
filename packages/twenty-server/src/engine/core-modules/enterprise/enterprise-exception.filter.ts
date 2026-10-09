@@ -1,16 +1,16 @@
-/* @license Enterprise */
+
 
 import { Catch, type ExceptionFilter } from '@nestjs/common';
 
 import { assertUnreachable } from 'twenty-shared/utils';
 
 import {
-  EnterpriseException,
-  EnterpriseExceptionCode,
+    EnterpriseException,
+    EnterpriseExceptionCode,
 } from 'src/engine/core-modules/enterprise/enterprise.exception';
 import {
-  ForbiddenError,
-  UserInputError,
+    ForbiddenError,
+    UserInputError,
 } from 'src/engine/core-modules/graphql/utils/graphql-errors.util';
 
 @Catch(EnterpriseException)

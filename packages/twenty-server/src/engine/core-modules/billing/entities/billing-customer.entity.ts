@@ -1,15 +1,15 @@
-/* @license Enterprise */
+
 
 import { Field, ObjectType } from '@nestjs/graphql';
 import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  type Relation,
-  UpdateDateColumn,
+    Column,
+    CreateDateColumn,
+    Entity,
+    Index,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    type Relation,
+    UpdateDateColumn,
 } from 'typeorm';
 
 import { UUIDScalarType } from 'src/engine/api/graphql/workspace-schema-builder/graphql-types/scalars';

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { type CacheLockOptions } from 'src/engine/core-modules/cache-lock/cache-lock.service';
 

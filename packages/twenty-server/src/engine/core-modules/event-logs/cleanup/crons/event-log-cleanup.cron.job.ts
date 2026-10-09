@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,8 +9,8 @@ import { Repository } from 'typeorm';
 import { SentryCronMonitor } from 'src/engine/core-modules/cron/sentry-cron-monitor.decorator';
 import { EVENT_LOG_CLEANUP_CRON_PATTERN } from 'src/engine/core-modules/event-logs/cleanup/constants/event-log-cleanup-cron-pattern.constant';
 import {
-  EventLogCleanupJob,
-  type EventLogCleanupJobData,
+    EventLogCleanupJob,
+    type EventLogCleanupJobData,
 } from 'src/engine/core-modules/event-logs/cleanup/jobs/event-log-cleanup.job';
 import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
 import { InjectMessageQueue } from 'src/engine/core-modules/message-queue/decorators/message-queue.decorator';

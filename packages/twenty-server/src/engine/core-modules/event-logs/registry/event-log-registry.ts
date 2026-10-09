@@ -1,14 +1,14 @@
-/* @license Enterprise */
+
 
 import { EventLogTable } from 'twenty-shared/types';
 
 import { BillingEntitlementKey } from 'src/engine/core-modules/billing/enums/billing-entitlement-key.enum';
 import { type EventLogRecord } from 'src/engine/core-modules/event-logs/dtos/event-log-result.dto';
 import {
-  type ApplicationLogRow,
-  type ObjectEventRow,
-  type PageviewRow,
-  type UsageEventRow,
+    type ApplicationLogRow,
+    type ObjectEventRow,
+    type PageviewRow,
+    type UsageEventRow,
 } from 'src/engine/core-modules/event-logs/types/workspace-event-envelope.type';
 
 type StoredRow<TRow> = Partial<Omit<TRow, 'type' | 'version'>> & {

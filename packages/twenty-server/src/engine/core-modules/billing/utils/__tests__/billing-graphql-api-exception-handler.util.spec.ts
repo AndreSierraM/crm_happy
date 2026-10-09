@@ -1,13 +1,13 @@
-/* @license Enterprise */
+
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 import { billingGraphqlApiExceptionHandler } from 'src/engine/core-modules/billing/utils/billing-graphql-api-exception-handler.util';
 import {
-  ErrorCode,
-  type BaseGraphQLError,
+    ErrorCode,
+    type BaseGraphQLError,
 } from 'src/engine/core-modules/graphql/utils/graphql-errors.util';
 
 const catchGraphqlError = (error: Error): BaseGraphQLError => {

@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import {
-  type RowLevelPermissionPredicate,
-  type RowLevelPermissionPredicateGroup,
-  RowLevelPermissionPredicateGroupLogicalOperator,
+    type RowLevelPermissionPredicate,
+    type RowLevelPermissionPredicateGroup,
+    RowLevelPermissionPredicateGroupLogicalOperator,
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 

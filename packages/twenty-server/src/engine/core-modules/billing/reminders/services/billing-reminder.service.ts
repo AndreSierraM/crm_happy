@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,10 +6,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { msg } from '@lingui/core/macro';
 import { addDays, differenceInCalendarDays } from 'date-fns';
 import {
-  BillingSubscriptionRenewingEmail,
-  BillingTrialConvertingEmail,
-  BillingTrialEndingEmail,
-  renderEmail,
+    BillingSubscriptionRenewingEmail,
+    BillingTrialConvertingEmail,
+    BillingTrialEndingEmail,
+    renderEmail,
 } from 'twenty-emails';
 import { SettingsPath } from 'twenty-shared/types';
 import { getSettingsPath, isDefined } from 'twenty-shared/utils';
@@ -20,15 +20,15 @@ import { BillingSubscriptionEntity } from 'src/engine/core-modules/billing/entit
 import { SubscriptionInterval } from 'src/engine/core-modules/billing/enums/billing-subscription-interval.enum';
 import { SubscriptionStatus } from 'src/engine/core-modules/billing/enums/billing-subscription-status.enum';
 import {
-  BILLING_RENEWAL_REMINDER_SENT_KEY,
-  BILLING_TRIAL_REMINDER_SENT_KEY,
+    BILLING_RENEWAL_REMINDER_SENT_KEY,
+    BILLING_TRIAL_REMINDER_SENT_KEY,
 } from 'src/engine/core-modules/billing/reminders/constants/billing-reminder-sent-keys.constant';
 import { WorkspaceDomainsService } from 'src/engine/core-modules/domain/workspace-domains/services/workspace-domains.service';
 import { EmailService } from 'src/engine/core-modules/email/email.service';
 import { I18nService } from 'src/engine/core-modules/i18n/i18n.service';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
-import { UserVarsService } from 'src/engine/core-modules/user/user-vars/services/user-vars.service';
 import { UserService } from 'src/engine/core-modules/user/services/user.service';
+import { UserVarsService } from 'src/engine/core-modules/user/user-vars/services/user-vars.service';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { WorkspaceMemberWorkspaceEntity } from 'src/modules/workspace-member/standard-objects/workspace-member.workspace-entity';
 

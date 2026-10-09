@@ -1,12 +1,12 @@
-/* @license Enterprise */
+
 
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
 import { useObjectPermissionsForObject } from '@/object-record/hooks/useObjectPermissionsForObject';
 import { getRestrictingRowLevelPermissionPredicates } from '@/object-record/record-field/ui/meta-types/utils/getRestrictingRowLevelPermissionPredicates';
 import { useMemo } from 'react';
 import {
-  type RowLevelPermissionPredicate,
-  RowLevelPermissionPredicateOperand,
+    type RowLevelPermissionPredicate,
+    RowLevelPermissionPredicateOperand,
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { type SelectOption } from 'twenty-ui/primitives/input';

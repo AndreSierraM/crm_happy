@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { isSellableBillingPrice } from 'src/engine/core-modules/billing/utils/is-sellable-billing-price.util';
 import { isSellableBillingProduct } from 'src/engine/core-modules/billing/utils/is-sellable-billing-product.util';

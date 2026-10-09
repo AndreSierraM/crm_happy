@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { MetadataReadability } from 'twenty-shared/types';
 import { assertUnreachable } from 'twenty-shared/utils';

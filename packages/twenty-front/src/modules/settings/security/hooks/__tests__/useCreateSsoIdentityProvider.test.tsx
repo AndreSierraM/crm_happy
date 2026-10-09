@@ -1,11 +1,11 @@
-/* @license Enterprise */
+
 
 import { renderHook } from '@testing-library/react';
 
 import { useCreateSsoIdentityProvider } from '@/settings/security/hooks/useCreateSsoIdentityProvider';
 import {
-  CreateOidcIdentityProviderDocument,
-  CreateSamlIdentityProviderDocument,
+    CreateOidcIdentityProviderDocument,
+    CreateSamlIdentityProviderDocument,
 } from '~/generated-metadata/graphql';
 import { getJestMetadataAndApolloMocksWrapper } from '~/testing/jest/getJestMetadataAndApolloMocksWrapper';
 

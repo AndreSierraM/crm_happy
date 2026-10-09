@@ -1,15 +1,15 @@
-/* @license Enterprise */
+
 
 import { registerEnumType } from '@nestjs/graphql';
 
 import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  Relation,
-  UpdateDateColumn,
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    Relation,
+    UpdateDateColumn,
 } from 'typeorm';
 
 import type Stripe from 'stripe';

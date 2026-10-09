@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Command, CommandRunner } from 'nest-commander';
 

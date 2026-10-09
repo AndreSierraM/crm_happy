@@ -1,19 +1,19 @@
-/* @license Enterprise */
+
 
 import {
-  RecordFilterGroupLogicalOperator,
-  RowLevelPermissionPredicateGroupLogicalOperator,
-  type CompositeFieldSubFieldName,
-  type RecordGqlOperationFilter,
-  type RowLevelPermissionPredicateValue,
+    RecordFilterGroupLogicalOperator,
+    RowLevelPermissionPredicateGroupLogicalOperator,
+    type CompositeFieldSubFieldName,
+    type RecordGqlOperationFilter,
+    type RowLevelPermissionPredicateValue,
 } from 'twenty-shared/types';
 import {
-  computeRecordGqlOperationFilter,
-  convertViewFilterValueToString,
-  getFilterTypeFromFieldType,
-  isDefined,
-  type RecordFilter,
-  type RecordFilterGroup,
+    computeRecordGqlOperationFilter,
+    convertViewFilterValueToString,
+    getFilterTypeFromFieldType,
+    isDefined,
+    type RecordFilter,
+    type RecordFilterGroup,
 } from 'twenty-shared/utils';
 
 import { type UserWorkspaceAuthContext } from 'src/engine/core-modules/auth/types/workspace-auth-context.type';
@@ -22,8 +22,8 @@ import { findFlatEntityByIdInFlatEntityMaps } from 'src/engine/metadata-modules/
 import { type OrmFlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/types/orm-flat-field-metadata.type';
 import { type FlatObjectMetadata } from 'src/engine/metadata-modules/flat-object-metadata/types/flat-object-metadata.type';
 import {
-  PermissionsException,
-  PermissionsExceptionCode,
+    PermissionsException,
+    PermissionsExceptionCode,
 } from 'src/engine/metadata-modules/permissions/permissions.exception';
 import { type FlatRowLevelPermissionPredicateGroupMaps } from 'src/engine/metadata-modules/row-level-permission-predicate/types/flat-row-level-permission-predicate-group-maps.type';
 import { type FlatRowLevelPermissionPredicateMaps } from 'src/engine/metadata-modules/row-level-permission-predicate/types/flat-row-level-permission-predicate-maps.type';

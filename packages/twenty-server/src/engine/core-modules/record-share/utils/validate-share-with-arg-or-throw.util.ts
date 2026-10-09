@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { msg } from '@lingui/core/macro';
 import { isNonEmptyArray } from 'twenty-shared/utils';
@@ -6,8 +6,8 @@ import { isNonEmptyArray } from 'twenty-shared/utils';
 import { isUserAuthContext } from 'src/engine/core-modules/auth/guards/is-user-auth-context.guard';
 import { type WorkspaceAuthContext } from 'src/engine/core-modules/auth/types/workspace-auth-context.type';
 import {
-  RecordShareException,
-  RecordShareExceptionCode,
+    RecordShareException,
+    RecordShareExceptionCode,
 } from 'src/engine/core-modules/record-share/record-share.exception';
 import { type ShareWithInput } from 'src/engine/core-modules/record-share/types/share-with-input.type';
 import { resolveShareWithPrincipalOrThrow } from 'src/engine/core-modules/record-share/utils/resolve-share-with-principal-or-throw.util';

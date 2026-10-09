@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
 

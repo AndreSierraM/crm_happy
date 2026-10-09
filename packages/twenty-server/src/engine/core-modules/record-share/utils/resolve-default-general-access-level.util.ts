@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { RecordShareAccessLevel } from 'twenty-shared/types';
 import { assertUnreachable } from 'twenty-shared/utils';

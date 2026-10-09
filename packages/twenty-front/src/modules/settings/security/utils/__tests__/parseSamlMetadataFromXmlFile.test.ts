@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { parseSamlMetadataFromXmlFile } from '@/settings/security/utils/parseSamlMetadataFromXmlFile';
 

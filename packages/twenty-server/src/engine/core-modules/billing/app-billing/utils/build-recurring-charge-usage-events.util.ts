@@ -1,10 +1,10 @@
-/* @license Enterprise */
+
 
 import { MAX_RECURRING_CHARGE_MICRO_CREDITS_PER_PERIOD } from 'twenty-shared/application';
 
 import {
-  type DeclaredRecurringCharge,
-  type RejectedRecurringCharge,
+    type DeclaredRecurringCharge,
+    type RejectedRecurringCharge,
 } from 'src/engine/core-modules/billing/app-billing/utils/collect-declared-recurring-charges.util';
 import { UsageOperationType } from 'src/engine/core-modules/usage/enums/usage-operation-type.enum';
 import { UsageResourceType } from 'src/engine/core-modules/usage/enums/usage-resource-type.enum';

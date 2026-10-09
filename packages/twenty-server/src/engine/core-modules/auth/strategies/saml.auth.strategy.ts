@@ -1,14 +1,14 @@
-/* @license Enterprise */
+
 
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 
 import {
-  MultiSamlStrategy,
-  type MultiStrategyConfig,
-  type PassportSamlConfig,
-  type SamlConfig,
-  type VerifyWithRequest,
+    MultiSamlStrategy,
+    type MultiStrategyConfig,
+    type PassportSamlConfig,
+    type SamlConfig,
+    type VerifyWithRequest,
 } from '@node-saml/passport-saml';
 import { type AuthenticateOptions } from '@node-saml/passport-saml/lib/types';
 import { isEmail } from 'class-validator';

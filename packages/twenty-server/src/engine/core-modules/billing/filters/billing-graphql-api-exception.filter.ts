@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import {
-  type ArgumentsHost,
-  Catch,
-  type ExceptionFilter,
+    type ArgumentsHost,
+    Catch,
+    type ExceptionFilter,
 } from '@nestjs/common';
 import { type GqlContextType } from '@nestjs/graphql';
 

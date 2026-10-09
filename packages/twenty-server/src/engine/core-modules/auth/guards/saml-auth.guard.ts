@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { type ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -6,8 +6,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { type Request } from 'express';
 
 import {
-  AuthException,
-  AuthExceptionCode,
+    AuthException,
+    AuthExceptionCode,
 } from 'src/engine/core-modules/auth/auth.exception';
 import { SamlAuthStrategy } from 'src/engine/core-modules/auth/strategies/saml.auth.strategy';
 import { WorkspaceDomainsService } from 'src/engine/core-modules/domain/workspace-domains/services/workspace-domains.service';

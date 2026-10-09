@@ -1,16 +1,16 @@
-import { WORKSPACE_MEMBER_DATA_SEED_IDS } from 'src/engine/workspace-manager/dev-seeder/data/constants/workspace-member-data-seeds.constant';
-import { setManualRecordShare } from 'test/integration/utils/set-manual-record-share.util';
-import { destroyAgentChatThread } from 'test/integration/utils/destroy-agent-chat-thread.util';
 import { type AccessTokenService } from 'src/engine/core-modules/auth/token/services/access-token.service';
 import { AuthProviderEnum } from 'src/engine/core-modules/workspace/types/workspace.type';
 import { USER_DATA_SEED_IDS } from 'src/engine/workspace-manager/dev-seeder/core/utils/seed-users.util';
-/* @license Enterprise */
+import { WORKSPACE_MEMBER_DATA_SEED_IDS } from 'src/engine/workspace-manager/dev-seeder/data/constants/workspace-member-data-seeds.constant';
+import { destroyAgentChatThread } from 'test/integration/utils/destroy-agent-chat-thread.util';
+import { setManualRecordShare } from 'test/integration/utils/set-manual-record-share.util';
 
-import { type WorkspaceOrmManager } from 'src/engine/twenty-orm/workspace-orm.manager';
-import { type WorkspaceTransactionScope } from 'src/engine/twenty-orm/types/workspace-transaction-scope.type';
-import { type AgentChatThreadService } from 'src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread.service';
-import { USER_WORKSPACE_DATA_SEED_IDS } from 'src/engine/workspace-manager/dev-seeder/core/utils/seed-user-workspaces.util';
+
 import { randomUUID } from 'node:crypto';
+import { type AgentChatThreadService } from 'src/engine/metadata-modules/ai/ai-chat/services/agent-chat-thread.service';
+import { type WorkspaceTransactionScope } from 'src/engine/twenty-orm/types/workspace-transaction-scope.type';
+import { type WorkspaceOrmManager } from 'src/engine/twenty-orm/workspace-orm.manager';
+import { USER_WORKSPACE_DATA_SEED_IDS } from 'src/engine/workspace-manager/dev-seeder/core/utils/seed-user-workspaces.util';
 
 import { createOneOperationFactory } from 'test/integration/graphql/utils/create-one-operation-factory.util';
 import { findManyOperationFactory } from 'test/integration/graphql/utils/find-many-operation-factory.util';
@@ -18,14 +18,14 @@ import { makeGraphqlApiRequest } from 'test/integration/graphql/utils/make-graph
 import { getAppProviderByClassName } from 'test/integration/utils/get-app-provider-by-class-name.util';
 import { getCoreRepository } from 'test/integration/utils/get-core-repository.util';
 import {
-  RecordShareAccessLevel,
-  RecordSharePrincipalType,
-  RecordShareRowCause,
+    RecordShareAccessLevel,
+    RecordSharePrincipalType,
+    RecordShareRowCause,
 } from 'twenty-shared/types';
 
-import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
 import { type RecordShareStorageService } from 'src/engine/core-modules/record-share/services/record-share-storage.service';
 import { type RecordShareInput } from 'src/engine/core-modules/record-share/types/record-share-input.type';
+import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
 import { SEED_APPLE_WORKSPACE_ID } from 'src/engine/workspace-manager/dev-seeder/core/constants/seeder-workspaces.constant';
 import { PERSON_DATA_SEED_IDS } from 'src/engine/workspace-manager/dev-seeder/data/constants/person-data-seeds.constant';
 

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { type MessageDescriptor } from '@lingui/core';
 import { msg } from '@lingui/core/macro';

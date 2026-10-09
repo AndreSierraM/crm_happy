@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { resolveRecordShareGateKind } from 'src/engine/core-modules/record-share/utils/resolve-record-share-gate-kind.util';
 import { type RecordShareAccessLevel } from 'twenty-shared/types';
@@ -12,10 +12,10 @@ import { resolveInheritedReadabilityParents } from 'src/engine/core-modules/reco
 import { resolveObjectSharing } from 'src/engine/core-modules/record-share/utils/resolve-object-sharing.util';
 import { resolveRequiredRecordShareAccessLevels } from 'src/engine/core-modules/record-share/utils/resolve-required-record-share-access-levels.util';
 import {
-  type InheritedReadabilityParentExpression,
-  type RowAccessPolicy,
-  type RowAccessPolicyContext,
-  type RowAccessPolicyTarget,
+    type InheritedReadabilityParentExpression,
+    type RowAccessPolicy,
+    type RowAccessPolicyContext,
+    type RowAccessPolicyTarget,
 } from 'src/engine/twenty-orm/types/row-access-policy.type';
 
 type BuildParentPolicy = (target: RowAccessPolicyTarget) => RowAccessPolicy;

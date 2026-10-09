@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 

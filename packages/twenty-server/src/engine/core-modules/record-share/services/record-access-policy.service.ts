@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable } from '@nestjs/common';
 
@@ -13,12 +13,12 @@ import { RecordShareStorageService } from 'src/engine/core-modules/record-share/
 import { type EventRecordAccessGate } from 'src/engine/core-modules/record-share/types/event-record-access-gate.type';
 import { type RecordShare } from 'src/engine/core-modules/record-share/types/record-share.type';
 import {
-  evaluateRowAccessPolicy,
-  type RowAccessEvaluationContext,
+    evaluateRowAccessPolicy,
+    type RowAccessEvaluationContext,
 } from 'src/engine/core-modules/record-share/utils/evaluate-row-access-policy.util';
 import {
-  type EventRecordSnapshot,
-  resolveEventRecordSnapshots,
+    type EventRecordSnapshot,
+    resolveEventRecordSnapshots,
 } from 'src/engine/core-modules/record-share/utils/resolve-event-record-snapshots.util';
 import { type InheritedReadabilityParentExpression } from 'src/engine/twenty-orm/types/row-access-policy.type';
 import { buildRowAccessPolicy } from 'src/engine/twenty-orm/utils/build-row-access-policy.util';

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,16 +14,16 @@ import { EnterprisePlanService } from 'src/engine/core-modules/enterprise/servic
 import { UserWorkspaceEntity } from 'src/engine/core-modules/user-workspace/user-workspace.entity';
 
 import {
-  EventLogsException,
-  EventLogsExceptionCode,
+    EventLogsException,
+    EventLogsExceptionCode,
 } from './event-logs.exception';
 
 import { EventLogFiltersInput } from './dtos/event-log-filters.input';
 import { EventLogQueryInput } from './dtos/event-log-query.input';
 import { EventLogQueryResult } from './dtos/event-log-result.dto';
 import {
-  EVENT_LOG_TYPES,
-  getClickHouseTableName,
+    EVENT_LOG_TYPES,
+    getClickHouseTableName,
 } from './registry/event-log-registry';
 import { buildEventLogFieldFilterCondition } from './utils/build-event-log-field-filter-condition.util';
 import { normalizeEventLogRecords } from './utils/normalize-event-log-records';

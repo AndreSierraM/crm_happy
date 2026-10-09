@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,25 +10,25 @@ import { QueryFailedError, Repository } from 'typeorm';
 
 import { POSTGRESQL_ERROR_CODES } from 'src/engine/api/graphql/workspace-query-runner/constants/postgres-error-codes.constants';
 import { type QueryFailedErrorWithCode } from 'src/engine/api/graphql/workspace-query-runner/utils/workspace-query-runner-graphql-api-exception-handler.util';
-import {
-  WorkspaceSsoIdentityProviderEntity,
-  IdentityProviderType,
-  OidcResponseType,
-} from 'src/engine/core-modules/sso/workspace-sso-identity-provider.entity';
 import { BillingEntitlementKey } from 'src/engine/core-modules/billing/enums/billing-entitlement-key.enum';
 import { BillingService } from 'src/engine/core-modules/billing/services/billing.service';
 import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
 import { SecureHttpClientService } from 'src/engine/core-modules/secure-http-client/secure-http-client.service';
 import {
-  SsoException,
-  SsoExceptionCode,
+    SsoException,
+    SsoExceptionCode,
 } from 'src/engine/core-modules/sso/sso.exception';
 import {
-  type OidcConfiguration,
-  type SamlConfiguration,
-  type SsoConfiguration,
+    type OidcConfiguration,
+    type SamlConfiguration,
+    type SsoConfiguration,
 } from 'src/engine/core-modules/sso/types/sso-configurations.type';
 import { resolveIdTokenSigningAlgorithm } from 'src/engine/core-modules/sso/utils/resolve-id-token-signing-algorithm.util';
+import {
+    IdentityProviderType,
+    OidcResponseType,
+    WorkspaceSsoIdentityProviderEntity,
+} from 'src/engine/core-modules/sso/workspace-sso-identity-provider.entity';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 
 @Injectable()

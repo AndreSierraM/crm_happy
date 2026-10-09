@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { msg } from '@lingui/core/macro';
 import { isDefined } from 'twenty-shared/utils';
@@ -6,8 +6,8 @@ import { isDefined } from 'twenty-shared/utils';
 import type Stripe from 'stripe';
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 import { BillingProductKey } from 'src/engine/core-modules/billing/enums/billing-product-key.enum';
 import { type SubscriptionStripePrices } from 'src/engine/core-modules/billing/types/subscription-stripe-prices.type';

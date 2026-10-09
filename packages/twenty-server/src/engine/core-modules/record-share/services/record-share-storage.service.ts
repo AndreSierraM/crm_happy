@@ -1,23 +1,23 @@
-/* @license Enterprise */
 
+
+import { Injectable } from '@nestjs/common';
 import { getWorkspaceSchemaName } from 'src/engine/workspace-datasource/utils/get-workspace-schema-name.util';
 import { escapeIdentifier } from 'src/engine/workspace-manager/workspace-migration/utils/remove-sql-injection.util';
-import { Injectable } from '@nestjs/common';
 
 import chunk from 'lodash.chunk';
 
 import { QUERY_MAX_RECORDS } from 'twenty-shared/constants';
+import {
+    RecordShareAccessLevel,
+    RecordSharePrincipalType,
+    RecordShareRowCause,
+} from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { In, Not, type EntityManager, type FindOptionsWhere } from 'typeorm';
-import {
-  RecordShareAccessLevel,
-  RecordSharePrincipalType,
-  RecordShareRowCause,
-} from 'twenty-shared/types';
 
 import {
-  RecordShareException,
-  RecordShareExceptionCode,
+    RecordShareException,
+    RecordShareExceptionCode,
 } from 'src/engine/core-modules/record-share/record-share.exception';
 import { type RecordShareInput } from 'src/engine/core-modules/record-share/types/record-share-input.type';
 import { type RecordShare } from 'src/engine/core-modules/record-share/types/record-share.type';

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { type InheritedReadabilityColumnParent } from 'src/engine/core-modules/record-share/types/inherited-readability-column-parent.type';
 

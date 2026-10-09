@@ -1,13 +1,13 @@
-/* @license Enterprise */
+
 
 import { type RecordShareAccessLevel } from 'twenty-shared/types';
 import { type ObjectLiteral } from 'typeorm';
 
-import {
-  type CompiledRowAccessPolicy,
-  type SqlCondition,
-} from 'src/engine/twenty-orm/types/row-access-policy.type';
 import { buildRecordShareCondition } from 'src/engine/core-modules/record-share/utils/build-record-share-condition.util';
+import {
+    type CompiledRowAccessPolicy,
+    type SqlCondition,
+} from 'src/engine/twenty-orm/types/row-access-policy.type';
 import { escapeIdentifier } from 'src/engine/workspace-manager/workspace-migration/utils/remove-sql-injection.util';
 
 export type InheritedReadabilityParentCondition =

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { randomUUID } from 'node:crypto';
 
@@ -23,19 +23,19 @@ import { getAppProviderByClassName } from 'test/integration/utils/get-app-provid
 import { getCoreRepository } from 'test/integration/utils/get-core-repository.util';
 import { EVERYONE_PRINCIPAL_ID } from 'twenty-shared/constants';
 import {
-  FeatureFlagKey,
-  FieldMetadataType,
-  MetadataReadability,
-  ObjectSharingReach,
-  RecordShareAccessLevel,
-  RecordSharePrincipalType,
-  RecordShareRowCause,
+    FeatureFlagKey,
+    FieldMetadataType,
+    MetadataReadability,
+    ObjectSharingReach,
+    RecordShareAccessLevel,
+    RecordSharePrincipalType,
+    RecordShareRowCause,
 } from 'twenty-shared/types';
 
+import { type RecordShareStorageService } from 'src/engine/core-modules/record-share/services/record-share-storage.service';
 import { type ShareWithInput } from 'src/engine/core-modules/record-share/types/share-with-input.type';
 import { RelationType } from 'src/engine/metadata-modules/field-metadata/interfaces/relation-type.interface';
 import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
-import { type RecordShareStorageService } from 'src/engine/core-modules/record-share/services/record-share-storage.service';
 import { SEED_APPLE_WORKSPACE_ID } from 'src/engine/workspace-manager/dev-seeder/core/constants/seeder-workspaces.constant';
 import { WORKSPACE_MEMBER_DATA_SEED_IDS } from 'src/engine/workspace-manager/dev-seeder/data/constants/workspace-member-data-seeds.constant';
 

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { renderHook } from '@testing-library/react';
 

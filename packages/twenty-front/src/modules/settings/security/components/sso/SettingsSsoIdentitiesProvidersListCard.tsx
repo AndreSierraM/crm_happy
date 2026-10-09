@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { ToastOnQueryErrorEffect } from '@/apollo/components/ToastOnQueryErrorEffect';
 import { Link } from 'react-router-dom';

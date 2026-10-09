@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { findOrThrow } from 'twenty-shared/utils';
 

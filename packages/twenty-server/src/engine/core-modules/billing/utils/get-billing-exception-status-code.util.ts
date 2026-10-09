@@ -1,10 +1,10 @@
-/* @license Enterprise */
+
 
 import { assertUnreachable } from 'twenty-shared/utils';
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 
 export const getBillingExceptionStatusCode = (

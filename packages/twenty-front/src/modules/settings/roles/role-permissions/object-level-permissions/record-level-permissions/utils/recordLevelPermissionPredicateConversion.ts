@@ -1,8 +1,8 @@
-/* @license Enterprise */
+
 
 import {
-  RecordFilterGroupLogicalOperator,
-  type ViewFilterOperand,
+    RecordFilterGroupLogicalOperator,
+    type ViewFilterOperand,
 } from 'twenty-shared/types';
 import { getFilterTypeFromFieldType, isDefined } from 'twenty-shared/utils';
 
@@ -11,10 +11,10 @@ import { type RecordFilterGroup } from '@/object-record/record-filter-group/type
 import { type RecordFilter } from '@/object-record/record-filter/types/RecordFilter';
 import { type CompositeFieldSubFieldName } from '@/settings/data-model/types/CompositeFieldSubFieldName';
 import {
-  type RowLevelPermissionPredicate,
-  type RowLevelPermissionPredicateGroup,
-  RowLevelPermissionPredicateGroupLogicalOperator,
-  type RowLevelPermissionPredicateOperand,
+    type RowLevelPermissionPredicate,
+    type RowLevelPermissionPredicateGroup,
+    RowLevelPermissionPredicateGroupLogicalOperator,
+    type RowLevelPermissionPredicateOperand,
 } from '~/generated-metadata/graphql';
 
 export const convertPredicateToRecordFilter = (

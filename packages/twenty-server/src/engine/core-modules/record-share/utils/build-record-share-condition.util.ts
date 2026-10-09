@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { randomBytes } from 'node:crypto';
 

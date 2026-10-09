@@ -1,20 +1,20 @@
-/* @license Enterprise */
+
 
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
-  assertIsDefinedOrThrow,
-  isDefined,
-  isNonEmptyArray,
+    assertIsDefinedOrThrow,
+    isDefined,
+    isNonEmptyArray,
 } from 'twenty-shared/utils';
 import { Not, Repository } from 'typeorm';
 
 import type Stripe from 'stripe';
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 import { BillingCustomerEntity } from 'src/engine/core-modules/billing/entities/billing-customer.entity';
 import { BillingSubscriptionEntity } from 'src/engine/core-modules/billing/entities/billing-subscription.entity';

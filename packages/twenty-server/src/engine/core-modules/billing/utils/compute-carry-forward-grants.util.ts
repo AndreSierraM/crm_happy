@@ -1,11 +1,11 @@
-/* @license Enterprise */
+
 
 import { isDefined } from 'twenty-shared/utils';
 
 import {
-  BillingCreditGrantType,
-  CAPPED_BILLING_CREDIT_GRANT_TYPES,
-  PAID_BILLING_CREDIT_GRANT_TYPES,
+    BillingCreditGrantType,
+    CAPPED_BILLING_CREDIT_GRANT_TYPES,
+    PAID_BILLING_CREDIT_GRANT_TYPES,
 } from 'src/engine/core-modules/billing/enums/billing-credit-grant-type.enum';
 
 export type CarryForwardGrantInput = {

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { useRedirect } from '@/domain-manager/hooks/useRedirect';
 import { getToastOptionsFromError } from '@/error-handler/utils/getToastOptionsFromError';

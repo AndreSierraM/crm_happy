@@ -1,18 +1,18 @@
-/* @license Enterprise */
+
 
 import { EVERYONE_PRINCIPAL_ID } from 'twenty-shared/constants';
 import {
-  FeatureFlagKey,
-  FieldMetadataType,
-  MetadataReadability,
-  RecordShareAccessLevel,
+    FeatureFlagKey,
+    FieldMetadataType,
+    MetadataReadability,
+    RecordShareAccessLevel,
 } from 'twenty-shared/types';
 
 import { type RecordShareGrant } from 'src/engine/core-modules/record-share/types/record-share-grant.type';
 import {
-  evaluateRowAccessPolicy,
-  type RowAccessEvaluationContext,
-  type RowAccessRecord,
+    evaluateRowAccessPolicy,
+    type RowAccessEvaluationContext,
+    type RowAccessRecord,
 } from 'src/engine/core-modules/record-share/utils/evaluate-row-access-policy.util';
 import { createEmptyFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-flat-entity-maps.constant';
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
@@ -21,9 +21,9 @@ import { getFlatFieldMetadataMock } from 'src/engine/metadata-modules/flat-field
 import { type FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/types/flat-field-metadata.type';
 import { COMPANY_FLAT_OBJECT_MOCK } from 'src/engine/metadata-modules/flat-object-metadata/__mocks__/company-flat-object.mock';
 import {
-  type RecordShareExpressionTarget,
-  type RowAccessExpression,
-  type RowAccessPolicySubject,
+    type RecordShareExpressionTarget,
+    type RowAccessExpression,
+    type RowAccessPolicySubject,
 } from 'src/engine/twenty-orm/types/row-access-policy.type';
 import { buildRowAccessPolicy } from 'src/engine/twenty-orm/utils/build-row-access-policy.util';
 

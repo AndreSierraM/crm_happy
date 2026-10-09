@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { type RecordShare } from 'src/engine/core-modules/record-share/types/record-share.type';
 

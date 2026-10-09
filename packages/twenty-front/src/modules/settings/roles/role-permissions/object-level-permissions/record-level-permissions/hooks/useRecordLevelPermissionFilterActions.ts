@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import {
-  FieldMetadataType,
-  RecordFilterGroupLogicalOperator,
-  CoreObjectNameSingular,
+    CoreObjectNameSingular,
+    FieldMetadataType,
+    RecordFilterGroupLogicalOperator,
 } from 'twenty-shared/types';
 import { getFilterTypeFromFieldType, isDefined } from 'twenty-shared/utils';
 import { v4 } from 'uuid';

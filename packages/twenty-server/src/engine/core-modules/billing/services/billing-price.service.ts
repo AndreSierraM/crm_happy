@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,8 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { type Repository } from 'typeorm';
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 import { billingValidator } from 'src/engine/core-modules/billing/billing.validate';
 import { BillingPriceEntity } from 'src/engine/core-modules/billing/entities/billing-price.entity';

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { styled } from '@linaria/react';
 import { t } from '@lingui/core/macro';
@@ -6,13 +6,13 @@ import { useContext } from 'react';
 import { isDefined } from 'twenty-shared/utils';
 import { Dropdown } from 'twenty-ui/components/navigation';
 import { IconVariablePlus } from 'twenty-ui/icon';
-import { useTheme, themeCssVariables } from 'twenty-ui/theme';
+import { themeCssVariables, useTheme } from 'twenty-ui/theme';
 
-import { type VariablePickerComponent } from '@/ui/input/types/VariablePickerComponent';
 import { SettingsRolePermissionsObjectLevelRecordLevelPermissionMeValueSelect } from '@/settings/roles/role-permissions/object-level-permissions/record-level-permissions/components/SettingsRolePermissionsObjectLevelRecordLevelPermissionMeValueSelect';
 import { RecordLevelPermissionVariablePickerContext } from '@/settings/roles/role-permissions/object-level-permissions/record-level-permissions/contexts/RecordLevelPermissionVariablePickerContext';
-import { DropdownRoot } from '@/ui/layout/dropdown/components/DropdownRoot';
+import { type VariablePickerComponent } from '@/ui/input/types/VariablePickerComponent';
 import { DropdownContent } from '@/ui/layout/dropdown/components/DropdownContent';
+import { DropdownRoot } from '@/ui/layout/dropdown/components/DropdownRoot';
 import { GenericDropdownContentWidth } from '@/ui/layout/dropdown/constants/GenericDropdownContentWidth';
 
 const StyledRecordLevelPermissionPickerContainer = styled.div<{

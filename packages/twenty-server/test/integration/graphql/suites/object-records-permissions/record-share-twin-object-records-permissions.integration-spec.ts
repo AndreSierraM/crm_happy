@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { randomUUID } from 'node:crypto';
 
@@ -18,11 +18,11 @@ import { findOneRoleByLabel } from 'test/integration/metadata/suites/role/utils/
 import { getAppProviderByClassName } from 'test/integration/utils/get-app-provider-by-class-name.util';
 import { EVERYONE_PRINCIPAL_ID } from 'twenty-shared/constants';
 import {
-  FieldMetadataType,
-  MetadataReadability,
-  RecordShareAccessLevel,
-  RecordSharePrincipalType,
-  RecordShareRowCause,
+    FieldMetadataType,
+    MetadataReadability,
+    RecordShareAccessLevel,
+    RecordSharePrincipalType,
+    RecordShareRowCause,
 } from 'twenty-shared/types';
 import { capitalize } from 'twenty-shared/utils';
 

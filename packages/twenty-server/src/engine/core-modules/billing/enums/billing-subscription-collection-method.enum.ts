@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 export enum BillingSubscriptionCollectionMethod {
   CHARGE_AUTOMATICALLY = 'CHARGE_AUTOMATICALLY',

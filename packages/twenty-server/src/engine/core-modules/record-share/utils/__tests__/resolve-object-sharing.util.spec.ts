@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import {
-  FeatureFlagKey,
-  MetadataReadability,
-  ObjectSharingReach,
+    FeatureFlagKey,
+    MetadataReadability,
+    ObjectSharingReach,
 } from 'twenty-shared/types';
 
 import { RecordSharingMode } from 'src/engine/core-modules/record-share/enums/record-sharing-mode.enum';

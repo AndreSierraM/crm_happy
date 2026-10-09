@@ -1,16 +1,17 @@
-/* @license Enterprise */
+
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
+import { SettingsPageLayout } from '@/settings/components/layout/SettingsPageLayout';
 import { SaveAndCancelButtons } from '@/settings/components/SaveAndCancelButtons/SaveAndCancelButtons';
 import { SettingsPageContainer } from '@/settings/components/SettingsPageContainer';
 import { CheckCustomDomainValidRecordsEffect } from '@/settings/domains/components/CheckCustomDomainValidRecordsEffect';
 import { SettingsDomainRecords } from '@/settings/domains/components/SettingsDomainRecords';
+import { useCheckCustomDomainValidRecords } from '@/settings/domains/hooks/useCheckCustomDomainValidRecords';
 import { useSettingsCustomDomain } from '@/settings/domains/hooks/useSettingsCustomDomain';
 import { customDomainRecordsState } from '@/settings/domains/states/customDomainRecordsState';
 import { TextInput } from '@/ui/input/components/TextInput';
-import { SettingsPageLayout } from '@/settings/components/layout/SettingsPageLayout';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
-import { Trans, useLingui } from '@lingui/react/macro';
 import { styled } from '@linaria/react';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { SettingsPath } from 'twenty-shared/types';
 import { getSettingsPath } from 'twenty-shared/utils';
 import { Section } from 'twenty-ui/components/layout';
@@ -18,7 +19,6 @@ import { IconReload, IconTrash } from 'twenty-ui/icon';
 import { Button } from 'twenty-ui/primitives/input';
 import { themeCssVariables } from 'twenty-ui/theme';
 import { useNavigateSettings } from '~/hooks/useNavigateSettings';
-import { useCheckCustomDomainValidRecords } from '@/settings/domains/hooks/useCheckCustomDomainValidRecords';
 
 const StyledDomainFormWrapper = styled.div`
   display: flex;

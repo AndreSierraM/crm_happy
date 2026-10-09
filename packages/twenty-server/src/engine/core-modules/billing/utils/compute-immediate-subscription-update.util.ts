@@ -1,8 +1,8 @@
-/* @license Enterprise */
+
 
 import {
-  type SubscriptionUpdate,
-  SubscriptionUpdateType,
+    type SubscriptionUpdate,
+    SubscriptionUpdateType,
 } from 'src/engine/core-modules/billing/types/billing-subscription-update.type';
 import { type SubscriptionStripePrices } from 'src/engine/core-modules/billing/types/subscription-stripe-prices.type';
 

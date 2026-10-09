@@ -1,15 +1,15 @@
-/* @license Enterprise */
+
 
 import {
-  BadRequestException,
-  InternalServerErrorException,
+    BadRequestException,
+    InternalServerErrorException,
 } from '@nestjs/common';
 
 import { assertUnreachable } from 'twenty-shared/utils';
 
 import {
-  type RecordShareException,
-  RecordShareExceptionCode,
+    type RecordShareException,
+    RecordShareExceptionCode,
 } from 'src/engine/core-modules/record-share/record-share.exception';
 
 export const recordShareRestApiExceptionHandler = (

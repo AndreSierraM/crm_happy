@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { getCustomerIdFromInvoice } from 'src/engine/core-modules/billing-webhook/utils/get-customer-id-from-invoice.util';
 

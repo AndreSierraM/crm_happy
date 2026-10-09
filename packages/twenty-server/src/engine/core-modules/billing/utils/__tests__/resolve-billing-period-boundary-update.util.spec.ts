@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { resolveBillingPeriodBoundaryUpdate } from 'src/engine/core-modules/billing/utils/resolve-billing-period-boundary-update.util';
 

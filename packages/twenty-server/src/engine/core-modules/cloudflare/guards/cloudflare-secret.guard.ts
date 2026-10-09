@@ -1,10 +1,10 @@
-/* @license Enterprise */
+
 
 import {
-  type CanActivate,
-  type ExecutionContext,
-  Injectable,
-  InternalServerErrorException,
+    type CanActivate,
+    type ExecutionContext,
+    Injectable,
+    InternalServerErrorException,
 } from '@nestjs/common';
 
 import { timingSafeEqual } from 'crypto';

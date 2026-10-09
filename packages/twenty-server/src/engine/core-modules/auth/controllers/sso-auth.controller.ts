@@ -1,13 +1,13 @@
-/* @license Enterprise */
+
 
 import {
-  Controller,
-  Get,
-  Post,
-  Req,
-  Res,
-  UseFilters,
-  UseGuards,
+    Controller,
+    Get,
+    Post,
+    Req,
+    Res,
+    UseFilters,
+    UseGuards,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -15,16 +15,16 @@ import { generateServiceProviderMetadata } from '@node-saml/node-saml';
 import { isNonEmptyString } from '@sniptt/guards';
 import { Response } from 'express';
 import {
-  ApiPath,
-  AppPath,
-  ConnectedAccountProvider,
+    ApiPath,
+    AppPath,
+    ConnectedAccountProvider,
 } from 'twenty-shared/types';
 import { assertIsDefinedOrThrow } from 'twenty-shared/utils';
 import { Repository } from 'typeorm';
 
 import {
-  AuthException,
-  AuthExceptionCode,
+    AuthException,
+    AuthExceptionCode,
 } from 'src/engine/core-modules/auth/auth.exception';
 import { AuthRestApiExceptionFilter } from 'src/engine/core-modules/auth/filters/auth-rest-api-exception.filter';
 import { EnterpriseFeaturesEnabledGuard } from 'src/engine/core-modules/auth/guards/enterprise-features-enabled.guard';
@@ -38,9 +38,9 @@ import { WorkspaceDomainsService } from 'src/engine/core-modules/domain/workspac
 import { GuardRedirectService } from 'src/engine/core-modules/guard-redirect/services/guard-redirect.service';
 import { SsoService } from 'src/engine/core-modules/sso/services/sso.service';
 import {
-  IdentityProviderType,
-  SsoIdentityProviderStatus,
-  WorkspaceSsoIdentityProviderEntity,
+    IdentityProviderType,
+    SsoIdentityProviderStatus,
+    WorkspaceSsoIdentityProviderEntity,
 } from 'src/engine/core-modules/sso/workspace-sso-identity-provider.entity';
 import { UserService } from 'src/engine/core-modules/user/services/user.service';
 import { AuthProviderEnum } from 'src/engine/core-modules/workspace/types/workspace.type';

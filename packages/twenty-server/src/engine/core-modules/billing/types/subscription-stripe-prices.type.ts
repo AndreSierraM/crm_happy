@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 export type SubscriptionStripePrices = {
   baseProductPriceId: string;

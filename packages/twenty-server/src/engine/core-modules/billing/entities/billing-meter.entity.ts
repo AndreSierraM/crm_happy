@@ -1,14 +1,14 @@
-/* @license Enterprise */
+
 
 import Stripe from 'stripe';
 import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  Relation,
-  UpdateDateColumn,
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    Relation,
+    UpdateDateColumn,
 } from 'typeorm';
 
 import { BillingPriceEntity } from 'src/engine/core-modules/billing/entities/billing-price.entity';

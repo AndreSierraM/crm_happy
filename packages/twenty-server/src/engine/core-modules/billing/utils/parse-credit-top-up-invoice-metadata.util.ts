@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { isNonEmptyString } from '@sniptt/guards';
 import type Stripe from 'stripe';

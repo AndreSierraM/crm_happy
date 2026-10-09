@@ -1,24 +1,24 @@
-/* @license Enterprise */
+
 
 import {
-  Body,
-  Controller,
-  ForbiddenException,
-  Get,
-  HttpCode,
-  HttpStatus,
-  NotFoundException,
-  Post,
-  Req,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
+    Body,
+    Controller,
+    ForbiddenException,
+    Get,
+    HttpCode,
+    HttpStatus,
+    NotFoundException,
+    Post,
+    Req,
+    UseGuards,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 
 import { Request } from 'express';
 import {
-  type CreditAvailability,
-  type CreditUnavailableReason,
+    type CreditAvailability,
+    type CreditUnavailableReason,
 } from 'twenty-shared/application';
 import { ApiPath } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
@@ -29,9 +29,9 @@ import { BillingUsageService } from 'src/engine/core-modules/billing/services/bi
 import { type SubscriptionInactiveReason } from 'src/engine/core-modules/billing/types/subscription-inactive-reason.type';
 import { ThrottlerService } from 'src/engine/core-modules/throttler/throttler.service';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
+import { AuthPrincipalGuard } from 'src/engine/guards/auth-principal.guard';
 import { JwtAuthGuard } from 'src/engine/guards/jwt-auth.guard';
 import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
-import { AuthPrincipalGuard } from 'src/engine/guards/auth-principal.guard';
 
 // On top of the executor's throttle: application-access tokens are JWTs usable outside the runtime
 const APP_BILLING_CHARGE_THROTTLE_LIMIT = 1000;

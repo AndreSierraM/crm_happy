@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { EVERYONE_PRINCIPAL_ID } from 'twenty-shared/constants';
 

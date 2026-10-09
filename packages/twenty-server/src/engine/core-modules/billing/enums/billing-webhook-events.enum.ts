@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 export enum BillingWebhookEvent {
   CUSTOMER_SUBSCRIPTION_CREATED = 'customer.subscription.created',

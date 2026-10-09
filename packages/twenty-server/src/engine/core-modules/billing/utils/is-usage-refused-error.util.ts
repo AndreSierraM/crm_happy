@@ -1,12 +1,12 @@
-/* @license Enterprise */
+
 
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 import {
-  UsageLimitException,
-  UsageLimitExceptionCode,
+    UsageLimitException,
+    UsageLimitExceptionCode,
 } from 'src/engine/core-modules/usage-limit/exceptions/usage-limit.exception';
 
 const BILLING_REFUSAL_EXCEPTION_CODES = [

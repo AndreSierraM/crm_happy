@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import { styled } from '@linaria/react';
 import { t } from '@lingui/core/macro';
 import { useContext, useMemo } from 'react';
-import { FieldMetadataType, CoreObjectNameSingular } from 'twenty-shared/types';
+import { CoreObjectNameSingular, FieldMetadataType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { IconEraser } from 'twenty-ui/icon';
 import { Tooltip } from 'twenty-ui/primitives/surfaces';
@@ -28,7 +28,7 @@ import { SettingsRolePermissionsObjectLevelRecordLevelPermissionVariablePicker }
 import { RecordLevelPermissionVariablePickerContext } from '@/settings/roles/role-permissions/object-level-permissions/record-level-permissions/contexts/RecordLevelPermissionVariablePickerContext';
 import { TooltipDelay } from '@/ui/layout/tooltip/constants/TooltipDelay';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
-import { useTheme, themeCssVariables } from 'twenty-ui/theme';
+import { themeCssVariables, useTheme } from 'twenty-ui/theme';
 
 const StyledContainer = styled.div`
   align-items: stretch;

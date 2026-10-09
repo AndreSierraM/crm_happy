@@ -1,6 +1,6 @@
-/* @license Enterprise */
-import { useEffect } from 'react';
+
 import { useCheckCustomDomainValidRecords } from '@/settings/domains/hooks/useCheckCustomDomainValidRecords';
+import { useEffect } from 'react';
 
 export const CheckCustomDomainValidRecordsEffect = () => {
   const { checkCustomDomainRecords } = useCheckCustomDomainValidRecords();

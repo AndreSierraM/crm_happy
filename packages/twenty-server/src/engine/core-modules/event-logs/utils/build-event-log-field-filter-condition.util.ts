@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { type EventLogTable } from 'twenty-shared/types';
 

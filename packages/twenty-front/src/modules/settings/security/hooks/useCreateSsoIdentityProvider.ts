@@ -1,13 +1,13 @@
-/* @license Enterprise */
+
 
 import { ssoIdentitiesProvidersState } from '@/settings/security/states/ssoIdentitiesProvidersState';
 import { useSetAtomState } from '@/ui/utilities/state/jotai/hooks/useSetAtomState';
 import { useMutation } from '@apollo/client/react';
 import {
-  type CreateOidcIdentityProviderMutationVariables,
-  type CreateSamlIdentityProviderMutationVariables,
-  CreateOidcIdentityProviderDocument,
-  CreateSamlIdentityProviderDocument,
+    type CreateOidcIdentityProviderMutationVariables,
+    type CreateSamlIdentityProviderMutationVariables,
+    CreateOidcIdentityProviderDocument,
+    CreateSamlIdentityProviderDocument,
 } from '~/generated-metadata/graphql';
 
 export const useCreateSsoIdentityProvider = () => {

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { msg } from '@lingui/core/macro';
 import { EVERYONE_PRINCIPAL_ID } from 'twenty-shared/constants';
@@ -8,8 +8,8 @@ import { isDefined, isValidUuid } from 'twenty-shared/utils';
 import { GENERAL_RECORD_SHARE_ACCESS_LEVELS } from 'src/engine/core-modules/record-share/constants/general-record-share-access-levels.constant';
 import { GRANTABLE_RECORD_SHARE_ACCESS_LEVELS } from 'src/engine/core-modules/record-share/constants/grantable-record-share-access-levels.constant';
 import {
-  RecordShareException,
-  RecordShareExceptionCode,
+    RecordShareException,
+    RecordShareExceptionCode,
 } from 'src/engine/core-modules/record-share/record-share.exception';
 import { type RecordShareInput } from 'src/engine/core-modules/record-share/types/record-share-input.type';
 import { type ShareWithInput } from 'src/engine/core-modules/record-share/types/share-with-input.type';

@@ -1,15 +1,15 @@
-/* @license Enterprise */
+
 
 import { Injectable } from '@nestjs/common';
 
 import { MAX_SEATS_WITHOUT_ENTERPRISE_KEY } from 'src/engine/core-modules/enterprise/constants/max-seats-without-organization-key.constant';
 import {
-  EnterpriseException,
-  EnterpriseExceptionCode,
+    EnterpriseException,
+    EnterpriseExceptionCode,
 } from 'src/engine/core-modules/enterprise/enterprise.exception';
 import {
-  type CustomAiProviderAccess,
-  CustomAiProviderAccessService,
+    type CustomAiProviderAccess,
+    CustomAiProviderAccessService,
 } from 'src/engine/core-modules/enterprise/services/custom-ai-provider-access.service';
 import { UserInputError } from 'src/engine/core-modules/graphql/utils/graphql-errors.util';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';

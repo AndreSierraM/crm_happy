@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { assertUnreachable } from 'twenty-shared/utils';
 
@@ -8,8 +8,8 @@ import { resolveRecordIdsSharedWithPrincipals } from 'src/engine/core-modules/re
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
 import { type OrmFlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/types/orm-flat-field-metadata.type';
 import {
-  type RowAccessExpression,
-  type RowAccessPolicy,
+    type RowAccessExpression,
+    type RowAccessPolicy,
 } from 'src/engine/twenty-orm/types/row-access-policy.type';
 import { isRecordMatchingRLSRowLevelPermissionPredicate } from 'src/engine/twenty-orm/utils/is-record-matching-rls-row-level-permission-predicate.util';
 

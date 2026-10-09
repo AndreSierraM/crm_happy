@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import {
-  type RecordShareAccessLevel,
-  type RecordSharePrincipalType,
-  type RecordShareRowCause,
+    type RecordShareAccessLevel,
+    type RecordSharePrincipalType,
+    type RecordShareRowCause,
 } from 'twenty-shared/types';
 
 export type RecordShareInput = {

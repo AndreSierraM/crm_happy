@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 export enum SubscriptionStatus {
   Active = 'active',

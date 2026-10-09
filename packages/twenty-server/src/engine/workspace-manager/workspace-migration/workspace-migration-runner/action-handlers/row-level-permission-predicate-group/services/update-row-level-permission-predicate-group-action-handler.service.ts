@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Injectable } from '@nestjs/common';
 
@@ -8,12 +8,12 @@ import { findFlatEntityByUniversalIdentifierOrThrow } from 'src/engine/metadata-
 import { RowLevelPermissionPredicateGroupEntity } from 'src/engine/metadata-modules/row-level-permission-predicate/entities/row-level-permission-predicate-group.entity';
 import { resolveUniversalUpdateRelationIdentifiersToIds } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/utils/resolve-universal-update-relation-identifiers-to-ids.util';
 import {
-  FlatUpdateRowLevelPermissionPredicateGroupAction,
-  UniversalUpdateRowLevelPermissionPredicateGroupAction,
+    FlatUpdateRowLevelPermissionPredicateGroupAction,
+    UniversalUpdateRowLevelPermissionPredicateGroupAction,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/row-level-permission-predicate-group/types/workspace-migration-row-level-permission-predicate-group-action.type';
 import {
-  WorkspaceMigrationActionRunnerArgs,
-  WorkspaceMigrationActionRunnerContext,
+    WorkspaceMigrationActionRunnerArgs,
+    WorkspaceMigrationActionRunnerContext,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/types/workspace-migration-action-runner-args.type';
 
 @Injectable()

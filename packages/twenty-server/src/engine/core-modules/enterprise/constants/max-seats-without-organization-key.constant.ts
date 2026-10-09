@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 // Custom AI providers stay complimentary for small organizations: an instance
 // is only asked for an enterprise key once it grows past this many distinct

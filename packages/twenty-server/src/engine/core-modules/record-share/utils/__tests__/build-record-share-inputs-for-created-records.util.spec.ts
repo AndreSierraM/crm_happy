@@ -1,15 +1,15 @@
-/* @license Enterprise */
+
 
 import { EVERYONE_PRINCIPAL_ID } from 'twenty-shared/constants';
 
 import {
-  RecordShareAccessLevel,
-  RecordSharePrincipalType,
-  RecordShareRowCause,
+    RecordShareAccessLevel,
+    RecordSharePrincipalType,
+    RecordShareRowCause,
 } from 'twenty-shared/types';
 
-import { buildRecordShareInputsForCreatedRecords } from 'src/engine/core-modules/record-share/utils/build-record-share-inputs-for-created-records.util';
 import { type WorkspaceAuthContext } from 'src/engine/core-modules/auth/types/workspace-auth-context.type';
+import { buildRecordShareInputsForCreatedRecords } from 'src/engine/core-modules/record-share/utils/build-record-share-inputs-for-created-records.util';
 
 const OBJECT_METADATA_ID = 'object-metadata-1';
 const WORKSPACE_MEMBER_ID = '20202020-0000-4000-8000-000000000001';

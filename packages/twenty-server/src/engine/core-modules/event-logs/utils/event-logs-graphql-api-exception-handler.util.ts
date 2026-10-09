@@ -1,14 +1,14 @@
-/* @license Enterprise */
+
 
 import { assertUnreachable } from 'twenty-shared/utils';
 
 import {
-  type EventLogsException,
-  EventLogsExceptionCode,
+    type EventLogsException,
+    EventLogsExceptionCode,
 } from 'src/engine/core-modules/event-logs/event-logs.exception';
 import {
-  ForbiddenError,
-  UserInputError,
+    ForbiddenError,
+    UserInputError,
 } from 'src/engine/core-modules/graphql/utils/graphql-errors.util';
 
 export const eventLogsGraphqlApiExceptionHandler = (

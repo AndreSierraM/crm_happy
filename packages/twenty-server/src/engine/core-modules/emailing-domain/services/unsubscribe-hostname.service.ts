@@ -1,18 +1,18 @@
-/* @license Enterprise */
+
 import { Injectable, Logger } from '@nestjs/common';
 
 import { isNonEmptyString } from '@sniptt/guards';
 import { isDefined } from 'twenty-shared/utils';
 
 import {
-  DnsManagerException,
-  DnsManagerExceptionCode,
+    DnsManagerException,
+    DnsManagerExceptionCode,
 } from 'src/engine/core-modules/dns-manager/exceptions/dns-manager.exception';
+import { DnsManagerService } from 'src/engine/core-modules/dns-manager/services/dns-manager.service';
 import { UNSUBSCRIBE_HOSTNAME_PREFIX } from 'src/engine/core-modules/emailing-domain/constants/unsubscribe-hostname-prefix.constant';
 import { UnsubscribeHostnameStatus } from 'src/engine/core-modules/emailing-domain/drivers/types/unsubscribe-hostname-status.type';
 import { type VerificationRecord } from 'src/engine/core-modules/emailing-domain/drivers/types/verifications-record.type';
 import { EmailingDomainEntity } from 'src/engine/core-modules/emailing-domain/emailing-domain.entity';
-import { DnsManagerService } from 'src/engine/core-modules/dns-manager/services/dns-manager.service';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import { InjectWorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/inject-workspace-scoped-repository.decorator';
 import { WorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/workspace-scoped-repository';

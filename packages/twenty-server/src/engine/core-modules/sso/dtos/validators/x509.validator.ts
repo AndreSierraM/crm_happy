@@ -1,12 +1,12 @@
-/* @license Enterprise */
+
 
 import * as crypto from 'crypto';
 
 import {
-  registerDecorator,
-  type ValidationOptions,
-  ValidatorConstraint,
-  type ValidatorConstraintInterface,
+    registerDecorator,
+    type ValidationOptions,
+    ValidatorConstraint,
+    type ValidatorConstraintInterface,
 } from 'class-validator';
 
 @ValidatorConstraint({ async: false })

@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import {
-  type ApplicationBilling,
-  isRecurringCharge,
-  type RecurringCharge,
+    type ApplicationBilling,
+    isRecurringCharge,
+    type RecurringCharge,
 } from 'twenty-shared/application';
 import { isDefined } from 'twenty-shared/utils';
 

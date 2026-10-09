@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 
 import { BillingCreditGrantType } from 'src/engine/core-modules/billing/enums/billing-credit-grant-type.enum';
 import {
-  computeCarryForwardGrants,
-  type CarryForwardGrantInput,
+    computeCarryForwardGrants,
+    type CarryForwardGrantInput,
 } from 'src/engine/core-modules/billing/utils/compute-carry-forward-grants.util';
 
 const BOUNDARY = new Date('2026-02-01T00:00:00.000Z');

@@ -1,22 +1,22 @@
-/* @license Enterprise */
+
 
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
-  isUsageOperationTypeValue,
-  type UsageOperationTypeValue,
+    isUsageOperationTypeValue,
+    type UsageOperationTypeValue,
 } from 'twenty-shared/application';
 import { isDefined } from 'twenty-shared/utils';
 import { type Repository } from 'typeorm';
 
 import { findActiveFlatApplicationById } from 'src/engine/core-modules/application/utils/find-active-flat-application-by-id.util';
 import { type ChargeDto } from 'src/engine/core-modules/billing/app-billing/dtos/charge.dto';
-import { UserWorkspaceEntity } from 'src/engine/core-modules/user-workspace/user-workspace.entity';
 import { UsageLimitQuotaService } from 'src/engine/core-modules/usage-limit/services/usage-limit-quota.service';
 import { UsageOperationType } from 'src/engine/core-modules/usage/enums/usage-operation-type.enum';
 import { UsageResourceType } from 'src/engine/core-modules/usage/enums/usage-resource-type.enum';
 import { UsageUnit } from 'src/engine/core-modules/usage/enums/usage-unit.enum';
+import { UserWorkspaceEntity } from 'src/engine/core-modules/user-workspace/user-workspace.entity';
 import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
 
 type AppChargeableOperationType =

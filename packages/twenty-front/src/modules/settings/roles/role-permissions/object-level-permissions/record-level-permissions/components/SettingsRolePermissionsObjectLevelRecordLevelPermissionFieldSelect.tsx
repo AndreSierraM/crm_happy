@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { styled } from '@linaria/react';
 import { t } from '@lingui/core/macro';

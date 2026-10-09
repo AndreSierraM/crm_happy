@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { RecordSharePrincipalType } from 'twenty-shared/types';
 

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { gql } from '@apollo/client';
 

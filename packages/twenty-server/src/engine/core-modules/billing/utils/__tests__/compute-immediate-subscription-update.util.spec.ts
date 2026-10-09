@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { SubscriptionInterval } from 'src/engine/core-modules/billing/enums/billing-subscription-interval.enum';
 import { SubscriptionUpdateType } from 'src/engine/core-modules/billing/types/billing-subscription-update.type';

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { useCallback, useEffect } from 'react';
 import { isDefined } from 'twenty-shared/utils';
@@ -7,8 +7,8 @@ import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/Enriche
 import { type RecordFilterGroup } from '@/object-record/record-filter-group/types/RecordFilterGroup';
 import { type RecordFilter } from '@/object-record/record-filter/types/RecordFilter';
 import {
-  convertRecordFilterGroupToPredicateGroup,
-  convertRecordFilterToPredicate,
+    convertRecordFilterGroupToPredicateGroup,
+    convertRecordFilterToPredicate,
 } from '@/settings/roles/role-permissions/object-level-permissions/record-level-permissions/utils/recordLevelPermissionPredicateConversion';
 import { settingsDraftRoleFamilyState } from '@/settings/roles/states/settingsDraftRoleFamilyState';
 import { useSetAtomFamilyState } from '@/ui/utilities/state/jotai/hooks/useSetAtomFamilyState';

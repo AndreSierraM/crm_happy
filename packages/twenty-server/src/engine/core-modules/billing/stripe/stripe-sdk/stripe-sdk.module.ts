@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Module } from '@nestjs/common';
 

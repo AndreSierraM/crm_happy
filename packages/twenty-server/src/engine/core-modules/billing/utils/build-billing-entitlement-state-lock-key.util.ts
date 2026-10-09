@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 export const buildBillingEntitlementStateLockKey = (
   workspaceId: string,

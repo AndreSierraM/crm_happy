@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 export const isEntitlementActive = ({
   hasValidEnterprisePlan,

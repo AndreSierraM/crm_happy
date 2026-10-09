@@ -1,11 +1,11 @@
-/* @license Enterprise */
+
 
 import { Injectable, Logger } from '@nestjs/common';
 
 import { buildRecurringChargeUsageEvents } from 'src/engine/core-modules/billing/app-billing/utils/build-recurring-charge-usage-events.util';
 import {
-  collectDeclaredRecurringCharges,
-  type RejectedRecurringCharge,
+    collectDeclaredRecurringCharges,
+    type RejectedRecurringCharge,
 } from 'src/engine/core-modules/billing/app-billing/utils/collect-declared-recurring-charges.util';
 import { collectDueRecurringCharges } from 'src/engine/core-modules/billing/app-billing/utils/collect-due-recurring-charges.util';
 import { NO_BILLING_SUBSCRIPTION } from 'src/engine/core-modules/billing/constants/no-billing-subscription.constant';
@@ -13,8 +13,8 @@ import { SubscriptionInterval } from 'src/engine/core-modules/billing/enums/bill
 import { BillingService } from 'src/engine/core-modules/billing/services/billing.service';
 import { UsageLimitQuotaService } from 'src/engine/core-modules/usage-limit/services/usage-limit-quota.service';
 import { UsageAnalyticsService } from 'src/engine/core-modules/usage/services/usage-analytics.service';
-import { WorkspaceOrmManager } from 'src/engine/twenty-orm/workspace-orm.manager';
 import { buildSystemAuthContext } from 'src/engine/twenty-orm/utils/build-system-auth-context.util';
+import { WorkspaceOrmManager } from 'src/engine/twenty-orm/workspace-orm.manager';
 import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
 import { type WorkspaceMemberWorkspaceEntity } from 'src/modules/workspace-member/standard-objects/workspace-member.workspace-entity';
 

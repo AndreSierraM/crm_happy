@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { ApiPath } from 'twenty-shared/types';
 

@@ -1,15 +1,15 @@
-/* @license Enterprise */
+
 
 import {
-  Controller,
-  Headers,
-  Logger,
-  Post,
-  type RawBodyRequest,
-  Req,
-  Res,
-  UseFilters,
-  UseGuards,
+    Controller,
+    Headers,
+    Logger,
+    Post,
+    type RawBodyRequest,
+    Req,
+    Res,
+    UseFilters,
+    UseGuards,
 } from '@nestjs/common';
 
 import { type Response } from 'express';
@@ -24,8 +24,8 @@ import { BillingWebhookProductService } from 'src/engine/core-modules/billing-we
 import { BillingWebhookSubscriptionScheduleService } from 'src/engine/core-modules/billing-webhook/services/billing-webhook-subscription-schedule.service';
 import { BillingWebhookSubscriptionService } from 'src/engine/core-modules/billing-webhook/services/billing-webhook-subscription.service';
 import {
-  BillingException,
-  BillingExceptionCode,
+    BillingException,
+    BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
 import { BillingWebhookEvent } from 'src/engine/core-modules/billing/enums/billing-webhook-events.enum';
 import { BillingRestApiExceptionFilter } from 'src/engine/core-modules/billing/filters/billing-api-exception.filter';

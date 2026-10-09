@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { type IssuerMetadata } from 'openid-client';
 

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Logger, Scope } from '@nestjs/common';
 
@@ -6,8 +6,8 @@ import { BillingSubscriptionUpdateService } from 'src/engine/core-modules/billin
 import { Process } from 'src/engine/core-modules/message-queue/decorators/process.decorator';
 import { Processor } from 'src/engine/core-modules/message-queue/decorators/processor.decorator';
 import { MessageQueue } from 'src/engine/core-modules/message-queue/message-queue.constants';
-import { WorkspaceOrmManager } from 'src/engine/twenty-orm/workspace-orm.manager';
 import { buildSystemAuthContext } from 'src/engine/twenty-orm/utils/build-system-auth-context.util';
+import { WorkspaceOrmManager } from 'src/engine/twenty-orm/workspace-orm.manager';
 import { type WorkspaceMemberWorkspaceEntity } from 'src/modules/workspace-member/standard-objects/workspace-member.workspace-entity';
 export type UpdateSubscriptionQuantityJobData = { workspaceId: string };
 

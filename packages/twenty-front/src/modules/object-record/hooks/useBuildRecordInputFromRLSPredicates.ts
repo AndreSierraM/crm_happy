@@ -1,11 +1,10 @@
-/* @license Enterprise */
+
 
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
 import { convertPredicateToRecordFilter } from '@/settings/roles/role-permissions/object-level-permissions/record-level-permissions/utils/recordLevelPermissionPredicateConversion';
 
 import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
 import { useObjectMetadataItem } from '@/object-metadata/hooks/useObjectMetadataItem';
-import { CoreObjectNameSingular, RelationType } from 'twenty-shared/types';
 import { getObjectPermissionsForObject } from '@/object-metadata/utils/getObjectPermissionsForObject';
 import { useFindOneRecord } from '@/object-record/hooks/useFindOneRecord';
 import { useObjectPermissions } from '@/object-record/hooks/useObjectPermissions';
@@ -13,9 +12,10 @@ import { isCompositeFieldType } from '@/object-record/object-filter-dropdown/uti
 import { buildRecordInputFromFilter } from '@/object-record/record-table/utils/buildRecordInputFromFilter';
 import { buildCompositeValueFromSubField } from '@/object-record/record-table/utils/buildValueFromFilter';
 import { type ObjectRecord } from '@/object-record/types/ObjectRecord';
-import { isUndefined } from '@sniptt/guards';
 import { useUserTimezone } from '@/ui/input/components/internal/date/hooks/useUserTimezone';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
+import { isUndefined } from '@sniptt/guards';
+import { CoreObjectNameSingular, RelationType } from 'twenty-shared/types';
 import { isDefined, isPlainObject } from 'twenty-shared/utils';
 
 const mergeCompositeValues = (existingValue: unknown, incomingValue: unknown) =>

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { SettingsSecuritySsoRowDropdownMenu } from '@/settings/security/components/sso/SettingsSecuritySsoRowDropdownMenu';
 import { type SsoIdentityProvider } from '@/settings/security/types/SsoIdentityProvider';

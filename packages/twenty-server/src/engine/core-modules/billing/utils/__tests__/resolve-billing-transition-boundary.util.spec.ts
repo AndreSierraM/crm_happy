@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { resolveBillingTransitionBoundary } from 'src/engine/core-modules/billing/utils/resolve-billing-transition-boundary.util';
 

@@ -1,9 +1,9 @@
-/* @license Enterprise */
+
 import { BillingPlanKey } from 'src/engine/core-modules/billing/enums/billing-plan-key.enum';
 import { SubscriptionInterval } from 'src/engine/core-modules/billing/enums/billing-subscription-interval.enum';
 import { BillingUsageType } from 'src/engine/core-modules/billing/enums/billing-usage-type.enum';
-import { formatBillingDatabaseProductToGraphqlDTO } from 'src/engine/core-modules/billing/utils/format-database-product-to-graphql-dto.util';
 import type { BillingGetPlanResult } from 'src/engine/core-modules/billing/types/billing-get-plan-result.type';
+import { formatBillingDatabaseProductToGraphqlDTO } from 'src/engine/core-modules/billing/utils/format-database-product-to-graphql-dto.util';
 
 describe('formatBillingDatabaseProductToGraphqlDTO', () => {
   it('should correctly format a billing plan with licensed and metered products', () => {

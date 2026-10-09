@@ -1,10 +1,10 @@
-/* @license Enterprise */
+
 
 import { EVERYONE_PRINCIPAL_ID } from 'twenty-shared/constants';
 import { RecordShareAccessLevel } from 'twenty-shared/types';
 
-import { compileNamedParameters } from 'src/engine/twenty-orm/sql/utils/compile-named-parameters.util';
 import { buildRecordShareExceptionCondition } from 'src/engine/core-modules/record-share/utils/build-record-share-exception-condition.util';
+import { compileNamedParameters } from 'src/engine/twenty-orm/sql/utils/compile-named-parameters.util';
 
 const OBJECT_METADATA_ID = 'object-metadata-1';
 const PRINCIPAL_IDS = ['principal-1', EVERYONE_PRINCIPAL_ID];

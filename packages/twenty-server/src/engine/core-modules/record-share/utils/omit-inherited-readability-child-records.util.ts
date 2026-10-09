@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { type ObjectRecordEvent } from 'twenty-shared/database-events';
 import { isDefined } from 'twenty-shared/utils';

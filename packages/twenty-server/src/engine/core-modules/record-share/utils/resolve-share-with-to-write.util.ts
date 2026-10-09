@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { assertUnreachable, isNonEmptyArray } from 'twenty-shared/utils';
 

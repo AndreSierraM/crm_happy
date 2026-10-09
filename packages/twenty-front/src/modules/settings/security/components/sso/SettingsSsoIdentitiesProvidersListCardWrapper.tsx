@@ -1,11 +1,11 @@
-/* @license Enterprise */
 
-import { t } from '@lingui/core/macro';
+
 import { SettingsListCard } from '@/settings/components/SettingsListCard';
 import { SettingsSsoIdentityProviderRowRightContainer } from '@/settings/security/components/sso/SettingsSsoIdentityProviderRowRightContainer';
 import { ssoIdentitiesProvidersState } from '@/settings/security/states/ssoIdentitiesProvidersState';
 import { guessSsoIdentityProviderIconByUrl } from '@/settings/security/utils/guessSsoIdentityProviderIconByUrl';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
+import { t } from '@lingui/core/macro';
 import { SettingsPath } from 'twenty-shared/types';
 import { useNavigateSettings } from '~/hooks/useNavigateSettings';
 

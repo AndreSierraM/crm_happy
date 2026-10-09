@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
 import { Args, Mutation, Query } from '@nestjs/graphql';
@@ -6,27 +6,27 @@ import { Args, Mutation, Query } from '@nestjs/graphql';
 import { PermissionFlagType } from 'twenty-shared/constants';
 
 import { MetadataResolver } from 'src/engine/api/graphql/graphql-config/decorators/metadata-resolver.decorator';
-import { EnterpriseFeaturesEnabledGuard } from 'src/engine/core-modules/auth/guards/enterprise-features-enabled.guard';
 import { AuthGraphqlApiExceptionFilter } from 'src/engine/core-modules/auth/filters/auth-graphql-api-exception.filter';
+import { EnterpriseFeaturesEnabledGuard } from 'src/engine/core-modules/auth/guards/enterprise-features-enabled.guard';
 import { PreventNestToAutoLogGraphqlErrorsFilter } from 'src/engine/core-modules/graphql/filters/prevent-nest-to-auto-log-graphql-errors.filter';
 import { ResolverValidationPipe } from 'src/engine/core-modules/graphql/pipes/resolver-validation.pipe';
-import { DeleteSsoInput } from 'src/engine/core-modules/sso/dtos/delete-sso.input';
 import { DeleteSsoDTO } from 'src/engine/core-modules/sso/dtos/delete-sso.dto';
-import { EditSsoInput } from 'src/engine/core-modules/sso/dtos/edit-sso.input';
+import { DeleteSsoInput } from 'src/engine/core-modules/sso/dtos/delete-sso.input';
 import { EditSsoDTO } from 'src/engine/core-modules/sso/dtos/edit-sso.dto';
+import { EditSsoInput } from 'src/engine/core-modules/sso/dtos/edit-sso.input';
 import { FindAvailableSsoIdpDTO } from 'src/engine/core-modules/sso/dtos/find-available-sso-idp.dto';
-import {
-  SetupOidcSsoInput,
-  SetupSamlSsoInput,
-} from 'src/engine/core-modules/sso/dtos/setup-sso.input';
 import { SetupSsoDTO } from 'src/engine/core-modules/sso/dtos/setup-sso.dto';
+import {
+    SetupOidcSsoInput,
+    SetupSamlSsoInput,
+} from 'src/engine/core-modules/sso/dtos/setup-sso.input';
 import { SsoGraphqlApiExceptionFilter } from 'src/engine/core-modules/sso/filters/sso-graphql-api-exception.filter';
 import { SsoService } from 'src/engine/core-modules/sso/services/sso.service';
 import { type SsoException } from 'src/engine/core-modules/sso/sso.exception';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { AuthWorkspace } from 'src/engine/decorators/auth/auth-workspace.decorator';
-import { SettingsPermissionGuard } from 'src/engine/guards/settings-permission.guard';
 import { AuthPrincipalGuard } from 'src/engine/guards/auth-principal.guard';
+import { SettingsPermissionGuard } from 'src/engine/guards/settings-permission.guard';
 import { PermissionsGraphqlApiExceptionFilter } from 'src/engine/metadata-modules/permissions/utils/permissions-graphql-api-exception.filter';
 
 @MetadataResolver()

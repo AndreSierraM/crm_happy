@@ -1,20 +1,20 @@
-/* @license Enterprise */
+
 
 import { Field, InputType } from '@nestjs/graphql';
 
 import { Type } from 'class-transformer';
 import {
-  IsArray,
-  IsNotEmpty,
-  IsOptional,
-  IsUUID,
-  ValidateNested,
+    IsArray,
+    IsNotEmpty,
+    IsOptional,
+    IsUUID,
+    ValidateNested,
 } from 'class-validator';
 import GraphQLJSON from 'graphql-type-json';
 import {
-  RowLevelPermissionPredicateGroupLogicalOperator,
-  RowLevelPermissionPredicateOperand,
-  RowLevelPermissionPredicateValue,
+    RowLevelPermissionPredicateGroupLogicalOperator,
+    RowLevelPermissionPredicateOperand,
+    RowLevelPermissionPredicateValue,
 } from 'twenty-shared/types';
 
 import { UUIDScalarType } from 'src/engine/api/graphql/workspace-schema-builder/graphql-types/scalars';

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { type RecordGqlOperationFilter } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';

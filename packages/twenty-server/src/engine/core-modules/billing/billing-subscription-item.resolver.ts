@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Logger, UseFilters, UsePipes } from '@nestjs/common';
 import { Parent, ResolveField } from '@nestjs/graphql';

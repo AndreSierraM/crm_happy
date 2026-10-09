@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { isSamePhaseSignature } from 'src/engine/core-modules/billing/utils/is-same-phase-signature.util';
 

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { isNonEmptyArray } from 'twenty-shared/utils';
 

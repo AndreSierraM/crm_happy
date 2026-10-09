@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { Command } from 'nest-commander';
 

@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
 import { Args, Mutation, Query } from '@nestjs/graphql';
@@ -8,6 +8,8 @@ import { PermissionFlagType } from 'twenty-shared/constants';
 
 import { AdminResolver } from 'src/engine/api/graphql/graphql-config/decorators/admin-resolver.decorator';
 import { CustomAiProviderAccessDTO } from 'src/engine/core-modules/admin-panel/dtos/custom-ai-provider-access.dto';
+import { ModelsDevModelSuggestionDTO } from 'src/engine/core-modules/admin-panel/dtos/models-dev-model-suggestion.dto';
+import { ModelsDevProviderSuggestionDTO } from 'src/engine/core-modules/admin-panel/dtos/models-dev-provider-suggestion.dto';
 import { AdminPanelAiProviderService } from 'src/engine/core-modules/admin-panel/services/admin-panel-ai-provider.service';
 import { AuthGraphqlApiExceptionFilter } from 'src/engine/core-modules/auth/filters/auth-graphql-api-exception.filter';
 import { EnterpriseExceptionFilter } from 'src/engine/core-modules/enterprise/enterprise-exception.filter';
@@ -17,8 +19,6 @@ import { ConfigVariableGraphqlApiExceptionFilter } from 'src/engine/core-modules
 import { AdminPanelGuard } from 'src/engine/guards/admin-panel-guard';
 import { AuthPrincipalGuard } from 'src/engine/guards/auth-principal.guard';
 import { SettingsPermissionGuard } from 'src/engine/guards/settings-permission.guard';
-import { ModelsDevModelSuggestionDTO } from 'src/engine/core-modules/admin-panel/dtos/models-dev-model-suggestion.dto';
-import { ModelsDevProviderSuggestionDTO } from 'src/engine/core-modules/admin-panel/dtos/models-dev-provider-suggestion.dto';
 import { ModelsDevCatalogService } from 'src/engine/metadata-modules/ai/ai-models/services/models-dev-catalog.service';
 
 @UsePipes(ResolverValidationPipe)

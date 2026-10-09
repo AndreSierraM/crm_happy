@@ -1,13 +1,13 @@
-/* @license Enterprise */
+
 
 import { ArgsType, Field } from '@nestjs/graphql';
 
 import {
-  IsBoolean,
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
+    IsBoolean,
+    IsEnum,
+    IsNotEmpty,
+    IsOptional,
+    IsString,
 } from 'class-validator';
 
 import { BillingPlanKey } from 'src/engine/core-modules/billing/enums/billing-plan-key.enum';

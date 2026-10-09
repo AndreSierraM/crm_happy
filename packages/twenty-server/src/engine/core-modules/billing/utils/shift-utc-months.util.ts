@@ -1,4 +1,4 @@
-/* @license Enterprise */
+
 
 // date-fns shifts in server local time, which moves Stripe's UTC boundaries around daylight-saving changes.
 export const shiftUtcMonths = ({
