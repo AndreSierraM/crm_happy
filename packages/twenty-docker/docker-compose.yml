@@ -2,8 +2,8 @@ name: crm_happy
 
 services:
   server:
-    # Happy CRM: imagen base Twenty, override con TAG o DOCKER_IMAGE si publicas la tuya
-    image: twentycrm/twenty:${TAG:-latest}
+    # Happy CRM: imagen propia por defecto; fallback legacy twentycrm/twenty con DOCKER_IMAGE
+    image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
     volumes:
       - server-local-data:/app/packages/twenty-server/.local-storage
     ports:
@@ -64,8 +64,8 @@ services:
     restart: always
 
   worker:
-    # Happy CRM: misma imagen base que server
-    image: twentycrm/twenty:${TAG:-latest}
+    # Happy CRM: misma imagen que server (ver DOCKER_IMAGE arriba)
+    image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
     volumes:
       - server-local-data:/app/packages/twenty-server/.local-storage
     command: ["yarn", "worker:prod"]

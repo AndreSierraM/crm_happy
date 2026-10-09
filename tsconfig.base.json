@@ -13,7 +13,52 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "happy-front": ["packages/twenty-front"],
+      "happy-front/*": ["packages/twenty-front/*"],
+      "happy-server": ["packages/twenty-server"],
+      "happy-server/*": ["packages/twenty-server/*"],
+      "happy-shared": ["packages/twenty-shared"],
+      "happy-shared/*": ["packages/twenty-shared/*"],
+      "happy-ui": ["packages/twenty-ui"],
+      "happy-ui/*": ["packages/twenty-ui/*"],
+      "happy-sdk": ["packages/twenty-sdk"],
+      "happy-sdk/*": ["packages/twenty-sdk/*"],
+      "happy-client-sdk": ["packages/twenty-client-sdk"],
+      "happy-client-sdk/*": ["packages/twenty-client-sdk/*"],
+      "happy-emails": ["packages/twenty-emails"],
+      "happy-emails/*": ["packages/twenty-emails/*"],
+      "happy-utils": ["packages/twenty-utils"],
+      "happy-utils/*": ["packages/twenty-utils/*"],
+      "happy-zapier": ["packages/twenty-zapier"],
+      "happy-zapier/*": ["packages/twenty-zapier/*"],
+      "happy-docs": ["packages/twenty-docs"],
+      "happy-docs/*": ["packages/twenty-docs/*"],
+      "happy-e2e-testing": ["packages/twenty-e2e-testing"],
+      "happy-e2e-testing/*": ["packages/twenty-e2e-testing/*"],
+      "happy-front-component-renderer": [
+        "packages/twenty-front-component-renderer"
+      ],
+      "happy-front-component-renderer/*": [
+        "packages/twenty-front-component-renderer/*"
+      ],
+      "happy-cli": ["packages/twenty-cli"],
+      "happy-cli/*": ["packages/twenty-cli/*"],
+      "create-happy-app": ["packages/create-twenty-app"],
+      "create-happy-app/*": ["packages/create-twenty-app/*"],
+      "happy-agent-skills": ["packages/twenty-agent-skills"],
+      "happy-agent-skills/*": ["packages/twenty-agent-skills/*"],
+      "happy-claude-skills": ["packages/twenty-claude-skills"],
+      "happy-claude-skills/*": ["packages/twenty-claude-skills/*"],
+      "happy-oxlint-rules": ["packages/twenty-oxlint-rules"],
+      "happy-oxlint-rules/*": ["packages/twenty-oxlint-rules/*"],
+      "@happy-crm/companion": ["packages/twenty-companion"],
+      "@happy-crm/companion/*": ["packages/twenty-companion/*"],
+      "happy-website": ["packages/twenty-website"],
+      "happy-website/*": ["packages/twenty-website/*"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

@@ -3,7 +3,7 @@
 const { defineConfig, Yarn } = require('@yarnpkg/types');
 const semver = require('semver');
 
-const MONOREPO_ROOT_WORKSPACE = 'twenty-monorepo';
+const MONOREPO_ROOT_WORKSPACE = 'crm_happy'; // Happy CRM: antes 'twenty-monorepo', ver happy/aliases.json
 
 module.exports = defineConfig({
   async constraints({ Yarn }) {

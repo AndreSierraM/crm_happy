@@ -1,0 +1,38 @@
+{
+  "root": { "legacy": "twenty-monorepo", "happy": "crm_happy" },
+  "packages": {
+    "twenty-front": "happy-front",
+    "twenty-server": "happy-server",
+    "twenty-shared": "happy-shared",
+    "twenty-ui": "happy-ui",
+    "twenty-sdk": "happy-sdk",
+    "twenty-client-sdk": "happy-client-sdk",
+    "twenty-emails": "happy-emails",
+    "twenty-utils": "happy-utils",
+    "twenty-zapier": "happy-zapier",
+    "twenty-docs": "happy-docs",
+    "twenty-e2e-testing": "happy-e2e-testing",
+    "twenty-front-component-renderer": "happy-front-component-renderer",
+    "twenty": "happy-cli",
+    "create-twenty-app": "create-happy-app",
+    "twenty-agent-skills": "happy-agent-skills",
+    "twenty-claude-skills": "happy-claude-skills",
+    "twenty-oxlint-rules": "happy-oxlint-rules",
+    "@twentyhq/companion": "@happy-crm/companion",
+    "twenty-website": "happy-website"
+  },
+  "docker": { "legacy": "twentycrm/twenty", "happy": "happy/crm_happy" },
+  "env": {
+    "ALLOW_REQUESTS_TO_TWENTY_ICONS": "HAPPY_ALLOW_REQUESTS_TO_HAPPY_ICONS",
+    "newHappyVars": [
+      "HAPPY_EDITION",
+      "HAPPY_LICENSE_KEY",
+      "HAPPY_MAX_USERS",
+      "HAPPY_MAX_WORKSPACES",
+      "HAPPY_LICENSE_SECRET"
+    ]
+  },
+  "domIds": {
+    "twenty-env-config": "data-happy-env-config"
+  }
+}

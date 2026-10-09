@@ -1,0 +1,53 @@
+# Happy CRM en Dokploy (source git, composePath = este archivo).
+# Postgres/Redis los gestiona Dokploy en el mismo proyecto; llegan por
+# dokploy-network vía PG_DATABASE_URL / REDIS_URL del .env (pestaña Environment).
+# Sin dominio: SERVER_URL=http://10.20.50.102:3100 (Dokploy ocupa :3000).
+services:
+  server:
+    image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
+    ports:
+      - "3100:3000"
+    volumes:
+      - server-local-data:/app/packages/twenty-server/.local-storage
+    environment:
+      NODE_PORT: 3000
+      PG_DATABASE_URL: ${PG_DATABASE_URL}
+      SERVER_URL: ${SERVER_URL}
+      REDIS_URL: ${REDIS_URL}
+      STORAGE_TYPE: ${STORAGE_TYPE}
+      IS_BILLING_ENABLED: ${IS_BILLING_ENABLED}
+      HAPPY_EDITION: ${HAPPY_EDITION}
+      HAPPY_LICENSE_KEY: ${HAPPY_LICENSE_KEY}
+      HAPPY_LICENSE_SECRET: ${HAPPY_LICENSE_SECRET}
+      HAPPY_MAX_USERS: ${HAPPY_MAX_USERS}
+      HAPPY_MAX_WORKSPACES: ${HAPPY_MAX_WORKSPACES}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      APP_SECRET: ${APP_SECRET}
+      EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME}
+    healthcheck:
+      test: curl --fail http://localhost:3000/healthz
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    restart: always
+  worker:
+    image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
+    volumes:
+      - server-local-data:/app/packages/twenty-server/.local-storage
+    command: ["yarn", "worker:prod"]
+    environment:
+      PG_DATABASE_URL: ${PG_DATABASE_URL}
+      SERVER_URL: ${SERVER_URL}
+      REDIS_URL: ${REDIS_URL}
+      STORAGE_TYPE: ${STORAGE_TYPE}
+      DISABLE_DB_MIGRATIONS: "true"
+      DISABLE_CRON_JOBS_REGISTRATION: "true"
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      APP_SECRET: ${APP_SECRET}
+    depends_on:
+      server:
+        condition: service_healthy
+    restart: always
+volumes:
+  server-local-data:

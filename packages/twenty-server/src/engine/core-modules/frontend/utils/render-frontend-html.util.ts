@@ -15,8 +15,8 @@ export const renderFrontendHtml = (
 
   return template
     .replace(
-      /<!-- BEGIN: Twenty Config -->[\s\S]*?<!-- END: Twenty Config -->/,
-      '<script id="twenty-env-config">window._env_ = {};</script>',
+      /<!-- BEGIN: (?:Happy CRM Config|Twenty Config)[^>]*-->[\s\S]*?<!-- END: (?:Happy CRM Config|Twenty Config)[^>]*-->/,
+      '<script id="twenty-env-config" data-happy-env-config="true">window._env_ = {};</script>',
     )
     .replace(
       '</head>',
