@@ -1,6 +1,7 @@
 # Happy CRM — compose de PRODUCCIÓN (único).
 # - En Dokploy: composePath = packages/twenty-docker/docker-compose.yml,
 #   Postgres/Redis los da Dokploy vía PG_DATABASE_URL / REDIS_URL del Environment.
+#   Los tres servicios comparten la red externa dokploy-network.
 # - Self-host sin Dokploy: levanta primero la infra con
 #     docker compose -f docker-compose.dev.yml up -d
 #   y luego este archivo (o pásale PG_DATABASE_URL / REDIS_URL externos).
@@ -22,7 +23,7 @@ services:
       NODE_PORT: 3000
       PG_DATABASE_URL: ${PG_DATABASE_URL}
       SERVER_URL: ${SERVER_URL}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      REDIS_URL: ${REDIS_URL}
       REDIS_CACHE_PREFIX: ${REDIS_CACHE_PREFIX:-}
       DISABLE_DB_MIGRATIONS: ${DISABLE_DB_MIGRATIONS}
       DISABLE_CRON_JOBS_REGISTRATION: ${DISABLE_CRON_JOBS_REGISTRATION}
@@ -54,6 +55,8 @@ services:
       timeout: 5s
       retries: 20
     restart: always
+    networks:
+      - dokploy-network
 
   worker:
     image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
@@ -63,7 +66,7 @@ services:
     environment:
       PG_DATABASE_URL: ${PG_DATABASE_URL}
       SERVER_URL: ${SERVER_URL}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      REDIS_URL: ${REDIS_URL}
       REDIS_CACHE_PREFIX: ${REDIS_CACHE_PREFIX:-}
       DISABLE_DB_MIGRATIONS: "true" # it already runs on the server
       DISABLE_CRON_JOBS_REGISTRATION: "true" # it already runs on the server
@@ -80,6 +83,12 @@ services:
       server:
         condition: service_healthy
     restart: always
+    networks:
+      - dokploy-network
 
 volumes:
   server-local-data:
+
+networks:
+  dokploy-network:
+    external: true
