@@ -15,7 +15,7 @@ services:
       target: twenty
     image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
     ports:
-      - "${HOST_PORT:-3000}:3000"
+      - "${HOST_PORT:-3100}:3000"
     volumes:
       - server-local-data:/app/packages/twenty-server/.local-storage
     environment:
@@ -48,11 +48,6 @@ services:
       EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
       EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
       EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
     healthcheck:
       test: curl --fail http://localhost:3000/healthz
       interval: 5s
