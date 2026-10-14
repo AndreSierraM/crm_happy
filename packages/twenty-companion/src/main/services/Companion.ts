@@ -12,13 +12,13 @@ import { connectOAuth } from '../utils/connectOAuth';
 import { getDesktopInstallationUrl } from '../utils/getDesktopInstallationUrl';
 import { DesktopRecorderUnavailableError } from '../errors/DesktopRecorderUnavailableError';
 import { SecureStore } from './SecureStore';
-import { TwentyClient } from './TwentyClient';
+import { HappyClient } from './HappyClient';
 import { RecordingController } from './RecordingController';
 
 export class Companion {
   state = createInitialState();
   private store = new SecureStore(app.getPath('userData'));
-  private client = new TwentyClient(this.store);
+  private client = new HappyClient(this.store);
   private handledIds = new Set<string>();
   private refreshing = false;
   private connectionVersion = 0;
@@ -409,7 +409,7 @@ export class Companion {
         await this.markHandled(meeting.id);
         this.notify(
           'Your next meeting is starting',
-          `${meeting.title}. Open Twenty to join when you are ready.`,
+          `${meeting.title}. Open Happy CRM to join when you are ready.`,
         );
       } else {
         await this.join(meeting.id);

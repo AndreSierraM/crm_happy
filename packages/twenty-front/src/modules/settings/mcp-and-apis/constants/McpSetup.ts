@@ -1,5 +1,5 @@
 export const MCP_SETUP = {
-  chatGptTwentyAppUrl:
+  chatGptAppUrl:
     'https://chatgpt.com/apps/twenty/asdk_app_6a0ac8d7e28c8191a58ea65bb0ca3d5c',
   tooltipIds: {
     claudeInstallDisabled: 'mcp-claude-install-disabled',
@@ -10,8 +10,8 @@ export const MCP_SETUP = {
     value: 'Bearer <YOUR_API_KEY>',
   },
   server: {
-    name: 'twenty',
-    displayName: 'Twenty',
+    name: 'happy-crm',
+    displayName: 'Happy CRM',
   },
   clientDocsUrls: {
     augment: 'https://docs.augmentcode.com/setup-augment/mcp',

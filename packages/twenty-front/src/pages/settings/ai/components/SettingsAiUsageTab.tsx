@@ -1,55 +1,29 @@
-import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
-import { billingState } from '@/client-config/states/billingState';
 import { isClickHouseConfiguredState } from '@/client-config/states/isClickHouseConfiguredState';
+import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { SettingsBillingLabelValueItem } from '@/settings/billing/components/internal/SettingsBillingLabelValueItem';
 import { SubscriptionInfoContainer } from '@/settings/billing/components/SubscriptionInfoContainer';
-import { SettingsEnterpriseFeatureGateCard } from '@/settings/components/SettingsEnterpriseFeatureGateCard';
 import { UsageBreakdownPieSection } from '@/settings/usage/components/UsageBreakdownPieSection';
 import { UsageByUserTableSection } from '@/settings/usage/components/UsageByUserTableSection';
 import { UsageDailyChartSection } from '@/settings/usage/components/UsageDailyChartSection';
 import { UsageSectionSkeleton } from '@/settings/usage/components/UsageSectionSkeleton';
 import { AI_OPERATION_TYPES } from '@/settings/usage/constants/AiOperationTypes';
 import { useUsageAnalyticsData } from '@/settings/usage/hooks/useUsageAnalyticsData';
-import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { t } from '@lingui/core/macro';
 import { SettingsPath } from 'twenty-shared/types';
 import { getSettingsPath } from 'twenty-shared/utils';
-import { OrganizationAdornment } from '@/settings/enterprise/components/OrganizationAdornment';
 import { Section } from 'twenty-ui/components/layout';
 
 export const SettingsAiUsageTab = () => {
-  const currentWorkspace = useAtomStateValue(currentWorkspaceState);
-  const billing = useAtomStateValue(billingState);
-  const isBillingEnabled = billing?.isBillingEnabled ?? false;
-  const isClickHouseConfigured = useAtomStateValue(isClickHouseConfiguredState);
+  const isClickHouseConfigured = useAtomStateValue(
+    isClickHouseConfiguredState,
+  );
 
-  const hasEnterpriseAccess =
-    isBillingEnabled ||
-    currentWorkspace?.hasValidEnterpriseValidityToken === true;
-
-  const shouldSkipQuery = !hasEnterpriseAccess || !isClickHouseConfigured;
+  const shouldSkipQuery = !isClickHouseConfigured;
 
   const { analytics, isInitialLoading } = useUsageAnalyticsData({
     operationTypes: AI_OPERATION_TYPES,
     skip: shouldSkipQuery,
   });
-
-  if (!hasEnterpriseAccess) {
-    return (
-      <Section.Root>
-        <Section.Header
-          title={t`AI Usage`}
-          description={t`Track AI consumption across your workspace.`}
-          actions={<OrganizationAdornment />}
-        />
-        <SettingsEnterpriseFeatureGateCard
-          title={t`Organization feature`}
-          description={t`AI usage analytics is available with an Organization key.`}
-          buttonTitle={t`Activate`}
-        />
-      </Section.Root>
-    );
-  }
 
   if (!isClickHouseConfigured) {
     return (

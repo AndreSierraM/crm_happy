@@ -7,7 +7,6 @@ import { PermissionFlagType } from 'twenty-shared/constants';
 
 import { MetadataResolver } from 'src/engine/api/graphql/graphql-config/decorators/metadata-resolver.decorator';
 import { AuthGraphqlApiExceptionFilter } from 'src/engine/core-modules/auth/filters/auth-graphql-api-exception.filter';
-import { EnterpriseFeaturesEnabledGuard } from 'src/engine/core-modules/auth/guards/enterprise-features-enabled.guard';
 import { PreventNestToAutoLogGraphqlErrorsFilter } from 'src/engine/core-modules/graphql/filters/prevent-nest-to-auto-log-graphql-errors.filter';
 import { ResolverValidationPipe } from 'src/engine/core-modules/graphql/pipes/resolver-validation.pipe';
 import { DeleteSsoDTO } from 'src/engine/core-modules/sso/dtos/delete-sso.dto';
@@ -50,7 +49,6 @@ import { PermissionsGraphqlApiExceptionFilter } from 'src/engine/metadata-module
     application: true,
   }),
   SettingsPermissionGuard(PermissionFlagType.SECURITY),
-  EnterpriseFeaturesEnabledGuard,
 )
 export class SsoResolver {
   constructor(private readonly ssoService: SsoService) {}

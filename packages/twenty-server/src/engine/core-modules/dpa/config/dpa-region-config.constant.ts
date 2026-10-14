@@ -4,18 +4,14 @@ import { type DpaRegionConfig } from 'src/engine/core-modules/dpa/types/dpa.type
 export const DEFAULT_DPA_REGION: DpaRegion = DpaRegion.EU;
 
 const DPA_COMMON_VALUES = {
-  PROCESSOR_ENTITY: 'Twenty.com PBC',
+  PROCESSOR_ENTITY: 'TODO_LEGAL: Happy BPO (confirmar razón social)',
   PROCESSOR_LEGAL_FORM:
-    'a public benefit corporation under the laws of Delaware, USA',
-  // The Delaware registered office and the SF notices address must stay distinct.
-  PROCESSOR_ADDRESS:
-    'c/o National Registered Agents, Inc., 1209 Orange Street, Wilmington, Delaware 19801, USA. For notices: 2261 Market Street #5275, San Francisco, California 94114, USA',
-  EU_AFFILIATE_ENTITY: 'Twenty.com SAS',
-  EU_AFFILIATE_LEGAL_FORM:
-    'a société par actions simplifiée under the laws of France',
-  EU_AFFILIATE_ADDRESS: '9 Rue des Colonnes, 75002 Paris, France',
-  GOVERNING_LAW: 'the State of Delaware, USA',
-  DPO_NAME_AND_CONTACT: 'Stéphanie Joly, privacy@twenty.com',
+    'TODO_LEGAL: confirmar forma jurídica y jurisdicción (p. ej. S.A.S., Colombia)',
+  // TODO_LEGAL: confirmar domicilio legal del responsable.
+  PROCESSOR_ADDRESS: 'TODO_LEGAL: confirmar domicilio legal',
+  GOVERNING_LAW: 'TODO_LEGAL: confirmar ley aplicable (p. ej. Colombia)',
+  DPO_NAME_AND_CONTACT: 'TODO_LEGAL: confirmar responsable de privacidad y contacto',
+  PRIVACY_CONTACT: 'TODO_LEGAL: confirmar email de privacidad',
 };
 
 export const DPA_REGION_CONFIGS: Record<DpaRegion, DpaRegionConfig> = {
@@ -24,7 +20,7 @@ export const DPA_REGION_CONFIGS: Record<DpaRegion, DpaRegionConfig> = {
     sccSectionActive: true,
     values: {
       ...DPA_COMMON_VALUES,
-      HOSTING_REGION: 'EU (Frankfurt, Germany)',
+      HOSTING_REGION: 'EU hosting location designated in the Agreement',
     },
   },
   [DpaRegion.US]: {
@@ -32,14 +28,15 @@ export const DPA_REGION_CONFIGS: Record<DpaRegion, DpaRegionConfig> = {
     sccSectionActive: true,
     values: {
       ...DPA_COMMON_VALUES,
-      HOSTING_REGION: 'United States',
+      HOSTING_REGION: 'US hosting location designated in the Agreement',
     },
   },
 };
 
-export const TWENTY_PRESIGNED_SIGNATORY = {
-  name: 'Félix Malfait',
-  title: 'Chief Executive Officer',
+// TODO_LEGAL: reemplazar por el firmante real antes de cualquier firma.
+export const HAPPY_PRESIGNED_SIGNATORY = {
+  name: 'TODO_LEGAL: nombre del firmante',
+  title: 'TODO_LEGAL: cargo del firmante',
 };
 
 export const getDpaRegionConfig = (region: DpaRegion): DpaRegionConfig =>

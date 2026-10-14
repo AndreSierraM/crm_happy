@@ -1,5 +1,5 @@
 import {
-  TWENTY_PRESIGNED_SIGNATORY,
+  HAPPY_PRESIGNED_SIGNATORY,
   getDpaRegionConfig,
 } from 'src/engine/core-modules/dpa/config/dpa-region-config.constant';
 import { DPA_TEMPLATE_BLOCKS } from 'src/engine/core-modules/dpa/constants/dpa-template.constant';
@@ -35,7 +35,7 @@ const SUBPROCESSOR_BLOCKS: ResolvedDpaBlock[] = (
 }));
 
 const SELF_HOSTED_NOTICE =
-  'NOT A VALID AGREEMENT — SELF-HOSTED DEPLOYMENT. This Twenty instance is self-hosted. For self-hosted deployments Twenty does not host or process Customer Personal Data and is not the Processor, so this Data Processing Agreement does not apply. This copy is generated for reference only and does not constitute an executed agreement with Twenty.';
+  'NOT A VALID AGREEMENT — SELF-HOSTED DEPLOYMENT. This Happy CRM instance is self-hosted. For self-hosted deployments Happy does not host or process Customer Personal Data and is not the Processor, so this Data Processing Agreement does not apply. This copy is generated for reference only and does not constitute an executed agreement with Happy.';
 
 // Unknown fields are left untouched so they surface in the unresolved-merge-field test instead of vanishing silently.
 const fillMergeFields = (
@@ -60,13 +60,7 @@ const buildExecutionBlocks = (
       kind: 'signatureField',
       text: '',
       label: `Processor — ${values.PROCESSOR_ENTITY}`,
-      value: `Signed on behalf of ${values.PROCESSOR_ENTITY} (pre-signed by Twenty)\nName: ${TWENTY_PRESIGNED_SIGNATORY.name}\nTitle: ${TWENTY_PRESIGNED_SIGNATORY.title}`,
-    },
-    {
-      kind: 'signatureField',
-      text: '',
-      label: `EU Affiliate — ${values.EU_AFFILIATE_ENTITY}`,
-      value: `Signed on behalf of ${values.EU_AFFILIATE_ENTITY} (pre-signed by Twenty)\nName: ${TWENTY_PRESIGNED_SIGNATORY.name}\nTitle: ${TWENTY_PRESIGNED_SIGNATORY.title}`,
+      value: `Signed on behalf of ${values.PROCESSOR_ENTITY} (pre-signed by Happy)\nName: ${HAPPY_PRESIGNED_SIGNATORY.name}\nTitle: ${HAPPY_PRESIGNED_SIGNATORY.title}`,
     },
     {
       kind: 'signatureField',

@@ -2,7 +2,7 @@ import { isNonEmptyString } from '@sniptt/guards';
 
 // Frozen copy of the 2.46 workflow agent run spec, so later runtime changes do not
 // change what the command writes for steps paused before 2.46
-const WORKFLOW_BASE_SYSTEM_PROMPT = `You are executing as part of a workflow automation in Twenty CRM.
+const WORKFLOW_BASE_SYSTEM_PROMPT = `You are executing as part of a workflow automation in Happy CRM.
 
 Tool usage strategy:
 - Chain multiple tools to solve complex tasks

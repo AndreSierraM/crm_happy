@@ -1,75 +1,34 @@
 {
   "subprocessors": [
     {
-      "name": "Amazon Web Services",
+      "name": "TODO_LEGAL: AI model providers",
       "services": [
-        "Amazon Web Services (AWS) provides the cloud infrastructure on which the Twenty CRM runs — compute, managed databases, object storage, and encrypted backups. AWS is Twenty's primary hosting provider."
+        "TODO_LEGAL: list the AI model providers configured for the deployment that may process Customer Personal Data (e.g. via workspace-configured models)."
       ],
-      "processingLocations": ["DE"],
-      "processesPii": true,
-      "vendorUrl": "https://aws.amazon.com"
+      "processingLocations": [
+        "TODO_LEGAL"
+      ],
+      "processesPii": true
     },
     {
-      "name": "Anthropic",
+      "name": "TODO_LEGAL: email delivery provider",
       "services": [
-        "Anthropic provides large language models that power Twenty's optional AI features, such as drafting, summarization, and data enrichment."
+        "TODO_LEGAL: describe the provider used to send service emails that may contain Customer Personal Data."
       ],
-      "processingLocations": ["US"],
-      "processesPii": true,
-      "vendorUrl": "https://www.anthropic.com"
+      "processingLocations": [
+        "TODO_LEGAL"
+      ],
+      "processesPii": true
     },
     {
-      "name": "ClickHouse",
+      "name": "TODO_LEGAL: hosting infrastructure provider",
       "services": [
-        "ClickHouse provides the analytical database Twenty uses to store audit logs and power in-product analytics and reporting."
+        "TODO_LEGAL: describe compute, database and storage hosting for the self-hosted deployment."
       ],
-      "processingLocations": ["DE"],
-      "processesPii": true,
-      "vendorUrl": "https://clickhouse.com/"
-    },
-    {
-      "name": "Cloudflare",
-      "services": [
-        "Cloudflare provides Twenty's content delivery network, DNS, and web application firewall, securing and accelerating traffic to the service. It does not retain Customer Personal Data on a long-term basis."
+      "processingLocations": [
+        "TODO_LEGAL"
       ],
-      "processingLocations": ["US", "EU"],
-      "processesPii": false,
-      "vendorUrl": "https://www.cloudflare.com"
-    },
-    {
-      "name": "Google Cloud Platform",
-      "services": [
-        "Google Cloud Platform provides specific Google services that Twenty integrates, such as Maps and Google sign-in."
-      ],
-      "processingLocations": ["US", "EU"],
-      "processesPii": true,
-      "vendorUrl": "https://cloud.google.com"
-    },
-    {
-      "name": "Mistral",
-      "services": [
-        "Mistral AI provides large language models that power Twenty's optional AI features. The AI provider used depends on the model configured for the workspace."
-      ],
-      "processingLocations": [],
-      "processesPii": false
-    },
-    {
-      "name": "OpenAI",
-      "services": [
-        "OpenAI provides large language models that power Twenty's optional AI features. The AI provider used depends on the model configured for the workspace."
-      ],
-      "processingLocations": [],
-      "processesPii": false,
-      "vendorUrl": "https://openai.com"
-    },
-    {
-      "name": "Sentry",
-      "services": [
-        "Sentry provides application error and performance monitoring, helping Twenty detect, diagnose, and resolve issues in the service."
-      ],
-      "processingLocations": ["US", "EU"],
-      "processesPii": true,
-      "vendorUrl": "https://sentry.io"
+      "processesPii": true
     }
   ]
 }

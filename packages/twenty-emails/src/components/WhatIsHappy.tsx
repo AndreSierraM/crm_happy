@@ -2,14 +2,14 @@ import { type I18n } from '@lingui/core';
 import { MainText } from 'src/components/MainText';
 import { SubTitle } from 'src/components/SubTitle';
 
-type WhatIsTwentyProps = {
+type WhatIsHappyProps = {
   i18n: I18n;
 };
 
-export const WhatIsTwenty = ({ i18n }: WhatIsTwentyProps) => {
+export const WhatIsHappy = ({ i18n }: WhatIsHappyProps) => {
   return (
     <>
-      <SubTitle value={i18n._('What is Twenty?')} />
+      <SubTitle value={i18n._('What is Happy CRM?')} />
       <MainText>
         {i18n._(
           "It's a CRM, a software to help businesses manage their customer data and relationships efficiently.",

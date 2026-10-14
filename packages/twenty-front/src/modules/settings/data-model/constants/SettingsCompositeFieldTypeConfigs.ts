@@ -179,14 +179,14 @@ export const SETTINGS_COMPOSITE_FIELD_TYPE_CONFIGS = {
     ],
     exampleValues: [
       {
-        primaryLinkUrl: 'twenty.com',
+        primaryLinkUrl: 'happybpo.co',
         primaryLinkLabel: '',
-        secondaryLinks: [{ url: 'twenty.com', label: 'Twenty' }],
+        secondaryLinks: [{ url: 'happybpo.co', label: 'Happy BPO' }],
       },
       {
-        primaryLinkUrl: 'github.com/twentyhq/twenty',
-        primaryLinkLabel: 'Twenty Repo',
-        secondaryLinks: [{ url: 'twenty.com', label: '' }],
+        primaryLinkUrl: 'github.com/AndreSierraM/crm_happy',
+        primaryLinkLabel: 'Happy CRM Repo',
+        secondaryLinks: [{ url: 'happybpo.co', label: '' }],
       },
       {
         primaryLinkUrl: 'react.dev',

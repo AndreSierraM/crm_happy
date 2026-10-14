@@ -115,20 +115,20 @@ export const previewCommand = (
       next.notice = {
         type: 'preview',
         message:
-          'Preview only. This opens the recording in your Twenty workspace.',
+          'Preview only. This opens the recording in your Happy CRM workspace.',
       };
       break;
     case 'open-recordings':
       next.notice = {
         type: 'preview',
         message:
-          'Preview only. This opens all recordings in your Twenty workspace.',
+          'Preview only. This opens all recordings in your Happy CRM workspace.',
       };
       break;
     case 'open-calendar-settings':
       next.notice = {
         type: 'preview',
-        message: 'Preview only. This opens calendar settings in Twenty.',
+        message: 'Preview only. This opens calendar settings in Happy CRM.',
       };
       break;
     case 'refresh':

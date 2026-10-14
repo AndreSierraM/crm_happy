@@ -9,7 +9,7 @@ import { type RecordingConfiguration } from '../../shared/types/RecordingConfigu
 import { type RecordingResult } from '../../shared/types/RecordingResult';
 import { type CompanionState } from '../../shared/types/CompanionState';
 import { matchMeeting } from '../../shared/utils/matchMeeting';
-import { type TwentyClient } from './TwentyClient';
+import { type HappyClient } from './HappyClient';
 
 const RECALL_REGIONS = new Set([
   'https://eu-central-1.recall.ai',
@@ -41,7 +41,7 @@ export class RecordingController {
 
   constructor(
     private state: CompanionState,
-    private client: TwentyClient,
+    private client: HappyClient,
     private events: RecordingEvents,
   ) {}
 
@@ -404,7 +404,7 @@ export class RecordingController {
       )
         this.events.notify(
           'Call detected',
-          'Open Twenty to record this conversation.',
+          'Open Happy CRM to record this conversation.',
         );
     };
     listen('meeting-detected', ({ window }) => handleDetection(window, true));

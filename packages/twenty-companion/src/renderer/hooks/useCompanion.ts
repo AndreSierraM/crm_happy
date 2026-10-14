@@ -42,7 +42,7 @@ export const useCompanion = () => {
           setState((value) => ({
             ...value,
             error: {
-              message: i18n._('Could not connect to the app. Reopen Twenty.'),
+              message: i18n._('Could not connect to the app. Reopen Happy CRM.'),
             },
           }));
           setLoaded(true);

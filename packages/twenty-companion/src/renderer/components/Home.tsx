@@ -112,7 +112,7 @@ const UpcomingMeetings = ({ state, isPending, command }: ActionProps) => {
               state.calendarConnected
                 ? i18n._('Start a recording for an unscheduled conversation.')
                 : i18n._(
-                    'Connect a calendar in Twenty to see your upcoming meetings.',
+                    'Connect a calendar in Happy CRM to see your upcoming meetings.',
                   )
             }
           >
@@ -150,7 +150,7 @@ export const Home = ({ state, command, isPending }: ActionProps) => {
               disabled={isPending('open-recordings')}
               onClick={() => void command({ type: 'open-recordings' })}
             >
-              {i18n._('View all in Twenty')}
+              {i18n._('View all in Happy CRM')}
             </Button>
           }
         />

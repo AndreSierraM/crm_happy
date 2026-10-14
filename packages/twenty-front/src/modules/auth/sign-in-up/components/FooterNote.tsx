@@ -1,8 +1,8 @@
 import { styled } from '@linaria/react';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { useWorkspaceBypass } from '@/auth/sign-in-up/hooks/useWorkspaceBypass';
-import { getTwentyWebsiteUrl } from '@/auth/utils/getTwentyWebsiteUrl';
+import { getHappyWebsiteUrl } from '@/auth/utils/getHappyWebsiteUrl';
 import { useIsCurrentLocationOnAWorkspace } from '@/domain-manager/hooks/useIsCurrentLocationOnAWorkspace';
 import { ONBOARDING_CONTENT_BLOCK_WIDTH } from '@/onboarding/constants/OnboardingContentBlockWidth';
 import { themeCssVariables } from 'twenty-ui/theme';
@@ -65,7 +65,6 @@ export const FooterNote = ({
   secondaryAgreement = 'privacyPolicy',
 }: FooterNoteProps) => {
   const { isOnAWorkspace } = useIsCurrentLocationOnAWorkspace();
-  const { i18n } = useLingui();
 
   const { shouldOfferBypass, shouldUseBypass, enableBypass } =
     useWorkspaceBypass();
@@ -73,9 +72,9 @@ export const FooterNote = ({
   if (!isOnAWorkspace) {
     return (
       <StyledCopyContainer>
-        <Trans>By using Twenty, you agree to the</Trans>{' '}
+        <Trans>By using Happy CRM, you agree to the</Trans>{' '}
         <a
-          href={getTwentyWebsiteUrl(i18n.locale, 'terms')}
+          href={getHappyWebsiteUrl()}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -84,7 +83,7 @@ export const FooterNote = ({
         <Trans>and</Trans>{' '}
         {secondaryAgreement === 'dataProcessingAgreement' ? (
           <a
-            href="https://twenty.com/legal/dpa"
+            href={getHappyWebsiteUrl()}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -92,7 +91,7 @@ export const FooterNote = ({
           </a>
         ) : (
           <a
-            href={getTwentyWebsiteUrl(i18n.locale, 'privacy-policy')}
+            href={getHappyWebsiteUrl()}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -115,7 +114,7 @@ export const FooterNote = ({
         </>
       )}
       <a
-        href={getTwentyWebsiteUrl(i18n.locale, 'privacy-policy')}
+        href={getHappyWebsiteUrl()}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -123,7 +122,7 @@ export const FooterNote = ({
       </a>
       <StyledSeparator>•</StyledSeparator>
       <a
-        href={getTwentyWebsiteUrl(i18n.locale, 'terms')}
+        href={getHappyWebsiteUrl()}
         target="_blank"
         rel="noopener noreferrer"
       >

@@ -38,7 +38,7 @@ const Welcome = ({ state, isPending, command }: ActionProps) => {
               if (state.connection === 'connecting')
                 void command({ type: 'cancel-connect' });
             }}
-            placeholder="https://your-workspace.twenty.com"
+            placeholder="https://your-workspace.happy.local"
             type="url"
             required
             autoComplete="url"
@@ -53,7 +53,7 @@ const Welcome = ({ state, isPending, command }: ActionProps) => {
         >
           {state.connection === 'connecting'
             ? i18n._('Waiting for your browser…')
-            : i18n._('Connect to Twenty')}
+            : i18n._('Connect to Happy CRM')}
         </MainButton>
       </form>
     </section>
@@ -127,7 +127,7 @@ const OnboardingContent = ({ state, isPending, command }: ActionProps) => {
 export const Onboarding = (props: ActionProps) => {
   return (
     <div className="setup-frame">
-      <span className="setup-logo" role="img" aria-label="Twenty" />
+      <span className="setup-logo" role="img" aria-label="Happy CRM" />
       <div className="setup-container">
         <OnboardingContent {...props} />
       </div>

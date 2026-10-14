@@ -66,7 +66,7 @@ export const AppConnectionHeader = ({
   return (
     <StyledContainer>
       <StyledAppLogoTile>
-        <StyledAppLogo src={'/images/happy/logo.svg'} alt="" />
+        <StyledAppLogo src={'/images/happy/logo.png'} alt="" />
       </StyledAppLogoTile>
       <StyledLinkIconContainer aria-hidden>
         <IconRefresh size={theme.icon.size.md} stroke={theme.icon.stroke.lg} />

@@ -3,7 +3,7 @@ import { type CompanionState } from '../types/CompanionState';
 
 export const createInitialState = (): CompanionState => ({
   connection: 'disconnected',
-  serverUrl: 'https://api.twenty.com',
+  serverUrl: '',
   workspace: null,
   meetings: [],
   recordings: [],

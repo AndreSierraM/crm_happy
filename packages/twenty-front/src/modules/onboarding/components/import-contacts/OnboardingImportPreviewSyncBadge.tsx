@@ -49,7 +49,7 @@ const StyledDivider = styled.div`
   width: 1px;
 `;
 
-const StyledTwentyLogo = styled.img`
+const StyledHappyLogo = styled.img`
   border-radius: ${themeCssVariables.border.radius.xs};
   height: ${SYNC_BADGE_LOGO_SIZE}px;
   width: ${SYNC_BADGE_LOGO_SIZE}px;
@@ -69,7 +69,7 @@ export const OnboardingImportPreviewSyncBadge = () => {
           color={themeCssVariables.font.color.tertiary}
         />
       </StyledArrow>
-      <StyledTwentyLogo src="/images/happy/logo.svg" alt="" />
+      <StyledHappyLogo src="/images/happy/logo.png" alt="" />
     </StyledBadge>
   );
 };

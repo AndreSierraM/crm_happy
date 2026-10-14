@@ -34,7 +34,7 @@ export class SecureStore {
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
       throw new Error(
-        'Could not unlock your Twenty connection. Reconnect to Twenty.',
+        'Could not unlock your Happy CRM connection. Reconnect to Happy CRM.',
       );
     }
   }

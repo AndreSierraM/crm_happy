@@ -28,7 +28,7 @@ afterEach(async () => {
   );
 });
 
-describe('Twenty OAuth', () => {
+describe('Happy CRM OAuth', () => {
   it('links to the integration installation page on the discovered frontend', async () => {
     vi.stubGlobal(
       'fetch',
@@ -148,7 +148,7 @@ describe('Twenty OAuth', () => {
       expect(response.status).toBe(200);
       expect(response.headers.get('cache-control')).toBe('no-store');
       expect(await response.text()).toBe(
-        'Returning to Twenty… You can close this tab.',
+        'Returning to Happy CRM… You can close this tab.',
       );
     });
     expect(credentials.accessToken).toBe('access');

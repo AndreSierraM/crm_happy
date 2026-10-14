@@ -4,7 +4,6 @@ import { ADD_AI_PROVIDER } from '@/settings/admin-panel/ai/graphql/mutations/add
 import { GET_ADMIN_AI_MODELS } from '@/settings/admin-panel/ai/graphql/queries/getAdminAiModels';
 import { GET_AI_PROVIDERS } from '@/settings/admin-panel/ai/graphql/queries/getAiProviders';
 import { GET_MODELS_DEV_PROVIDERS } from '@/settings/admin-panel/ai/graphql/queries/getModelsDevProviders';
-import { useCustomAiProviderAccess } from '@/settings/admin-panel/ai/hooks/useCustomAiProviderAccess';
 import { type RawAiProviderConfig } from '@/settings/admin-panel/ai/types/RawAiProviderConfig';
 import { getProviderIcon } from '@/ai/utils/getProviderIcon';
 import { useApolloAdminClient } from '@/settings/admin-panel/apollo/hooks/useApolloAdminClient';
@@ -18,7 +17,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { isNonEmptyString } from '@sniptt/guards';
 import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { slugify } from 'transliteration';
 import { type AiSdkPackage, isDataResidency } from 'twenty-shared/ai';
 import { SettingsPath } from 'twenty-shared/types';
@@ -26,7 +25,6 @@ import { capitalize, getSettingsPath } from 'twenty-shared/utils';
 import { InlineBanner, useToast } from 'twenty-ui/components/feedback';
 import { Section } from 'twenty-ui/components/layout';
 import { IconPlus } from 'twenty-ui/icon';
-import { OrganizationAdornment } from '@/settings/enterprise/components/OrganizationAdornment';
 
 type ModelsDevProvider = { id: string; modelCount: number; npm: AiSdkPackage };
 
@@ -51,12 +49,6 @@ export const SettingsAdminNewAiProvider = () => {
     null,
   );
   const [isCustomMode, setIsCustomMode] = useState(false);
-  const {
-    hasAccess: hasCustomAiProviderAccess,
-    gateDescription: customAiProviderGateDescription,
-    tooltipContent: customAiProviderTooltipContent,
-  } = useCustomAiProviderAccess();
-
   const [addAiProvider] = useMutation(ADD_AI_PROVIDER, {
     client: apolloAdminClient,
   });
@@ -260,43 +252,18 @@ export const SettingsAdminNewAiProvider = () => {
           <SaveAndCancelButtons
             onCancel={() => navigate(AI_ADMIN_PATH)}
             isSaveDisabled={
-              isSubmitting || !hasSelected || !hasCustomAiProviderAccess
+              isSubmitting || !hasSelected
             }
             onSave={handleSave}
           />
         }
       >
         <SettingsPageContainer>
-          {!hasCustomAiProviderAccess && (
-            <InlineBanner
-              layout="compact"
-              status="error"
-              action={
-                <InlineBanner.Action
-                  href={getSettingsPath(SettingsPath.AdminPanelOrganization)}
-                  nativeButton={false}
-                  role="link"
-                  render={
-                    <Link
-                      to={getSettingsPath(SettingsPath.AdminPanelOrganization)}
-                    />
-                  }
-                >{t`Activate`}</InlineBanner.Action>
-              }
-            >
-              {customAiProviderGateDescription}
-            </InlineBanner>
-          )}
-
           <Section.Root>
             <Section.Header
               title={t`Provider`}
               description={t`Select a known provider or create a custom one`}
-              actions={
-                <OrganizationAdornment
-                  tooltipContent={customAiProviderTooltipContent}
-                />
-              }
+
             />
             <Select
               dropdownId="ai-provider-models-dev-select"

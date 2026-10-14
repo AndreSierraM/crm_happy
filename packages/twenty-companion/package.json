@@ -1,6 +1,6 @@
 {
   "name": "@twentyhq/companion",
-  "productName": "Twenty",
+  "productName": "Happy CRM",
   "version": "0.1.0",
   "private": true,
   "description": "See upcoming meetings, record calls, and open transcripts and summaries in your Twenty workspace.",

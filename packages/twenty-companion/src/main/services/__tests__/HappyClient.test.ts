@@ -1,7 +1,7 @@
 import { createDeferred } from '../../utils/createDeferred';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type Agenda } from '../../../shared/types/Agenda';
-import { TwentyClient } from '../TwentyClient';
+import { HappyClient } from '../HappyClient';
 import { DesktopRecorderUnavailableError } from '../../errors/DesktopRecorderUnavailableError';
 
 const fetchMock = vi.fn();
@@ -53,7 +53,7 @@ const discovery = (logo?: string) =>
 describe('cloud custom-domain connection', () => {
   it('does not save a new account when the recording backend is unavailable', async () => {
     discovery();
-    const client = new TwentyClient(store);
+    const client = new HappyClient(store);
     await client.restore();
     await expect(
       client.connect({ ...credentials, clientId: 'new-client' }),
@@ -72,7 +72,7 @@ describe('cloud custom-domain connection', () => {
   });
   it('resolves the workspace logo using Twenty image URLs', async () => {
     discovery('workspace-logo.png?token=signed-image-token');
-    const client = new TwentyClient(store);
+    const client = new HappyClient(store);
     await client.restore();
     await client.companion<Agenda>({ action: 'agenda' }).catch(() => undefined);
     expect(client.workspace?.logoUrl).toBe(
@@ -88,7 +88,7 @@ describe('cloud custom-domain connection', () => {
 
   it('ignores image URLs that cannot be loaded safely', async () => {
     discovery('https://user:password@example.com/logo.png');
-    const client = new TwentyClient(store);
+    const client = new HappyClient(store);
     await client.restore();
     await client.companion<Agenda>({ action: 'agenda' }).catch(() => undefined);
     expect(client.workspace).toEqual({ id: 'workspace-1', name: 'Twenty' });
@@ -96,7 +96,7 @@ describe('cloud custom-domain connection', () => {
 
   it('uses the workspace function domain and distinguishes a missing backend from failed login', async () => {
     discovery();
-    const client = new TwentyClient(store);
+    const client = new HappyClient(store);
     await client.restore();
     await expect(
       client.companion<Agenda>({ action: 'agenda' }),
@@ -120,7 +120,7 @@ describe('cloud custom-domain connection', () => {
         ? json({ publicFunctionDomain: 'withtwenty.com' })
         : json({}, 404),
     );
-    const client = new TwentyClient(store);
+    const client = new HappyClient(store);
     await client.restore();
     await expect(
       client.companion<Agenda>({ action: 'agenda' }),
@@ -133,11 +133,11 @@ describe('cloud custom-domain connection', () => {
         ? json({ publicFunctionDomain: 'withtwenty.com' })
         : json({ errors: [{ message: 'Unauthorized' }] }),
     );
-    const client = new TwentyClient(store);
+    const client = new HappyClient(store);
     await client.restore();
     await expect(
       client.companion<Agenda>({ action: 'agenda' }),
-    ).rejects.toThrow('Twenty could not load your workspace');
+    ).rejects.toThrow('Happy CRM could not load your workspace');
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
   it('returns the personal agenda once the backend is available', async () => {
@@ -153,7 +153,7 @@ describe('cloud custom-domain connection', () => {
           })
         : fallback?.(url),
     );
-    const client = new TwentyClient(store);
+    const client = new HappyClient(store);
     await client.restore();
     expect(await client.companion<Agenda>({ action: 'agenda' })).toEqual({
       workspace: { id: 'workspace-1', name: 'Twenty' },
@@ -180,7 +180,7 @@ it('does not restore a signed-out session when a token refresh finishes late', a
     ...credentials,
     expiresAt: 0,
   });
-  const client = new TwentyClient(store);
+  const client = new HappyClient(store);
   await client.restore();
   const request = client
     .companion<Agenda>({ action: 'agenda' })
@@ -197,7 +197,7 @@ it('does not restore a signed-out session when a token refresh finishes late', a
   expect(await request).toBeInstanceOf(Error);
   expect(store.writeCredentials).not.toHaveBeenCalled();
   await expect(client.companion<Agenda>({ action: 'agenda' })).rejects.toThrow(
-    'Connect your Twenty workspace',
+    'Connect your Happy CRM workspace',
   );
 });
 
@@ -225,7 +225,7 @@ it('clears credentials after an in-flight refresh write, preserving disk sign-ou
     writing.resolve();
     return finishWrite.promise;
   });
-  const client = new TwentyClient(store);
+  const client = new HappyClient(store);
   await client.restore();
   const request = client
     .companion<Agenda>({ action: 'agenda' })
@@ -262,7 +262,7 @@ it('accepts null timestamps while a recording is being prepared', async () => {
         })
       : fallback?.(url),
   );
-  const client = new TwentyClient(store);
+  const client = new HappyClient(store);
   await client.restore();
   expect(
     (await client.companion<Agenda>({ action: 'agenda' })).recordings[0],
@@ -277,7 +277,7 @@ it.each([401, 403, 500, 503])(
     fetchMock.mockImplementation(async (url: string) =>
       url.endsWith('/desktop') ? json({}, status) : fallback?.(url),
     );
-    const client = new TwentyClient(store);
+    const client = new HappyClient(store);
     await expect(client.connect(credentials)).rejects.toThrow(
       `Twenty returned ${status}`,
     );
@@ -295,7 +295,7 @@ it.each([
     if (url.endsWith('/desktop')) throw error;
     return fallback?.(url);
   });
-  const client = new TwentyClient(store);
+  const client = new HappyClient(store);
   await expect(client.connect(credentials)).rejects.toBe(error);
   expect(store.writeCredentials).not.toHaveBeenCalled();
 });
@@ -306,7 +306,7 @@ it('does not suggest reinstalling for an invalid configuration response', async 
   fetchMock.mockImplementation(async (url: string) =>
     url.endsWith('/desktop') ? json({}) : fallback?.(url),
   );
-  const error = await new TwentyClient(store)
+  const error = await new HappyClient(store)
     .connect(credentials)
     .catch((error: unknown) => error);
   expect(error).toBeInstanceOf(Error);
@@ -323,7 +323,7 @@ it('offers installation after sign-in when the backend route is missing', async 
       : fallback?.(url),
   );
   await expect(
-    new TwentyClient(store).connect(credentials),
+    new HappyClient(store).connect(credentials),
   ).rejects.toBeInstanceOf(DesktopRecorderUnavailableError);
   expect(store.writeCredentials).not.toHaveBeenCalled();
 });
@@ -345,7 +345,7 @@ it('reuses validated workspace discovery after saving a connection', async () =>
         )
       : fallback?.(url),
   );
-  const client = new TwentyClient(store);
+  const client = new HappyClient(store);
   await client.connect(credentials);
   expect(client.workspace?.logoUrl).toBe(
     'https://crm.twenty.com/files/logo.png',
@@ -367,7 +367,7 @@ it('preserves the current workspace when saving a replacement connection fails',
       ? json({ apiUrl: 'https://eu-central-1.recall.ai' })
       : fallback?.(url),
   );
-  const client = new TwentyClient(store);
+  const client = new HappyClient(store);
   await client.connect(credentials);
   const workspace = client.workspace;
   vi.mocked(store.writeCredentials).mockRejectedValueOnce(
@@ -396,7 +396,7 @@ it('aborts the configuration probe without saving credentials', async () => {
     });
   });
   await expect(
-    new TwentyClient(store).connect(credentials, controller.signal),
+    new HappyClient(store).connect(credentials, controller.signal),
   ).rejects.toMatchObject({ name: 'AbortError' });
   expect(store.writeCredentials).not.toHaveBeenCalled();
 });
@@ -409,7 +409,7 @@ it('restores the previous account when canceled during the credential write', as
       ? json({ apiUrl: 'https://eu-central-1.recall.ai' })
       : fallback?.(url),
   );
-  const client = new TwentyClient(store);
+  const client = new HappyClient(store);
   await client.connect(credentials);
   const controller = new AbortController();
   vi.mocked(store.writeCredentials).mockImplementationOnce(async () => {

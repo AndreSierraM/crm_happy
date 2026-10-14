@@ -9,7 +9,7 @@ afterEach(() => {
 });
 it('translates recording notifications without relying on their English wording', () => {
   i18n.load('fr', {
-    'Recording ended. Twenty is processing your conversation.':
+    'Recording ended. Happy CRM is processing your conversation.':
       'Enregistrement terminé.',
   });
   i18n.activate('fr');

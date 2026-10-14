@@ -35,7 +35,6 @@ import {
   PASSWORD_REGEX,
   hashPassword,
 } from 'src/engine/core-modules/auth/auth.util';
-import { MAX_WORKSPACES_WITHOUT_ENTERPRISE_KEY } from 'src/engine/core-modules/auth/constants/max-workspaces-without-organization-key.constants';
 import { getSignUpWithoutWorkspaceDecision } from 'src/engine/core-modules/auth/utils/get-sign-up-without-workspace-decision.util';
 import { hasProvisionedSignUpDestination } from 'src/engine/core-modules/auth/utils/has-provisioned-sign-up-destination.util';
 import { DEFAULT_DPA_REGION } from 'src/engine/core-modules/dpa/config/dpa-region-config.constant';
@@ -50,7 +49,6 @@ import {
   type SignInUpNewUserPayload,
 } from 'src/engine/core-modules/auth/types/sign-in-up.type';
 import { SubdomainManagerService } from 'src/engine/core-modules/domain/subdomain-manager/services/subdomain-manager.service';
-import { EnterprisePlanService } from 'src/engine/core-modules/enterprise/services/enterprise-plan.service';
 import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
 import { FileCorePictureService } from 'src/engine/core-modules/file/file-core-picture/services/file-core-picture.service';
 import { MetricsService } from 'src/engine/core-modules/metrics/metrics.service';
@@ -96,7 +94,6 @@ export class SignInUpService {
     private readonly fileCorePictureService: FileCorePictureService,
     private readonly fileStorageService: FileStorageService,
     private readonly exceptionHandlerService: ExceptionHandlerService,
-    private readonly enterprisePlanService: EnterprisePlanService,
     private readonly eventLogEmitterService: EventLogEmitterService,
     private readonly billingService: BillingService,
     @InjectDataSource()
@@ -532,23 +529,9 @@ export class SignInUpService {
   }
 
   private async assertWorkspaceCountWithinLimit(
-    workspaceCount: number,
+    _workspaceCount: number,
   ): Promise<void> {
-    if (this.enterprisePlanService.isValid()) {
-      return;
-    }
-
-    if (workspaceCount < MAX_WORKSPACES_WITHOUT_ENTERPRISE_KEY) {
-      return;
-    }
-
-    throw new AuthException(
-      `Cannot create more than ${MAX_WORKSPACES_WITHOUT_ENTERPRISE_KEY} workspaces without a valid enterprise key`,
-      AuthExceptionCode.FORBIDDEN_EXCEPTION,
-      {
-        userFriendlyMessage: msg`Workspace limit reached. A valid Organization key is required to create more workspaces.`,
-      },
-    );
+    return;
   }
 
   private async deleteInferredWorkspaceLogo({

@@ -113,7 +113,7 @@ export const previewState = (initial: CompanionState): CompanionState => {
   if (scenario === 'error') {
     state.connection = 'disconnected';
     state.error = {
-      message: 'Could not unlock your Twenty connection. Reconnect to Twenty.',
+      message: 'Could not unlock your Happy CRM connection. Reconnect to Happy CRM.',
     };
   }
   if (scenario === 'missing-integration') {

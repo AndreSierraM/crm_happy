@@ -19,12 +19,10 @@ describe('resolveDpa', () => {
     });
 
     expect(resolved.region).toBe('EU');
-    expect(resolved.values.PROCESSOR_ENTITY).toBe('Twenty.com PBC');
-    expect(resolved.values.PROCESSOR_LEGAL_FORM).toContain('Delaware');
-    expect(resolved.values.EU_AFFILIATE_ENTITY).toBe('Twenty.com SAS');
-    expect(resolved.values.EU_AFFILIATE_LEGAL_FORM).toContain('France');
-    expect(resolved.values.HOSTING_REGION).toContain('Frankfurt');
-    expect(resolved.values.GOVERNING_LAW).toBe('the State of Delaware, USA');
+    expect(resolved.values.PROCESSOR_ENTITY).toContain('TODO_LEGAL');
+    expect(resolved.values.PROCESSOR_LEGAL_FORM).toContain('TODO_LEGAL');
+    expect(resolved.values.HOSTING_REGION).toContain('EU hosting location');
+    expect(resolved.values.GOVERNING_LAW).toContain('TODO_LEGAL');
     expect(resolved.sccSectionActive).toBe(true);
     expect(resolved.templateVersion).toBe(DPA_TEMPLATE_VERSION);
   });
@@ -33,25 +31,20 @@ describe('resolveDpa', () => {
     const resolved = resolveDpa({ region: DpaRegion.US, mode: 'preview' });
 
     expect(resolved.region).toBe('US');
-    expect(resolved.values.PROCESSOR_ENTITY).toBe('Twenty.com PBC');
-    expect(resolved.values.PROCESSOR_LEGAL_FORM).toContain('Delaware');
-    expect(resolved.values.EU_AFFILIATE_ENTITY).toBe('Twenty.com SAS');
-    expect(resolved.values.HOSTING_REGION).toBe('United States');
+    expect(resolved.values.PROCESSOR_ENTITY).toContain('TODO_LEGAL');
+    expect(resolved.values.PROCESSOR_LEGAL_FORM).toContain('TODO_LEGAL');
+    expect(resolved.values.HOSTING_REGION).toBe('US hosting location designated in the Agreement');
     expect(resolved.sccSectionActive).toBe(true);
   });
 
-  it('keeps both Twenty entities and their roles independent of hosting region', () => {
+  it('keeps a single Happy processor with no EU affiliate independent of hosting region', () => {
     const eu = resolveDpa({ region: DpaRegion.EU, mode: 'preview' });
     const us = resolveDpa({ region: DpaRegion.US, mode: 'preview' });
 
     for (const resolved of [eu, us]) {
-      expect(resolved.blocks[0].text).toContain('between Twenty.com PBC (');
-      expect(resolved.blocks[0].text).toContain(
-        'Twenty.com SAS (“Twenty SAS” or “EU Affiliate”) joins this DPA',
-      );
-      expect(resolved.blocks[0].text).toContain(
-        'Twenty SAS does not replace Twenty PBC as the Processor',
-      );
+      expect(resolved.blocks[0].text).toContain('is the sole Processor');
+      expect(resolved.blocks[0].text).toContain('no EU affiliate party');
+      expect(resolved.blocks[0].text).not.toContain('EU Affiliate:');
     }
   });
 
@@ -110,20 +103,18 @@ describe('resolveDpa', () => {
 
     const processorField = signed.blocks.find(
       (b) =>
-        b.kind === 'signatureField' && b.label === 'Processor — Twenty.com PBC',
+        b.kind === 'signatureField' &&
+        b.label?.startsWith('Processor — '),
     );
     const euAffiliateField = signed.blocks.find(
       (b) =>
         b.kind === 'signatureField' &&
-        b.label === 'EU Affiliate — Twenty.com SAS',
+        (b.label ?? '').startsWith('EU Affiliate'),
     );
 
-    expect(processorField?.value).toContain(
-      'Signed on behalf of Twenty.com PBC',
-    );
-    expect(euAffiliateField?.value).toContain(
-      'Signed on behalf of Twenty.com SAS',
-    );
+    expect(processorField?.value).toContain('Signed on behalf of');
+    expect(processorField?.value).toContain('(pre-signed by Happy)');
+    expect(euAffiliateField).toBeUndefined();
   });
 
   it('marks self-hosted deployments as not a valid agreement', () => {
@@ -163,15 +154,15 @@ describe('resolveDpa', () => {
     expect(
       resolveDpa({ region: DpaRegion.EU, mode: 'preview' }).values
         .HOSTING_REGION,
-    ).toBe('EU (Frankfurt, Germany)');
+    ).toBe('EU hosting location designated in the Agreement');
     expect(
       resolveDpa({ region: DpaRegion.US, mode: 'preview' }).values
         .HOSTING_REGION,
-    ).toBe('United States');
+    ).toBe('US hosting location designated in the Agreement');
 
     // Template phrasing "in the {{HOSTING_REGION}}" must not double the article.
     expect(resolvedText(DpaRegion.EU, 'signed')).toContain(
-      'in the EU (Frankfurt, Germany)',
+      'in the EU hosting location designated in the Agreement',
     );
     expect(resolvedText(DpaRegion.EU, 'signed')).not.toMatch(/\bthe the\b/);
   });
@@ -196,11 +187,10 @@ describe('resolveDpa', () => {
     }
   });
 
-  it('renders the DPO name and contact', () => {
+  it('renders the TODO_LEGAL privacy contact provisionals', () => {
     const text = resolvedText(DpaRegion.EU, 'signed');
 
-    expect(text).toContain('Stéphanie Joly');
-    expect(text).toContain('privacy@twenty.com');
+    expect(text).toContain('TODO_LEGAL');
   });
 
   it('states the §7.1 hosting location per region without contradicting the deployment', () => {
@@ -214,26 +204,21 @@ describe('resolveDpa', () => {
     }
 
     expect(eu).toContain(
-      'hosted in data centers in the EU (Frankfurt, Germany) via Amazon Web Services (AWS)',
+      'hosted in data centers in the EU hosting location designated in the Agreement',
     );
     expect(us).toContain(
-      'hosted in data centers in the United States via Amazon Web Services (AWS)',
+      'hosted in data centers in the US hosting location designated in the Agreement',
     );
 
-    expect(us).not.toContain(
-      'stored in data centers located in the European Union (Frankfurt, Germany)',
-    );
+    expect(us).not.toContain('EU hosting location');
   });
 
-  it('identifies PBC as Processor and data importer and SAS as EU Affiliate in Annex A', () => {
+  it('identifies the Happy processor and data importer with no EU Affiliate in Annex A', () => {
     for (const region of [DpaRegion.EU, DpaRegion.US]) {
       const text = resolvedText(region, 'signed');
 
-      expect(text).toContain('Data Importer (Processor): Twenty.com PBC');
-      expect(text).toContain('EU Affiliate: Twenty.com SAS');
-      expect(text).toContain(
-        'without replacing Twenty.com PBC as Processor or data importer',
-      );
+      expect(text).toContain('Data Importer (Processor): TODO_LEGAL');
+      expect(text).not.toContain('EU Affiliate:');
     }
   });
 
@@ -247,10 +232,10 @@ describe('resolveDpa', () => {
     }
   });
 
-  it('states the SOC 2 Type II certification and does not claim ISO 27001', () => {
+  it('states no SOC 2 certification and does not claim ISO 27001', () => {
     const text = resolvedText(DpaRegion.EU, 'signed');
 
-    expect(text).toContain('SOC 2 Type II');
+    expect(text).toContain('does not currently maintain a SOC 2');
     expect(text).not.toContain('ISO 27001');
   });
 

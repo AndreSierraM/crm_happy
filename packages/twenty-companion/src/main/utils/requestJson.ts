@@ -1,4 +1,4 @@
-import { TwentyRequestError } from '../errors/TwentyRequestError';
+import { HappyRequestError } from '../errors/HappyRequestError';
 
 export const requestJson = async <TResponse = unknown>(
   url: string,
@@ -12,7 +12,7 @@ export const requestJson = async <TResponse = unknown>(
       : AbortSignal.timeout(30_000),
   });
   if (!response.ok) {
-    throw new TwentyRequestError(response.status, url);
+    throw new HappyRequestError(response.status, url);
   }
   return response.json();
 };

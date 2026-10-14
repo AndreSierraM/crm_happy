@@ -76,7 +76,7 @@ export const Settings = ({ state, isPending, command }: ActionProps) => (
           />
         }
         title={i18n._('Appearance')}
-        description={i18n._('Choose how Twenty looks on this computer.')}
+        description={i18n._('Choose how Happy CRM looks on this computer.')}
       >
         <SegmentedControl
           itemWidth="content"
@@ -108,7 +108,7 @@ export const Settings = ({ state, isPending, command }: ActionProps) => (
         }
         label={i18n._('Launch at login')}
         description={i18n._(
-          'Keep Twenty ready in the background when you sign in.',
+          'Keep Happy CRM ready in the background when you sign in.',
         )}
       />
       <SettingsToggle
@@ -257,7 +257,7 @@ export const Settings = ({ state, isPending, command }: ActionProps) => (
             />
           }
           title={i18n._('Calendar settings')}
-          description={i18n._('Manage your connected calendars in Twenty.')}
+          description={i18n._('Manage your connected calendars in Happy CRM.')}
         >
           <IconArrowUpRight
             size={THEME_COMMON.icon.size.md}

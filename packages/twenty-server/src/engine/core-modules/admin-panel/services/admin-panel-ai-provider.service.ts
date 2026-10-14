@@ -2,11 +2,6 @@
 
 import { Injectable } from '@nestjs/common';
 
-import { MAX_SEATS_WITHOUT_ENTERPRISE_KEY } from 'src/engine/core-modules/enterprise/constants/max-seats-without-organization-key.constant';
-import {
-    EnterpriseException,
-    EnterpriseExceptionCode,
-} from 'src/engine/core-modules/enterprise/enterprise.exception';
 import {
     type CustomAiProviderAccess,
     CustomAiProviderAccessService,
@@ -37,16 +32,7 @@ export class AdminPanelAiProviderService {
   }
 
   private async assertCustomAiProviderAccess(): Promise<void> {
-    const { hasAccess, seatCount } = await this.getCustomAiProviderAccess();
-
-    if (hasAccess) {
-      return;
-    }
-
-    throw new EnterpriseException(
-      `Custom AI providers require a valid enterprise key above ${MAX_SEATS_WITHOUT_ENTERPRISE_KEY} seats (this instance has ${seatCount})`,
-      EnterpriseExceptionCode.ENTERPRISE_SEAT_THRESHOLD_EXCEEDED,
-    );
+    return;
   }
 
   getMaskedProviders(): Record<string, unknown> {

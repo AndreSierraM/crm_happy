@@ -11,7 +11,7 @@ export const noticeMessage = (notice: CompanionNotice): string => {
         { title: notice.title },
       );
     case 'recording-finished':
-      return i18n._('Recording ended. Twenty is processing your conversation.');
+      return i18n._('Recording ended. Happy CRM is processing your conversation.');
     case 'network-lost':
       return i18n._(
         'Network connection lost. Stopping this recording. Reconnect before starting a new recording.',

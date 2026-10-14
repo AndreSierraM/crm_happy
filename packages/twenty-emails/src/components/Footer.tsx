@@ -18,18 +18,18 @@ export const Footer = ({ i18n }: FooterProps) => {
         <Column>
           <ShadowText>
             <Link
-              href="https://twenty.com/"
+              href="https://happybpo.co/"
               value={i18n._('Website')}
-              aria-label={i18n._("Visit Twenty's website")}
+              aria-label={i18n._("Visit Happy BPO's website")}
             />
           </ShadowText>
         </Column>
         <Column>
           <ShadowText>
             <Link
-              href="https://github.com/twentyhq/twenty"
+              href="https://github.com/AndreSierraM/crm_happy"
               value={i18n._('Github')}
-              aria-label={i18n._("Visit Twenty's GitHub repository")}
+              aria-label={i18n._("Visit Happy CRM's GitHub repository")}
             />
           </ShadowText>
         </Column>
@@ -38,7 +38,7 @@ export const Footer = ({ i18n }: FooterProps) => {
             <Link
               href="https://docs.twenty.com/getting-started/introduction"
               value={i18n._('User guide')}
-              aria-label={i18n._("Read Twenty's user guide")}
+              aria-label={i18n._("Read Happy CRM's user guide")}
             />
           </ShadowText>
         </Column>
@@ -47,16 +47,16 @@ export const Footer = ({ i18n }: FooterProps) => {
             <Link
               href="https://docs.twenty.com/"
               value={i18n._('Developers')}
-              aria-label={i18n._("Visit Twenty's developer documentation")}
+              aria-label={i18n._("Visit Happy CRM's developer documentation")}
             />
           </ShadowText>
         </Column>
       </Row>
       <ShadowText>
         <>
-          {i18n._('Twenty.com, Public Benefit Corporation')}
+          {i18n._('Happy CRM')}
           <br />
-          {i18n._('San Francisco / Paris')}
+          {i18n._('Colombia')}
         </>
       </ShadowText>
     </Container>

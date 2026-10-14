@@ -6,12 +6,10 @@ export type DpaMergeField =
   | 'PROCESSOR_ENTITY'
   | 'PROCESSOR_LEGAL_FORM'
   | 'PROCESSOR_ADDRESS'
-  | 'EU_AFFILIATE_ENTITY'
-  | 'EU_AFFILIATE_LEGAL_FORM'
-  | 'EU_AFFILIATE_ADDRESS'
   | 'HOSTING_REGION'
   | 'GOVERNING_LAW'
-  | 'DPO_NAME_AND_CONTACT';
+  | 'DPO_NAME_AND_CONTACT'
+  | 'PRIVACY_CONTACT';
 
 // SCC transfer sections (7.2–7.5) are NEVER branched out of the document; only
 // field values change per region. This key exists so the conditional-clause
@@ -49,7 +47,7 @@ export type DpaResolveContext = {
   signatory?: DpaSignatory;
   // Passed in (never read from the clock here) so the resolver stays pure.
   executedAt?: string;
-  // Twenty is not the Processor for self-hosted deployments, so the resolved
+  // Happy is not the Processor for self-hosted deployments, so the resolved
   // document carries a prominent "not a valid agreement" notice.
   isSelfHosted?: boolean;
 };

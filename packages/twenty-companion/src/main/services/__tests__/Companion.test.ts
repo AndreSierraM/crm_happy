@@ -81,8 +81,8 @@ vi.mock('../../utils/connectOAuth', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../utils/connectOAuth')>()),
   connectOAuth: mocks.oauth,
 }));
-vi.mock('../TwentyClient', () => ({
-  TwentyClient: class {
+vi.mock('../HappyClient', () => ({
+  HappyClient: class {
     workspaceUrl = 'https://acme.twenty.com';
     restore = mocks.restore;
     connect = mocks.connect;

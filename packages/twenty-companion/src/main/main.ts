@@ -127,12 +127,12 @@ const assertSender = (event: Electron.IpcMainInvokeEvent) => {
 
 // Keep existing connections and settings when the visible app name changes.
 if (!SMOKE)
-  app.setPath('userData', join(app.getPath('appData'), 'Twenty Companion'));
+  app.setPath('userData', join(app.getPath('appData'), 'Happy CRM Companion'));
 
 if (!app.requestSingleInstanceLock()) app.quit();
 else {
   // Electron binds macOS encryption to this name before ready.
-  app.setName('Twenty Companion');
+  app.setName('Happy CRM Companion');
   if (SMOKE) {
     const directory = mkdtempSync(join(tmpdir(), 'twenty-companion-smoke-'));
     app.setPath('userData', directory);
@@ -152,7 +152,7 @@ else {
   void app
     .whenReady()
     .then(async () => {
-      app.setName('Twenty');
+      app.setName('Happy CRM');
       await app.dock?.show();
       const webPreferences = {
         preload: join(__dirname, 'preload.cjs'),
@@ -166,7 +166,7 @@ else {
         minWidth: 760,
         minHeight: 580,
         show: false,
-        title: 'Twenty',
+        title: 'Happy CRM',
         titleBarStyle:
           process.platform === 'darwin' ? 'hiddenInset' : 'default',
         trafficLightPosition: { x: 18, y: 25 },
@@ -193,7 +193,7 @@ else {
       if (trayImage.isEmpty()) throw new Error('The menu bar icon is missing.');
       if (process.platform === 'darwin') trayImage.setTemplateImage(true);
       tray = new Tray(trayImage, '8fd0b192-e117-4987-8b6f-98ef6f6f0c35');
-      tray.setToolTip('Twenty');
+      tray.setToolTip('Happy CRM');
       if (process.platform === 'win32')
         tray.on('click', () => tray.popUpContextMenu());
       const updateApplicationMenu = (shortcut: string) =>
@@ -252,8 +252,8 @@ else {
                   ' · ' +
                   recording.title
               : next
-                ? 'Twenty · ' + next.title
-                : 'Twenty',
+                ? 'Happy CRM · ' + next.title
+                : 'Happy CRM',
           );
         },
         () => showApp(),
@@ -342,7 +342,7 @@ else {
         return;
       }
       dialog.showErrorBox(
-        'Twenty could not start',
+        'Happy CRM could not start',
         error instanceof Error
           ? error.message
           : 'Restart the app to try again.',
@@ -380,7 +380,7 @@ else {
           const { response } = await dialog.showMessageBox(mainWindow, {
             type: 'question',
             message: 'Stop recording and quit?',
-            detail: 'The recording will finish processing in Twenty.',
+            detail: 'The recording will finish processing in Happy CRM.',
             buttons: ['Keep recording', 'Stop and quit'],
             cancelId: 0,
             defaultId: 0,
@@ -393,7 +393,7 @@ else {
         setImmediate(() => app.quit());
       } catch (error) {
         dialog.showErrorBox(
-          'Twenty could not finish quitting',
+          'Happy CRM could not finish quitting',
           error instanceof Error ? error.message : 'Try quitting again.',
         );
       } finally {

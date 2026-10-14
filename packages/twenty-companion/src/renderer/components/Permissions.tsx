@@ -94,7 +94,7 @@ export const Permissions = ({
       <SetupHeading
         title={i18n._('Set up recording')}
         description={i18n._(
-          'Enable audio access to transcribe your conversations and save them in Twenty.',
+          'Enable audio access to transcribe your conversations and save them in Happy CRM.',
         )}
       />
       <PermissionChecklist

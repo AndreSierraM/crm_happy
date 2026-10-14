@@ -171,8 +171,8 @@ export const useNavigationMenuItemAddOptions = ({
           onClick: () => {
             addItem({
               type: NavigationMenuItemType.LINK,
-              name: 'Twenty',
-              link: 'https://twenty.com',
+              name: 'Happy BPO',
+              link: 'https://happybpo.co',
               color: DEFAULT_NAVIGATION_MENU_ITEM_COLOR_LINK,
             });
           },

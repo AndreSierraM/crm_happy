@@ -7,9 +7,7 @@ import { v4 } from 'uuid';
 
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { type FlatApplication } from 'src/engine/core-modules/application/types/flat-application.type';
-import { BillingEntitlementKey } from 'src/engine/core-modules/billing/enums/billing-entitlement-key.enum';
-import { BillingService } from 'src/engine/core-modules/billing/services/billing.service';
-import { EnterprisePlanService } from 'src/engine/core-modules/enterprise/services/enterprise-plan.service';
+
 import { WorkspaceManyOrAllFlatEntityMapsCacheService } from 'src/engine/metadata-modules/flat-entity/services/workspace-many-or-all-flat-entity-maps-cache.service';
 import { type AllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/all-flat-entity-maps.type';
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
@@ -47,9 +45,7 @@ export class RowLevelPermissionPredicateService {
     private readonly workspaceMigrationValidateBuildAndRunService: WorkspaceMigrationValidateBuildAndRunService,
     private readonly flatEntityMapsCacheService: WorkspaceManyOrAllFlatEntityMapsCacheService,
     private readonly workspaceCacheService: WorkspaceCacheService,
-    private readonly billingService: BillingService,
     private readonly applicationService: ApplicationService,
-    private readonly enterprisePlanService: EnterprisePlanService,
   ) {}
 
   async findByWorkspaceId(
@@ -487,16 +483,8 @@ export class RowLevelPermissionPredicateService {
     ]);
   }
 
-  async hasRowLevelPermissionFeature(workspaceId: string): Promise<boolean> {
-    const hasValidEnterprisePlan = this.enterprisePlanService.isValid();
-
-    const isRowLevelPermissionEnabled =
-      await this.billingService.hasEntitlement(
-        workspaceId,
-        BillingEntitlementKey.RLS,
-      );
-
-    return hasValidEnterprisePlan && isRowLevelPermissionEnabled;
+  async hasRowLevelPermissionFeature(_workspaceId: string): Promise<boolean> {
+    return true;
   }
 
   private async hasRowLevelPermissionFeatureOrThrow(workspaceId: string) {

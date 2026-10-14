@@ -8,8 +8,8 @@ export const WorkspaceIcon = ({
 }) => (
   <span aria-hidden="true" className="workspace-avatar">
     <Avatar
-      src={workspace?.logoUrl || './twenty.svg'}
-      name={workspace?.name ?? 'Twenty'}
+      src={workspace?.logoUrl || './happy.png'}
+      name={workspace?.name ?? 'Happy CRM'}
       size="lg"
       shape="square"
     />

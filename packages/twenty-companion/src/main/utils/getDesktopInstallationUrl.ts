@@ -10,7 +10,7 @@ export const getDesktopInstallationUrl = async (
     `${serverUrl}/.well-known/oauth-authorization-server`,
   );
   if (discovery.issuer !== serverUrl)
-    throw new Error('Twenty returned a different OAuth issuer.');
+    throw new Error('Happy CRM returned a different OAuth issuer.');
   const frontendUrl = validateServerUrl(
     new URL(discovery.authorization_endpoint).origin,
   );

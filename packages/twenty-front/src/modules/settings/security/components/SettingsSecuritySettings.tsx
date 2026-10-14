@@ -2,7 +2,6 @@ import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { authProvidersState } from '@/client-config/states/authProvidersState';
 import { isClickHouseConfiguredState } from '@/client-config/states/isClickHouseConfiguredState';
 import { isMultiWorkspaceEnabledState } from '@/client-config/states/isMultiWorkspaceEnabledState';
-import { SettingsEnterpriseFeatureGateCard } from '@/settings/components/SettingsEnterpriseFeatureGateCard';
 import { SettingsOptionCardContentButton } from '@/settings/components/SettingsOptions/SettingsOptionCardContentButton';
 import { SettingsOptionCardContentCounter } from '@/settings/components/SettingsOptions/SettingsOptionCardContentCounter';
 import { SettingsRoleDefaultRole } from '@/settings/roles/components/SettingsRolesDefaultRole';
@@ -26,12 +25,7 @@ import { IconClockHour8, IconHistory, IconTrash } from 'twenty-ui/icon';
 import { Card } from 'twenty-ui/primitives/surfaces';
 import { themeCssVariables } from 'twenty-ui/theme';
 import { useDebouncedCallback } from 'use-debounce';
-import {
-  BillingEntitlementKey,
-  UpdateWorkspaceDocument,
-} from '~/generated-metadata/graphql';
-import { OrganizationAdornment } from '@/settings/enterprise/components/OrganizationAdornment';
-
+import { UpdateWorkspaceDocument } from '~/generated-metadata/graphql';
 import { getToastOptionsFromError } from '@/error-handler/utils/getToastOptionsFromError';
 
 const StyledContainer = styled.div`
@@ -142,14 +136,7 @@ export const SettingsSecuritySettings = () => {
     !hasDirectAuthEnabled &&
     hasBypassProviderAvailable;
 
-  const hasEnterpriseAccess =
-    currentWorkspace?.hasValidEnterpriseValidityToken === true;
-  const isEventLogsEnabled = hasEnterpriseAccess && isClickHouseConfigured;
-  const hasSsoEntitlement =
-    currentWorkspace?.billingEntitlements?.some(
-      (entitlement) =>
-        entitlement.key === BillingEntitlementKey.SSO && entitlement.value,
-    ) === true;
+  const isEventLogsEnabled = isClickHouseConfigured;
 
   return (
     <>
@@ -160,17 +147,8 @@ export const SettingsSecuritySettings = () => {
             <Section.Header
               title={t`SSO`}
               description={t`Configure an SSO connection`}
-              actions={<OrganizationAdornment />}
             />
-            {hasSsoEntitlement ? (
-              <SettingsSsoIdentitiesProvidersListCard />
-            ) : (
-              <SettingsEnterpriseFeatureGateCard
-                title={t`Organization feature`}
-                description={t`Upgrade to Organization to configure SSO.`}
-                buttonTitle={t`Activate`}
-              />
-            )}
+            <SettingsSsoIdentitiesProvidersListCard />
           </Section.Root>
         </StyledSectionContainer>
 
@@ -218,10 +196,8 @@ export const SettingsSecuritySettings = () => {
           <Section.Header
             title={t`Audit Logs`}
             description={t`Configure how long audit logs are retained`}
-            actions={<OrganizationAdornment />}
           />
-          {hasEnterpriseAccess ? (
-            <Card.Root rounded>
+          <Card.Root rounded>
               {isEventLogsEnabled ? (
                 <SettingsOptionCardContentCounter
                   Icon={IconClockHour8}
@@ -241,13 +217,6 @@ export const SettingsSecuritySettings = () => {
                 />
               )}
             </Card.Root>
-          ) : (
-            <SettingsEnterpriseFeatureGateCard
-              title={t`Organization feature`}
-              description={t`Upgrade to Organization to access audit logs.`}
-              buttonTitle={t`Activate`}
-            />
-          )}
         </Section.Root>
         <Section.Root>
           <Section.Header

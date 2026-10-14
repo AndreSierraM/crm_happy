@@ -32,9 +32,7 @@ import { BillingPriceService } from 'src/engine/core-modules/billing/services/bi
 import { StripeCustomerService } from 'src/engine/core-modules/billing/stripe/services/stripe-customer.service';
 import { StripeSubscriptionScheduleService } from 'src/engine/core-modules/billing/stripe/services/stripe-subscription-schedule.service';
 import { StripeSubscriptionService } from 'src/engine/core-modules/billing/stripe/services/stripe-subscription.service';
-import { isEntitlementActive } from 'src/engine/core-modules/billing/utils/is-entitlement-active.util';
 import { resolveBillingPeriodBoundaryUpdate } from 'src/engine/core-modules/billing/utils/resolve-billing-period-boundary-update.util';
-import { EnterprisePlanService } from 'src/engine/core-modules/enterprise/services/enterprise-plan.service';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import { UsageLimitQuotaService } from 'src/engine/core-modules/usage-limit/services/usage-limit-quota.service';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
@@ -65,7 +63,6 @@ export class BillingSubscriptionService {
     private readonly stripeSubscriptionScheduleService: StripeSubscriptionScheduleService,
     @InjectWorkspaceScopedRepository(BillingCustomerEntity)
     private readonly billingCustomerRepository: WorkspaceScopedRepository<BillingCustomerEntity>,
-    private readonly enterprisePlanService: EnterprisePlanService,
     private readonly workspaceCacheService: WorkspaceCacheService,
     private readonly usageLimitQuotaService: UsageLimitQuotaService,
   ) {}
@@ -225,24 +222,11 @@ export class BillingSubscriptionService {
   }
 
   async getWorkspaceEntitlements(
-    workspaceId: string,
+    _workspaceId: string,
   ): Promise<BillingEntitlementDTO[]> {
-    const isBillingEnabled = this.twentyConfigService.get('IS_BILLING_ENABLED');
-    const hasValidEnterprisePlan = this.enterprisePlanService.isValid();
-
-    const { billingEntitlements } = isBillingEnabled
-      ? await this.workspaceCacheService.getOrRecompute(workspaceId, [
-          'billingEntitlements',
-        ])
-      : { billingEntitlements: {} };
-
     return Object.values(BillingEntitlementKey).map((key) => ({
       key,
-      value: isEntitlementActive({
-        hasValidEnterprisePlan,
-        isBillingEnabled,
-        stripeEntitlementValue: billingEntitlements[key] ?? false,
-      }),
+      value: true,
     }));
   }
 
@@ -259,22 +243,10 @@ export class BillingSubscriptionService {
   }
 
   async getWorkspaceEntitlementValue(
-    workspaceId: string,
-    key: BillingEntitlementKey,
+    _workspaceId: string,
+    _key: BillingEntitlementKey,
   ): Promise<boolean> {
-    const hasValidEnterprisePlan = this.enterprisePlanService.isValid();
-    const isBillingEnabled = this.twentyConfigService.get('IS_BILLING_ENABLED');
-
-    const stripeEntitlementValue =
-      hasValidEnterprisePlan && isBillingEnabled
-        ? await this.getWorkspaceEntitlementByKey(workspaceId, key)
-        : false;
-
-    return isEntitlementActive({
-      hasValidEnterprisePlan,
-      isBillingEnabled,
-      stripeEntitlementValue,
-    });
+    return true;
   }
 
   async endTrialPeriod(workspace: WorkspaceEntity) {

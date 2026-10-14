@@ -59,7 +59,7 @@ try {
     name: 'Twenty',
     executableName: 'Twenty',
     appBundleId: 'com.twenty.companion',
-    icon: join(process.cwd(), 'assets/twenty.icns'),
+    icon: join(process.cwd(), 'assets/happy.icns'),
     platform: 'darwin',
     electronVersion: manifest.devDependencies.electron,
     arch: 'arm64',

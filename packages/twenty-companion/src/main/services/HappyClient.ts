@@ -4,7 +4,7 @@ import { type Credentials } from '../types/Credentials';
 import { refreshCredentials } from '../utils/refreshCredentials';
 import { requestJson } from '../utils/requestJson';
 import { validateServerUrl } from '../utils/validateServerUrl';
-import { TwentyRequestError } from '../errors/TwentyRequestError';
+import { HappyRequestError } from '../errors/HappyRequestError';
 import { DesktopRecorderUnavailableError } from '../errors/DesktopRecorderUnavailableError';
 import { type RecordingConfiguration } from '../../shared/types/RecordingConfiguration';
 import { type Agenda } from '../../shared/types/Agenda';
@@ -30,7 +30,7 @@ const resolveImageUrl = (
   }
 };
 
-export class TwentyClient {
+export class HappyClient {
   private credentials: Credentials | null = null;
   private context: ConnectionContext | null = null;
   get workspaceUrl() {
@@ -82,7 +82,7 @@ export class TwentyClient {
       );
       validateServerUrl(configuration.apiUrl);
     } catch (error) {
-      if (error instanceof TwentyRequestError && error.status === 404)
+      if (error instanceof HappyRequestError && error.status === 404)
         throw new DesktopRecorderUnavailableError(credentials.serverUrl);
       throw error;
     }
@@ -149,7 +149,7 @@ export class TwentyClient {
   async companion<TResponse>(body: object): Promise<TResponse> {
     const connectionVersion = this.connectionVersion;
     if (!this.credentials)
-      throw new Error('Connect your Twenty workspace first.');
+      throw new Error('Connect your Happy CRM workspace first.');
     if (this.credentials.expiresAt < Date.now() + 60_000) {
       if (!this.refreshing) {
         const refreshing = this.refresh().finally(() => {
@@ -160,7 +160,7 @@ export class TwentyClient {
       await this.refreshing;
     }
     if (!this.credentials || connectionVersion !== this.connectionVersion)
-      throw new Error('Reconnect your Twenty workspace.');
+      throw new Error('Reconnect your Happy CRM workspace.');
     if (!this.context) {
       const context = await this.discoverEndpoint(this.credentials);
       if (connectionVersion === this.connectionVersion) this.context = context;
@@ -170,7 +170,7 @@ export class TwentyClient {
       !this.credentials ||
       connectionVersion !== this.connectionVersion
     )
-      throw new Error('Reconnect your Twenty workspace.');
+      throw new Error('Reconnect your Happy CRM workspace.');
     const serverUrl = this.credentials.serverUrl;
     try {
       const response = await requestJson<TResponse>(this.context.endpoint, {
@@ -185,7 +185,7 @@ export class TwentyClient {
         throw new Error('Your workspace connection changed. Try again.');
       return response;
     } catch (error) {
-      if (error instanceof TwentyRequestError && error.status === 404) {
+      if (error instanceof HappyRequestError && error.status === 404) {
         throw new DesktopRecorderUnavailableError(serverUrl);
       }
       throw error;
@@ -227,7 +227,7 @@ export class TwentyClient {
     ]);
     if (metadata.errors?.length) {
       throw new Error(
-        'Twenty could not load your workspace. Try refreshing, or reconnect in Settings if this continues.',
+        'Happy CRM could not load your workspace. Try refreshing, or reconnect in Settings if this continues.',
       );
     }
     const { publicFunctionDomain } = configuration;

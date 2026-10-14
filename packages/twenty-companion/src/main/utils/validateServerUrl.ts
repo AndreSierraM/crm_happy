@@ -10,7 +10,7 @@ export const validateServerUrl = (value: string): string => {
     url.pathname !== '/'
   ) {
     throw new Error(
-      'Enter your Twenty workspace URL, using HTTPS or localhost.',
+      'Enter your Happy CRM workspace URL, using HTTPS or localhost.',
     );
   }
   return url.origin;

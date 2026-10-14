@@ -36,8 +36,6 @@ import { logConsoleHeightState } from '@/log-console/states/logConsoleHeightStat
 import { logConsoleSelectedLogState } from '@/log-console/states/logConsoleSelectedLogState';
 import { type LogConsoleSource } from '@/log-console/types/LogConsoleSource';
 import { SettingsEmptyPlaceholder } from '@/settings/components/SettingsEmptyPlaceholder';
-import { SettingsEnterpriseFeatureGateCard } from '@/settings/components/SettingsEnterpriseFeatureGateCard';
-import { SETTINGS_CONTENT_MAX_WIDTH } from '@/settings/constants/SettingsContentMaxWidth';
 import { APP_HEADER_HEIGHT } from '@/ui/layout/constants/AppHeaderHeight';
 import { RootStackingContextZIndices } from '@/ui/layout/constants/RootStackingContextZIndices';
 import { TabList } from '@/ui/layout/tab-list/components/TabList';
@@ -50,8 +48,6 @@ import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/use
 import { useAtomState } from '@/ui/utilities/state/jotai/hooks/useAtomState';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { useSetAtomState } from '@/ui/utilities/state/jotai/hooks/useSetAtomState';
-import { checkIfBillingEntitlementIsEnabledOnWorkspace } from '@/workspace/utils/checkIfBillingEntitlementIsEnabledOnWorkspace';
-import { BillingEntitlementKey } from '~/generated-metadata/graphql';
 
 const LOG_CONSOLE_HEIGHT_CSS_VARIABLE = '--log-console-height';
 
@@ -225,14 +221,6 @@ const subscribeToWindowResize = (onWindowResize: () => void) => {
 
 const getWindowHeight = () => window.innerHeight;
 
-const StyledUpgradeCardContainer = styled.div`
-  box-sizing: border-box;
-  margin: auto;
-  max-width: ${SETTINGS_CONTENT_MAX_WIDTH}px;
-  padding: 0 ${themeCssVariables.spacing[8]};
-  width: 100%;
-`;
-
 const StyledDetailPanelWrapper = styled.div<{
   detailPanelWidth: number;
   isOpen: boolean;
@@ -385,13 +373,7 @@ export const LogConsole = () => {
   const panelHeight =
     !isExiting && displayedLayout.isFullScreen ? '100%' : spacerHeight;
 
-  const hasAuditLogsEntitlement = checkIfBillingEntitlementIsEnabledOnWorkspace(
-    BillingEntitlementKey.AUDIT_LOGS,
-    currentWorkspace,
-  );
-
-  const isSourceLocked = (source: LogConsoleSource) =>
-    source.requiresAuditLogs && !hasAuditLogsEntitlement;
+  const isSourceLocked = (_source: LogConsoleSource) => false;
 
   const sources = [
     ...LOG_CONSOLE_SOURCES.filter((source) => !isSourceLocked(source)),
@@ -573,18 +555,6 @@ export const LogConsole = () => {
         <SettingsEmptyPlaceholder>
           {t`Logs require ClickHouse to be configured. Please contact your administrator.`}
         </SettingsEmptyPlaceholder>
-      );
-    }
-
-    if (isSourceLocked(activeSource)) {
-      return (
-        <StyledUpgradeCardContainer>
-          <SettingsEnterpriseFeatureGateCard
-            title={t`Upgrade to access audit logs`}
-            description={t`Record changes and app logs are available on your current plan. Other log types require an Organization subscription.`}
-            buttonTitle={t`Upgrade`}
-          />
-        </StyledUpgradeCardContainer>
       );
     }
 

@@ -2,7 +2,7 @@ import { i18n } from '@lingui/core';
 
 export const recordingLabel = (status: string) =>
   ({
-    COMPLETED: i18n._('Saved to Twenty'),
+    COMPLETED: i18n._('Saved to Happy CRM'),
     PROCESSING: i18n._('Processing'),
     FAILED: i18n._('Recording failed'),
     RECORDING: i18n._('Recording'),

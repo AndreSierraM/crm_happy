@@ -17,10 +17,10 @@ export const connectOAuth = async (
     { signal },
   );
   if (discovery.issuer !== serverUrl)
-    throw new Error('Twenty returned a different OAuth issuer.');
+    throw new Error('Happy CRM returned a different OAuth issuer.');
   if (!discovery.cli_client_id)
     throw new Error(
-      'This Twenty server does not support CLI sign-in. Update Twenty to connect.',
+      'This Happy CRM server does not support CLI sign-in. Update Happy CRM to connect.',
     );
   const clientId = discovery.cli_client_id;
   const authorizationEndpoint = new URL(discovery.authorization_endpoint);
@@ -57,7 +57,7 @@ export const connectOAuth = async (
       url.searchParams.get('iss') !== discovery.issuer
     ) {
       response.writeHead(400).end('Invalid authorization issuer.');
-      rejectCode(new Error('Twenty returned a different OAuth issuer.'));
+      rejectCode(new Error('Happy CRM returned a different OAuth issuer.'));
       return;
     }
     const code = url.searchParams.get('code');
@@ -68,11 +68,11 @@ export const connectOAuth = async (
       })
       .end(
         code
-          ? 'Returning to Twenty… You can close this tab.'
-          : 'Connection canceled. Return to Twenty.',
+          ? 'Returning to Happy CRM… You can close this tab.'
+          : 'Connection canceled. Return to Happy CRM.',
       );
     if (code) resolveCode(code);
-    else rejectCode(new Error('Twenty connection was canceled.'));
+    else rejectCode(new Error('Happy CRM connection was canceled.'));
   });
   await new Promise<void>((resolve, reject) => {
     server.once('error', reject);

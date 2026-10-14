@@ -16,15 +16,13 @@ const buildResolvedWithConditionalBlock = (
   title: 'Test DPA',
   sccSectionActive,
   values: {
-    PROCESSOR_ENTITY: 'Twenty.com PBC',
+    PROCESSOR_ENTITY: 'TODO_LEGAL processor',
     PROCESSOR_LEGAL_FORM: 'x',
     PROCESSOR_ADDRESS: 'x',
-    EU_AFFILIATE_ENTITY: 'Twenty.com SAS',
-    EU_AFFILIATE_LEGAL_FORM: 'x',
-    EU_AFFILIATE_ADDRESS: 'x',
     HOSTING_REGION: 'x',
     GOVERNING_LAW: 'x',
     DPO_NAME_AND_CONTACT: 'x',
+    PRIVACY_CONTACT: 'x',
   },
   blocks: [
     { kind: 'heading', text: 'Always Present' },
@@ -43,8 +41,8 @@ describe('renderDpaToHtml', () => {
   it('renders the title and last-updated line', () => {
     const html = renderDpaToHtml(resolveDpa(baseContext));
 
-    expect(html).toContain('Twenty Data Processing Agreement (DPA)');
-    expect(html).toContain('Last Updated: August 2026');
+    expect(html).toContain('Happy CRM Data Processing Agreement (DPA)');
+    expect(html).toContain('Last Updated: October 2026');
   });
 
   it('contains no unresolved {{ }} merge fields in the output', () => {
@@ -77,7 +75,7 @@ describe('renderDpaToHtml', () => {
     expect(html).toContain('&lt;script&gt;');
   });
 
-  it('renders the executed signatory and both Twenty entities in signed mode', () => {
+  it('renders the executed signatory and the single Happy processor in signed mode', () => {
     const html = renderDpaToHtml(
       resolveDpa({
         region: DpaRegion.EU,
@@ -90,8 +88,8 @@ describe('renderDpaToHtml', () => {
 
     expect(html).toContain('Acme GmbH');
     expect(html).toContain('Jane Doe');
-    expect(html).toContain('Twenty.com PBC');
-    expect(html).toContain('Twenty.com SAS');
+    expect(html).toContain('TODO_LEGAL: Happy BPO');
+    expect(html).not.toContain('EU Affiliate:');
   });
 
   it('renders a clean cloud DPA: no merge tokens, drafting notes, placeholders, or self-hosted banner', () => {
@@ -118,7 +116,8 @@ describe('renderDpaToHtml', () => {
       expect(html).not.toContain(forbidden);
     }
 
-    expect(html).toContain('Stéphanie Joly');
+    // Entity values are TODO_LEGAL provisionals until legal review.
+    expect(html).toContain('TODO_LEGAL');
     expect(
       html.match(/7\.1 Data Hosting and Localization:/g) ?? [],
     ).toHaveLength(1);

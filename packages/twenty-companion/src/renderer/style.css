@@ -224,10 +224,10 @@ p {
   inset: 0;
   background: var(--t-font-color-primary);
   opacity: var(--onboarding-logo-opacity);
-  mask: url('./assets/twenty-mark.svg') center / contain no-repeat;
+  mask: url('./assets/happy-logo.png') center / contain no-repeat;
 }
 .light .setup-logo::before {
-  background: url('./assets/twenty-logo.svg') center / contain no-repeat;
+  background: url('./assets/happy-logo.png') center / contain no-repeat;
   opacity: 1;
   mask: none;
 }

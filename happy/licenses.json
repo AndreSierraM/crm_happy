@@ -1,1 +1,28 @@
-{"licenses": []}
+{
+  "licenses": [
+    {
+      "v": 1,
+      "id": "9e0fa3dc-2912-463d-90be-89997038bcb6",
+      "client": "happy-internal",
+      "edition": "enterprise",
+      "maxUsers": 500,
+      "maxWorkspaces": 100,
+      "iat": 1791576819,
+      "exp": 1823112819,
+      "key": "HAPPY-eyJ2IjoxLCJpZCI6IjllMGZhM2RjLTI5MTItNDYzZC05MGJlLTg5OTk3MDM4YmNiNiIsImNsaWVudCI6ImhhcHB5LWludGVybmFsIiwiZWRpdGlvbiI6ImVudGVycHJpc2UiLCJtYXhVc2VycyI6NTAwLCJtYXhXb3Jrc3BhY2VzIjoxMDAsImlhdCI6MTc5MTU3NjgxOSwiZXhwIjoxODIzMTEyODE5fQ.dbef9460f6dfbf802d45e68a75ae6124a142de4fac01ac5bacf12af0a012ae27",
+      "revoked": false
+    },
+    {
+      "v": 1,
+      "id": "83976603-4904-479b-916a-af82e33b8ed8",
+      "client": "happy-internal",
+      "edition": "enterprise",
+      "maxUsers": 500,
+      "maxWorkspaces": 100,
+      "iat": 1791576825,
+      "exp": 1823112825,
+      "key": "HAPPY-eyJ2IjoxLCJpZCI6IjgzOTc2NjAzLTQ5MDQtNDc5Yi05MTZhLWFmODJlMzNiOGVkOCIsImNsaWVudCI6ImhhcHB5LWludGVybmFsIiwiZWRpdGlvbiI6ImVudGVycHJpc2UiLCJtYXhVc2VycyI6NTAwLCJtYXhXb3Jrc3BhY2VzIjoxMDAsImlhdCI6MTc5MTU3NjgyNSwiZXhwIjoxODIzMTEyODI1fQ.b92889a86f2711c16a69c533fcca9f57393a425d76bdc0c9f420765360d940a2",
+      "revoked": false
+    }
+  ]
+}

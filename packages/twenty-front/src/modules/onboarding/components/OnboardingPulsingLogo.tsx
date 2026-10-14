@@ -23,5 +23,5 @@ const StyledLogo = styled.img`
 `;
 
 export const OnboardingPulsingLogo = () => (
-  <StyledLogo src="/images/happy/logo.svg" alt="" />
+  <StyledLogo src="/images/happy/logo.png" alt="" />
 );

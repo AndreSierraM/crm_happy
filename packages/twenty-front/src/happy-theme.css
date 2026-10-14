@@ -1,14 +1,15 @@
-/* Happy CRM accent overrides. Import AFTER twenty-ui theme css in index.tsx:
+/* Happy CRM accent overrides (Happy BPO brand: blue #5271FF family).
+   Import AFTER twenty-ui theme css in index.tsx:
    import './happy-theme.css';
    Safe: only overrides accent + link variables, no layout changes. */
 .light {
-  --t-accent-primary: color(display-p3 0.961 0.773 0.094);
-  --t-accent-secondary: color(display-p3 0.961 0.773 0.094);
-  --t-accent-tertiary: color(display-p3 0.996 0.949 0.831);
-  --t-accent-quaternary: color(display-p3 1 0.984 0.941);
+  --t-accent-primary: color(display-p3 0.322 0.443 1);
+  --t-accent-secondary: color(display-p3 0.322 0.443 1);
+  --t-accent-tertiary: color(display-p3 0.863 0.894 1);
+  --t-accent-quaternary: color(display-p3 0.941 0.953 1);
 }
 
 .dark {
-  --t-accent-primary: color(display-p3 0.961 0.773 0.094);
-  --t-accent-secondary: color(display-p3 0.961 0.773 0.094);
+  --t-accent-primary: color(display-p3 0.482 0.565 1);
+  --t-accent-secondary: color(display-p3 0.482 0.565 1);
 }

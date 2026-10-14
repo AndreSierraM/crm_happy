@@ -20,7 +20,7 @@ export const RecordingList = ({ state, isPending, command }: ActionProps) => {
           className="recording-row"
           key={recording.id}
           disabled={isPending('open-recording')}
-          title={i18n._('Open in Twenty')}
+          title={i18n._('Open in Happy CRM')}
           onClick={() =>
             void command({ type: 'open-recording', recordingId: recording.id })
           }
@@ -66,7 +66,7 @@ export const RecordingList = ({ state, isPending, command }: ActionProps) => {
     >
       <p>
         {i18n._(
-          'Your recorded conversations will appear here and in your Twenty workspace.',
+          'Your recorded conversations will appear here and in your Happy CRM workspace.',
         )}
       </p>
     </Empty>

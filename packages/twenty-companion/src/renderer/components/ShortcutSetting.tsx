@@ -26,7 +26,7 @@ export const ShortcutSetting = ({ state, isPending, command }: ActionProps) => {
           ? i18n._(
               'Press Control, Option / Alt, or Command with a key. Escape cancels.',
             )
-          : i18n._('Open Twenty from anywhere on your computer.')
+          : i18n._('Open Happy CRM from anywhere on your computer.')
       }
     >
       <div className="button-group shortcut-actions">

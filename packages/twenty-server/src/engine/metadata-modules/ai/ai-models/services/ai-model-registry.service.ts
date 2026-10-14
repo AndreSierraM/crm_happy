@@ -13,7 +13,6 @@ import {
   parseAiModelVariantId,
 } from 'twenty-shared/ai';
 
-import { MAX_SEATS_WITHOUT_ENTERPRISE_KEY } from 'src/engine/core-modules/enterprise/constants/max-seats-without-organization-key.constant';
 import { CustomAiProviderAccessService } from 'src/engine/core-modules/enterprise/services/custom-ai-provider-access.service';
 import { ConfigVariablesGroup } from 'src/engine/core-modules/twenty-config/enums/config-variables-group.enum';
 import { ConfigGroupHashService } from 'src/engine/core-modules/twenty-config/services/config-group-hash.service';
@@ -660,7 +659,7 @@ export class AiModelRegistryService {
       return message;
     }
 
-    return `${message}. Custom AI providers require a valid enterprise key above ${MAX_SEATS_WITHOUT_ENTERPRISE_KEY} seats.`;
+    return message;
   }
 
   private createDefaultConfigForCustomModel(

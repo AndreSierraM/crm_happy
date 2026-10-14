@@ -56,7 +56,7 @@ const StyledRightSide = styled(StyledSide)`
 `;
 
 const StyledLogo = styled.div`
-  background-image: url('/images/happy/logo.svg');
+  background-image: url('/images/happy/logo.png');
   background-size: cover;
   height: ${themeCssVariables.spacing[6]};
   opacity: 0.4;
