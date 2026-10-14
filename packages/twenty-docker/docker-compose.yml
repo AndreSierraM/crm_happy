@@ -14,7 +14,17 @@ services:
       context: ../..
       dockerfile: packages/twenty-docker/twenty/Dockerfile
       target: twenty
+      args:
+        # Topes de heap en build (ver Dockerfile). Defaults para host chico
+        # compartido; se sobreescriben en el Environment de Dokploy.
+        YARN_FOCUS_MEM: ${YARN_FOCUS_MEM:-2048}
+        SERVER_BUILD_MEM: ${SERVER_BUILD_MEM:-3072}
+        FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-4096}
     image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
+    # Guardarraíl en runtime: el server observado usa ~770MB; el límite evita
+    # que un pico se lleve al resto de apps del host. Vigilar con docker stats.
+    mem_limit: 1536m
+    mem_reservation: 768m
     ports:
       - "${HOST_PORT:-3100}:3000"
     volumes:
@@ -60,6 +70,8 @@ services:
 
   worker:
     image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
+    mem_limit: 1024m
+    mem_reservation: 512m
     volumes:
       - server-local-data:/app/packages/twenty-server/.local-storage
     command: ["yarn", "worker:prod"]

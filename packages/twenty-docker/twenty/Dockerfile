@@ -1,8 +1,16 @@
 # ===========================================================================
 # Dependency stages
 # ===========================================================================
+# Build-time memory budget for small hosts (Dokploy builds on this server).
+# Override with --build-arg or compose build.args. Defaults fit a ~7GB box
+# shared with other apps; raise them on CI/desktops for faster builds.
+ARG YARN_FOCUS_MEM=2048
+ARG SERVER_BUILD_MEM=3072
+ARG FRONT_BUILD_MEM=4096
 
 FROM node:24.19.0-alpine3.23@sha256:244cc2b53f46f9e876304391d17682b0ddae9ac33491f4857e25e35a36ba7995 AS front-deps
+
+ARG YARN_FOCUS_MEM
 
 WORKDIR /app
 
@@ -17,10 +25,15 @@ COPY ./packages/twenty-front-component-renderer/package.json /app/packages/twent
 COPY ./packages/twenty-sdk/package.json /app/packages/twenty-sdk/
 COPY ./packages/twenty-client-sdk/package.json /app/packages/twenty-client-sdk/
 
-RUN yarn workspaces focus crm_happy twenty-front twenty-front-component-renderer twenty-ui twenty-shared twenty-sdk twenty-client-sdk && yarn cache clean && npx nx reset
+RUN NODE_OPTIONS="--max-old-space-size=${YARN_FOCUS_MEM}" yarn workspaces focus crm_happy twenty-front twenty-front-component-renderer twenty-ui twenty-shared twenty-sdk twenty-client-sdk && yarn cache clean && npx nx reset
 
 
-FROM node:24.19.0-alpine3.23@sha256:244cc2b53f46f9e876304391d17682b0ddae9ac33491f4857e25e35a36ba7995 AS server-deps
+# Serialized after front-deps on purpose: BuildKit runs independent stages
+# in parallel, which doubles peak RAM/IO (two yarn fetches at once) and
+# starves small shared hosts. Chaining keeps one heavy step at a time.
+FROM front-deps AS server-deps
+
+ARG YARN_FOCUS_MEM
 
 WORKDIR /app
 
@@ -35,10 +48,12 @@ COPY ./packages/twenty-shared/package.json /app/packages/twenty-shared/
 COPY ./packages/twenty-client-sdk/package.json /app/packages/twenty-client-sdk/
 COPY ./packages/twenty-oxlint-rules/package.json /app/packages/twenty-oxlint-rules/
 
-RUN yarn workspaces focus crm_happy twenty-server twenty-emails twenty-shared twenty-client-sdk && yarn cache clean && npx nx reset
+RUN NODE_OPTIONS="--max-old-space-size=${YARN_FOCUS_MEM}" yarn workspaces focus crm_happy twenty-server twenty-emails twenty-shared twenty-client-sdk && yarn cache clean && npx nx reset
 
 
 FROM server-deps AS twenty-server-build
+
+ARG SERVER_BUILD_MEM
 
 COPY ./packages/twenty-emails /app/packages/twenty-emails
 COPY ./packages/twenty-shared /app/packages/twenty-shared
@@ -50,17 +65,24 @@ RUN npx nx run twenty-server:lingui:extract && \
     npx nx run twenty-emails:lingui:extract && \
     npx nx run twenty-emails:lingui:compile
 
-RUN npx nx run twenty-server:build
+# NX_DAEMON=false avoids a background daemon holding RAM inside the build;
+# the cache mount (persisted on the builder) reuses unchanged task outputs
+# across deploys instead of recompiling everything.
+RUN --mount=type=cache,target=/app/.nx-cache,sharing=locked \
+    NX_DAEMON=false NX_PARALLEL=1 NX_CACHE_DIRECTORY=/app/.nx-cache NODE_OPTIONS="--max-old-space-size=${SERVER_BUILD_MEM}" \
+    npx nx run twenty-server:build
 
 # Clean server build output (type declarations and compiled tests are not needed at runtime;
 # source maps are kept because twenty-infra extracts them from the image for Sentry uploads)
 RUN find /app/packages/twenty-server/dist -name '*.d.ts' -delete \
  && rm -rf /app/packages/twenty-server/dist/packages/twenty-server/test
 
-RUN yarn workspaces focus --production twenty-emails twenty-shared twenty-client-sdk twenty-server
+RUN NODE_OPTIONS="--max-old-space-size=${SERVER_BUILD_MEM}" yarn workspaces focus --production twenty-emails twenty-shared twenty-client-sdk twenty-server
 
 
 FROM front-deps AS twenty-front-build
+
+ARG FRONT_BUILD_MEM
 
 COPY ./packages/twenty-front /app/packages/twenty-front
 COPY ./packages/twenty-front-component-renderer /app/packages/twenty-front-component-renderer
@@ -73,10 +95,13 @@ RUN npx nx run twenty-front:lingui:extract && \
 # To skip the memory-intensive frontend build, pre-build on the host:
 #   npx nx build twenty-front
 # The check below will use packages/twenty-front/build/ if it already exists.
-RUN if [ -d /app/packages/twenty-front/build ]; then \
+# Heap capped for small shared hosts (was 8192); override via build arg.
+RUN --mount=type=cache,target=/app/.nx-cache,sharing=locked \
+    if [ -d /app/packages/twenty-front/build ]; then \
       echo "Using pre-built frontend from host"; \
     else \
-      NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front; \
+      NX_DAEMON=false NX_PARALLEL=1 NX_CACHE_DIRECTORY=/app/.nx-cache NODE_OPTIONS="--max-old-space-size=${FRONT_BUILD_MEM}" \
+      npx nx build twenty-front; \
     fi
 
 
@@ -132,7 +157,7 @@ COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-emails/dist /a
 COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-client-sdk/package.json /app/packages/twenty-client-sdk/
 COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-client-sdk/dist /app/packages/twenty-client-sdk/dist
 
-LABEL org.opencontainers.image.source=https://github.com/twentyhq/twenty
+LABEL org.opencontainers.image.source=https://github.com/AndreSierraM/crm_happy
 LABEL org.opencontainers.image.description="Twenty server image (no frontend)."
 
 # Remove unused, unpatchable components the scanner flags (none are executed at
@@ -318,7 +343,7 @@ ENV PG_DATABASE_URL=postgres://twenty:twenty@localhost:5432/default \
 EXPOSE 2020
 VOLUME ["/data/postgres", "/data/clickhouse", "/app/packages/twenty-server/.local-storage"]
 
-LABEL org.opencontainers.image.source=https://github.com/twentyhq/twenty
+LABEL org.opencontainers.image.source=https://github.com/AndreSierraM/crm_happy
 LABEL org.opencontainers.image.description="All-in-one Twenty image for local development and SDK usage. Includes PostgreSQL, Redis, ClickHouse, server, and worker."
 
 ENTRYPOINT ["/init"]

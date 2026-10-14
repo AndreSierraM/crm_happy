@@ -3,3 +3,13 @@
 **/node_modules
 .nx/cache
 packages/twenty-server/.env
+# Nunca se copian a la imagen; excluirlos achica el contexto que Dokploy
+# empaqueta en el servidor en cada deploy.
+packages/twenty-docs
+packages/twenty-website
+packages/twenty-apps
+packages/twenty-e2e-testing
+happy
+.github
+.vscode
+.claude
