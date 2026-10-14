@@ -14,8 +14,9 @@
 #
 # Dokploy con Postgres/Redis externos (los datos de prod viven ahí):
 #   composePath = packages/twenty-docker/docker-compose.dokploy.yml
-#   (ese overlay incluye este archivo, une server/worker a dokploy-network
-#   y exige PG_DATABASE_URL / REDIS_URL del Environment de Dokploy).
+#   (archivo STANDALONE: solo server/worker, sin db/redis internos;
+#   no usa `include` porque el compose de Dokploy predates v2.24 y no
+#   soporta `!reset`/`!override` para quitar servicios heredados).
 #
 # Desarrollo local: NO usar este archivo. Usar docker-compose.dev.yml
 # (infra db+redis) + `yarn start` desde el código fuente.

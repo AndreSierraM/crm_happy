@@ -1,37 +1,127 @@
-# Happy CRM — overlay de PRODUCCIÓN para Dokploy.
-# Incluye el compose de prod autocontenido (docker-compose.yml) y lo adapta a
-# Dokploy con Postgres/Redis EXTERNOS (los datos de prod viven ahí):
-#  - server/worker se unen a la red externa dokploy-network para resolver los
-#    hostnames de las bases de Dokploy por DNS interno;
-#  - PG_DATABASE_URL / REDIS_URL del Environment de Dokploy son obligatorios
-#    (fallo temprano y explícito si faltan).
-#  - db/redis internos también arrancan (el `depends_on` de la base los exige)
-#    pero quedan idle: ningún tráfico va a ellos. Es el costo de no usar
-#    sintaxis moderna (`!reset`/`profiles`) que el compose de Dokploy no soporta.
+# Happy CRM — compose STANDALONE de PRODUCCIÓN para Dokploy.
+# Solo server + worker. NO incluye db/redis internos: Postgres y Redis son
+# EXTERNOS (los datos de prod viven en las bases de Dokploy).
+#
+# Es standalone a propósito (sin `include` del docker-compose.yml base):
+# el compose de Dokploy es anterior a v2.24 y no soporta `!reset`/`!override`
+# ni `required: false`, así que con overlay era imposible quitar los
+# servicios db/redis y sus `depends_on` — se creaban contenedores internos
+# inútiles en cada deploy. Este archivo es la única fuente para Dokploy.
 #
 # En Dokploy: composePath = packages/twenty-docker/docker-compose.dokploy.yml
-# y HOST_PORT=3100 en el Environment (el mapeo de puertos se hereda de la base;
-# redefinirlo aquí duplicaría la entrada porque compose fusiona las listas).
-# `name` se repite aquí: con `include`, el nombre del archivo incluido se ignora.
+# Environment obligatorio:
+#   HOST_PORT=3100
+#   PG_DATABASE_URL=postgres://user:pass@host:puerto/db   (base externa)
+#   REDIS_URL=redis://host:puerto                          (redis externo)
+#   SERVER_URL, APP_SECRET/ENCRYPTION_KEY, STORAGE_*, EMAIL_*, HAPPY_* ...
+# server/worker van a la red externa dokploy-network para resolver por DNS
+# interno los hostnames de las bases de Dokploy.
 name: crm_happy
-
-include:
-  - ./docker-compose.yml
 
 services:
   server:
+    build:
+      context: ../..
+      dockerfile: packages/twenty-docker/twenty/Dockerfile
+      target: twenty
+      args:
+        # Topes de heap en build (ver Dockerfile). Defaults para host chico
+        # compartido; se sobreescriben en el Environment de Dokploy.
+        FOCUS_NODE_MEM: ${FOCUS_NODE_MEM:-2048}
+        SERVER_BUILD_MEM: ${SERVER_BUILD_MEM:-3072}
+        FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-4096}
+    image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
+    # Guardarraíl en runtime: el server observado usa ~770MB; el límite evita
+    # que un pico se lleve al resto de apps del host. Vigilar con docker stats.
+    mem_limit: 1536m
+    mem_reservation: 768m
+    ports:
+      - "${HOST_PORT:-3000}:3000"
+    volumes:
+      - server-local-data:/app/packages/twenty-server/.local-storage
     environment:
+      NODE_ENV: production
+      NODE_PORT: 3000
+      # Sin estas dos el deploy falla temprano y explícito: no hay db/redis
+      # internos a los que caer.
       PG_DATABASE_URL: ${PG_DATABASE_URL:?PG_DATABASE_URL debe venir del Environment de Dokploy (Postgres externo)}
+      SERVER_URL: ${SERVER_URL}
       REDIS_URL: ${REDIS_URL:?REDIS_URL debe venir del Environment de Dokploy (Redis externo)}
+      REDIS_CACHE_PREFIX: ${REDIS_CACHE_PREFIX:-}
+      DISABLE_DB_MIGRATIONS: ${DISABLE_DB_MIGRATIONS}
+      DISABLE_CRON_JOBS_REGISTRATION: ${DISABLE_CRON_JOBS_REGISTRATION}
+      STORAGE_TYPE: ${STORAGE_TYPE}
+      STORAGE_S3_REGION: ${STORAGE_S3_REGION}
+      STORAGE_S3_NAME: ${STORAGE_S3_NAME}
+      STORAGE_S3_ENDPOINT: ${STORAGE_S3_ENDPOINT}
+      STORAGE_S3_ACCESS_KEY_ID: ${STORAGE_S3_ACCESS_KEY_ID}
+      STORAGE_S3_SECRET_ACCESS_KEY: ${STORAGE_S3_SECRET_ACCESS_KEY}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      FALLBACK_ENCRYPTION_KEY: ${FALLBACK_ENCRYPTION_KEY}
+      APP_SECRET: ${APP_SECRET:-}
+      IS_BILLING_ENABLED: ${IS_BILLING_ENABLED:-false}
+      HAPPY_EDITION: ${HAPPY_EDITION:-community}
+      HAPPY_LICENSE_KEY: ${HAPPY_LICENSE_KEY}
+      HAPPY_LICENSE_SECRET: ${HAPPY_LICENSE_SECRET}
+      HAPPY_MAX_USERS: ${HAPPY_MAX_USERS:-50}
+      HAPPY_MAX_WORKSPACES: ${HAPPY_MAX_WORKSPACES:-10}
+      EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME}
+      EMAIL_DRIVER: ${EMAIL_DRIVER}
+      EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
+      EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
+      EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
+      EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
     networks:
       - dokploy-network
+    healthcheck:
+      test: curl --fail http://localhost:3000/healthz
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: always
 
   worker:
+    build:
+      context: ../..
+      dockerfile: packages/twenty-docker/twenty/Dockerfile
+      target: twenty
+      args:
+        FOCUS_NODE_MEM: ${FOCUS_NODE_MEM:-2048}
+        SERVER_BUILD_MEM: ${SERVER_BUILD_MEM:-3072}
+        FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-4096}
+    image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
+    mem_limit: 1024m
+    mem_reservation: 512m
+    volumes:
+      - server-local-data:/app/packages/twenty-server/.local-storage
+    command: ["yarn", "worker:prod"]
     environment:
+      NODE_ENV: production
       PG_DATABASE_URL: ${PG_DATABASE_URL:?PG_DATABASE_URL debe venir del Environment de Dokploy (Postgres externo)}
+      SERVER_URL: ${SERVER_URL}
       REDIS_URL: ${REDIS_URL:?REDIS_URL debe venir del Environment de Dokploy (Redis externo)}
+      REDIS_CACHE_PREFIX: ${REDIS_CACHE_PREFIX:-}
+      DISABLE_DB_MIGRATIONS: "true" # it already runs on the server
+      DISABLE_CRON_JOBS_REGISTRATION: "true" # it already runs on the server
+      STORAGE_TYPE: ${STORAGE_TYPE}
+      STORAGE_S3_REGION: ${STORAGE_S3_REGION}
+      STORAGE_S3_NAME: ${STORAGE_S3_NAME}
+      STORAGE_S3_ENDPOINT: ${STORAGE_S3_ENDPOINT}
+      STORAGE_S3_ACCESS_KEY_ID: ${STORAGE_S3_ACCESS_KEY_ID}
+      STORAGE_S3_SECRET_ACCESS_KEY: ${STORAGE_S3_SECRET_ACCESS_KEY}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      FALLBACK_ENCRYPTION_KEY: ${FALLBACK_ENCRYPTION_KEY}
+      APP_SECRET: ${APP_SECRET:-}
+    depends_on:
+      server:
+        condition: service_healthy
     networks:
       - dokploy-network
+    restart: always
+
+volumes:
+  server-local-data:
 
 networks:
   dokploy-network:
