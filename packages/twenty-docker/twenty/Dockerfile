@@ -4,13 +4,15 @@
 # Build-time memory budget for small hosts (Dokploy builds on this server).
 # Override with --build-arg or compose build.args. Defaults fit a ~7GB box
 # shared with other apps; raise them on CI/desktops for faster builds.
-ARG YARN_FOCUS_MEM=2048
+# Never prefix these with YARN_: yarn maps any YARN_* env var to a config
+# setting and aborts on unknown ones.
+ARG FOCUS_NODE_MEM=2048
 ARG SERVER_BUILD_MEM=3072
 ARG FRONT_BUILD_MEM=4096
 
 FROM node:24.19.0-alpine3.23@sha256:244cc2b53f46f9e876304391d17682b0ddae9ac33491f4857e25e35a36ba7995 AS front-deps
 
-ARG YARN_FOCUS_MEM
+ARG FOCUS_NODE_MEM
 
 WORKDIR /app
 
@@ -25,7 +27,7 @@ COPY ./packages/twenty-front-component-renderer/package.json /app/packages/twent
 COPY ./packages/twenty-sdk/package.json /app/packages/twenty-sdk/
 COPY ./packages/twenty-client-sdk/package.json /app/packages/twenty-client-sdk/
 
-RUN NODE_OPTIONS="--max-old-space-size=${YARN_FOCUS_MEM}" yarn workspaces focus crm_happy twenty-front twenty-front-component-renderer twenty-ui twenty-shared twenty-sdk twenty-client-sdk && yarn cache clean && npx nx reset
+RUN NODE_OPTIONS="--max-old-space-size=${FOCUS_NODE_MEM}" yarn workspaces focus crm_happy twenty-front twenty-front-component-renderer twenty-ui twenty-shared twenty-sdk twenty-client-sdk && yarn cache clean && npx nx reset
 
 
 # Serialized after front-deps on purpose: BuildKit runs independent stages
@@ -33,7 +35,7 @@ RUN NODE_OPTIONS="--max-old-space-size=${YARN_FOCUS_MEM}" yarn workspaces focus 
 # starves small shared hosts. Chaining keeps one heavy step at a time.
 FROM front-deps AS server-deps
 
-ARG YARN_FOCUS_MEM
+ARG FOCUS_NODE_MEM
 
 WORKDIR /app
 
@@ -48,7 +50,7 @@ COPY ./packages/twenty-shared/package.json /app/packages/twenty-shared/
 COPY ./packages/twenty-client-sdk/package.json /app/packages/twenty-client-sdk/
 COPY ./packages/twenty-oxlint-rules/package.json /app/packages/twenty-oxlint-rules/
 
-RUN NODE_OPTIONS="--max-old-space-size=${YARN_FOCUS_MEM}" yarn workspaces focus crm_happy twenty-server twenty-emails twenty-shared twenty-client-sdk && yarn cache clean && npx nx reset
+RUN NODE_OPTIONS="--max-old-space-size=${FOCUS_NODE_MEM}" yarn workspaces focus crm_happy twenty-server twenty-emails twenty-shared twenty-client-sdk && yarn cache clean && npx nx reset
 
 
 FROM server-deps AS twenty-server-build

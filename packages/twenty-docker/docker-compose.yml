@@ -17,7 +17,7 @@ services:
       args:
         # Topes de heap en build (ver Dockerfile). Defaults para host chico
         # compartido; se sobreescriben en el Environment de Dokploy.
-        YARN_FOCUS_MEM: ${YARN_FOCUS_MEM:-2048}
+        FOCUS_NODE_MEM: ${FOCUS_NODE_MEM:-2048}
         SERVER_BUILD_MEM: ${SERVER_BUILD_MEM:-3072}
         FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-4096}
     image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
