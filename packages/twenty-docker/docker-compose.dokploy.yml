@@ -3,31 +3,23 @@
 # Dokploy con Postgres/Redis EXTERNOS (los datos de prod viven ahí):
 #  - server/worker se unen a la red externa dokploy-network para resolver los
 #    hostnames de las bases de Dokploy por DNS interno;
-#  - db/redis internos se desactivan (profile `self-host`, nunca activo aquí);
 #  - PG_DATABASE_URL / REDIS_URL del Environment de Dokploy son obligatorios
-#    (fallo temprano y explícito si faltan, en vez de apuntar a `db`/`redis`
-#    internos que aquí no existen).
+#    (fallo temprano y explícito si faltan).
+#  - db/redis internos también arrancan (el `depends_on` de la base los exige)
+#    pero quedan idle: ningún tráfico va a ellos. Es el costo de no usar
+#    sintaxis moderna (`!reset`/`profiles`) que el compose de Dokploy no soporta.
 #
 # En Dokploy: composePath = packages/twenty-docker/docker-compose.dokploy.yml
-# Requiere docker compose >= 2.24 por el `!reset`/`!override` de depends_on.
-# `name` se repite aquí: con `include`, el nombre del archivo incluido se ignora
-# y sin esto los volúmenes/contenedores cambiarían de prefijo (datos huérfanos).
+# y HOST_PORT=3100 en el Environment (el mapeo de puertos se hereda de la base;
+# redefinirlo aquí duplicaría la entrada porque compose fusiona las listas).
+# `name` se repite aquí: con `include`, el nombre del archivo incluido se ignora.
 name: crm_happy
 
 include:
   - ./docker-compose.yml
 
 services:
-  db:
-    profiles: ["self-host"]
-
-  redis:
-    profiles: ["self-host"]
-
   server:
-    depends_on: !reset {}
-    ports:
-      - "${HOST_PORT:-3100}:3000"
     environment:
       PG_DATABASE_URL: ${PG_DATABASE_URL:?PG_DATABASE_URL debe venir del Environment de Dokploy (Postgres externo)}
       REDIS_URL: ${REDIS_URL:?REDIS_URL debe venir del Environment de Dokploy (Redis externo)}
@@ -35,7 +27,6 @@ services:
       - dokploy-network
 
   worker:
-    depends_on: !override {server: {condition: service_healthy}}
     environment:
       PG_DATABASE_URL: ${PG_DATABASE_URL:?PG_DATABASE_URL debe venir del Environment de Dokploy (Postgres externo)}
       REDIS_URL: ${REDIS_URL:?REDIS_URL debe venir del Environment de Dokploy (Redis externo)}
