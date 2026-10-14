@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { type EmailDriverInterface } from 'src/engine/core-modules/email/drivers/interfaces/email-driver.interface';
 
@@ -12,6 +12,8 @@ import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twent
 
 @Injectable()
 export class EmailDriverFactory extends DriverFactoryBase<EmailDriverInterface> {
+  private readonly logger = new Logger(EmailDriverFactory.name);
+
   constructor(
     twentyConfigService: TwentyConfigService,
     configGroupHashService: ConfigGroupHashService,
@@ -39,6 +41,9 @@ export class EmailDriverFactory extends DriverFactoryBase<EmailDriverInterface> 
 
   protected createDriver(): EmailDriverInterface {
     const driver = this.twentyConfigService.get('EMAIL_DRIVER');
+
+    // Visible at boot so a wrong EMAIL_DRIVER is obvious in deploy logs.
+    this.logger.log(`Using email driver: ${driver}`);
 
     switch (driver) {
       case EmailDriver.LOGGER:
