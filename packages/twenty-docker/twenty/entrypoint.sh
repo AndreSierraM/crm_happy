@@ -11,8 +11,11 @@ setup_and_migrate_db() {
 
     # Run setup and migration scripts
     has_schema=$(psql -tAc "SELECT EXISTS (SELECT 1 FROM information_schema.schemata WHERE schema_name = 'core')" ${PG_DATABASE_URL})
-    if [ "$has_schema" = "f" ]; then
-        echo "Database appears to be empty, running migrations."
+    # Un schema `core` vacío (init a medias de un arranque anterior fallido)
+    # también necesita init: sin tablas no hay nada que migrar.
+    has_core_tables=$(psql -tAc "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'core' AND table_name = 'workspace')" ${PG_DATABASE_URL})
+    if [ "$has_schema" = "f" ] || [ "$has_core_tables" = "f" ]; then
+        echo "Database appears to be empty or not initialized, running migrations."
         yarn database:init:prod
     fi
 
