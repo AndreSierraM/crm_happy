@@ -67,7 +67,9 @@ services:
       HAPPY_MAX_WORKSPACES: ${HAPPY_MAX_WORKSPACES:-10}
       EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS}
       EMAIL_FROM_NAME: ${EMAIL_FROM_NAME}
-      EMAIL_DRIVER: ${EMAIL_DRIVER}
+      # Default LOGGER (= default del código): sin esto, compose interpola
+      # cadena vacía y el server tumba en validación (solo acepta LOGGER/SMTP).
+      EMAIL_DRIVER: ${EMAIL_DRIVER:-LOGGER}
       EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
       EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
       EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
