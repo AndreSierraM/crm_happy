@@ -14,7 +14,6 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
     "paths": {
       "happy-front": ["packages/twenty-front"],
       "happy-front/*": ["packages/twenty-front/*"],
