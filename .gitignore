@@ -70,3 +70,6 @@ screenshots/
 /.diag*.mjs
 /.compare*.mjs
 /.narrow*.mjs
+
+# Happy license store: never commit keys (runtime uses env vars)
+happy/licenses.json
