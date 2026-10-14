@@ -1,2 +1,3 @@
-export const DEFAULT_WORKSPACE_LOGO =
-  'https://twentyhq.github.io/placeholder-images/workspaces/twenty-logo.png';
+import { getHappyLogoUrl } from 'src/utils/logo.utils';
+
+export const DEFAULT_WORKSPACE_LOGO = getHappyLogoUrl();
