@@ -18,7 +18,7 @@ export const TwoFactorAuthenticationRecoveryCodeIssuedEmail = ({
   expiresAt,
   locale,
 }: TwoFactorAuthenticationRecoveryCodeIssuedEmailProps) => {
-  const i18n = createI18nInstance(locale);
+  const i18n = createI18nInstance('es-ES');
   const formattedExpiresAt = i18n.date(expiresAt, {
     dateStyle: 'medium',
     timeStyle: 'long',

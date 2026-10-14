@@ -9,14 +9,10 @@ const footerStyle = {
   textAlign: 'center' as const,
   fontSize: '12px',
   lineHeight: '18px',
-  color: '#9aa0ae',
+  color: '#667085',
   marginTop: '28px',
 };
 
 export const Footer = ({ i18n }: FooterProps) => {
-  return (
-    <Text style={footerStyle}>
-      {i18n._('Happy CRM · Colombia')}
-    </Text>
-  );
+  return <Text style={footerStyle}>{i18n._('Happy CRM · Colombia')}</Text>;
 };

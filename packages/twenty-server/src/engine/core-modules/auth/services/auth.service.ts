@@ -751,7 +751,7 @@ export class AuthService {
     const html = await renderEmail(emailTemplate, { pretty: true });
     const text = await renderEmail(emailTemplate, { plainText: true });
 
-    const passwordChangedMsg = msg`Your Password Has Been Successfully Changed`;
+    const passwordChangedMsg = msg`Tu contraseña se cambió correctamente`;
     const i18n = this.i18nService.getI18nInstance(firstUserWorkspace.locale);
     const subject = i18n._(passwordChangedMsg);
 

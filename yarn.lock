@@ -50537,9 +50537,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"twenty-monorepo@workspace:.":
+"crm_happy@workspace:.":
   version: 0.0.0-use.local
-  resolution: "twenty-monorepo@workspace:."
+  resolution: "crm_happy@workspace:."
   dependencies:
     "@nx/jest": "npm:22.7.8"
     "@nx/js": "npm:22.7.8"

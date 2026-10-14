@@ -549,7 +549,7 @@ export class TwoFactorAuthenticationRecoveryService {
     await this.sendSecurityEmail({
       to: targetUserWorkspace.user.email,
       locale,
-      subject: msg`A two-factor authentication recovery code was generated for you`,
+      subject: msg`Se generó un código de recuperación para ti`,
       buildEmailTemplate: () =>
         TwoFactorAuthenticationRecoveryCodeIssuedEmail({
           actorName:
@@ -573,7 +573,7 @@ export class TwoFactorAuthenticationRecoveryService {
     await this.sendSecurityEmail({
       to: userWorkspace.user.email,
       locale,
-      subject: msg`Your two-factor authentication was reset`,
+      subject: msg`Se restableció tu verificación en dos pasos`,
       buildEmailTemplate: () =>
         TwoFactorAuthenticationResetEmail({
           workspaceDisplayName: workspaceDisplayName ?? '',

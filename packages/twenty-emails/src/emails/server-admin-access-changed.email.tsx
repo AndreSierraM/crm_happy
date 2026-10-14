@@ -32,7 +32,9 @@ export const ServerAdminAccessChangedEmail = ({
 
   return (
     <BaseEmail locale={locale}>
-      <Title value={i18n._('Cambió el acceso de administración del servidor')} />
+      <Title
+        value={i18n._('Cambió el acceso de administración del servidor')}
+      />
       <MainText>
         <Trans
           id="{actorName} actualizó el acceso de administración del servidor para {targetName} ({targetEmail})."

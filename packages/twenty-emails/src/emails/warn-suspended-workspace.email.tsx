@@ -25,8 +25,8 @@ export const WarnSuspendedWorkspaceEmail = ({
 }: WarnSuspendedWorkspaceEmailProps) => {
   const i18n = createI18nInstance(locale);
   const daysLeft = inactiveDaysBeforeDelete - daysSinceInactive;
-  const dayOrDays = daysLeft > 1 ? 'días' : 'día';
-  const remainingDays = daysLeft > 0 ? daysLeft : 0;
+  const remainingDays = Math.max(0, daysLeft);
+  const dayOrDays = remainingDays === 1 ? 'día' : 'días';
 
   return (
     <BaseEmail locale={locale}>
@@ -55,7 +55,10 @@ export const WarnSuspendedWorkspaceEmail = ({
         <Trans id="Después de eso, el espacio de trabajo y todos sus datos se eliminarán para siempre, sin posibilidad de recuperarlos." />
       </MainText>
       <br />
-      <CallToAction href={link} value={i18n._('Reactivar espacio de trabajo')} />
+      <CallToAction
+        href={link}
+        value={i18n._('Reactivar espacio de trabajo')}
+      />
       <br />
       <br />
     </BaseEmail>

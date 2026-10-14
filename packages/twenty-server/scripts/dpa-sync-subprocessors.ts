@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as prettier from 'prettier';
 
-import { ONELEET_TRUST_API_URL } from 'src/engine/core-modules/dpa/constants/oneleet-trust.constant';
+const ONELEET_TRUST_API_URL =
+  'https://api.oneleet.com/api/v1/tenants/twenty/trust';
 import {
   type Subprocessor,
   type SubprocessorList,

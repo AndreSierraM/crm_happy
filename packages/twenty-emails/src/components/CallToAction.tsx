@@ -5,7 +5,7 @@ const callToActionStyle = {
   display: 'inline-block',
   padding: '14px 36px',
   borderRadius: '999px',
-  background: '#5271FF',
+  background: '#3C5CE5',
   color: '#ffffff',
   fontSize: '14px',
   fontWeight: 600,

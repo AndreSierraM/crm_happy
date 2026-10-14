@@ -231,8 +231,8 @@ export class ResetPasswordService {
 
     const i18n = this.i18nService.getI18nInstance(locale);
     const subjectTemplate = hasPassword
-      ? msg`Action Needed to Reset Password`
-      : msg`Action Needed to Set Password`;
+      ? msg`Acción necesaria: restablece tu contraseña`
+      : msg`Acción necesaria: crea tu contraseña`;
     const subject = i18n._(subjectTemplate);
 
     await this.emailService.send({

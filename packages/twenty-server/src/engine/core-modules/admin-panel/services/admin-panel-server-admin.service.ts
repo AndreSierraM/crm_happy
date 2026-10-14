@@ -195,7 +195,9 @@ export class AdminPanelServerAdminService {
             const text = await renderEmail(emailTemplate, { plainText: true });
 
             const i18n = this.i18nService.getI18nInstance(locale);
-            const subject = i18n._(msg`Server administrator access changed`);
+            const subject = i18n._(
+              msg`Cambió el acceso de administración del servidor`,
+            );
 
             const sendResults = await Promise.allSettled(
               recipients.map((recipient) =>

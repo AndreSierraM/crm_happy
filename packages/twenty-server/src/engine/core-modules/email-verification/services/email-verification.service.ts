@@ -101,7 +101,7 @@ export class EmailVerificationService {
 
     const emailVerificationMsg =
       verificationTrigger === EmailVerificationTrigger.EMAIL_UPDATE
-        ? msg`Please confirm your updated email`
+        ? msg`Confirma tu nuevo correo electrónico`
         : msg`Bienvenido a Happy CRM: confirma tu correo electrónico`;
     const i18n = this.i18nService.getI18nInstance(locale);
     const subject = i18n._(emailVerificationMsg);

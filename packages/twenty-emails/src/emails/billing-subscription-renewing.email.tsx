@@ -22,7 +22,7 @@ export const BillingSubscriptionRenewingEmail = ({
   link,
   locale,
 }: BillingSubscriptionRenewingEmailProps) => {
-  const i18n = createI18nInstance(locale);
+  const i18n = createI18nInstance('es-ES');
   const formattedDate = i18n.date(renewsAt, {
     day: 'numeric',
     month: 'long',

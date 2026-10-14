@@ -19,7 +19,7 @@ export const PasswordUpdateNotifyEmail = ({
   link,
   locale,
 }: PasswordUpdateNotifyEmailProps) => {
-  const i18n = createI18nInstance(locale);
+  const i18n = createI18nInstance('es-ES');
   const formattedDate = i18n.date(new Date());
 
   return (

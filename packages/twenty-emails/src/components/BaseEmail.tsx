@@ -36,7 +36,7 @@ export const BaseEmail = ({ children, locale }: BaseEmailProps) => {
 
   return (
     <I18nProvider i18n={i18nInstance}>
-      <Html lang={locale}>
+      <Html lang="es">
         <BaseHead />
         <Body style={bodyStyle}>
           <Container style={wrapperStyle}>

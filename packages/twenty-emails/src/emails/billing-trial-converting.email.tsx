@@ -24,7 +24,7 @@ export const BillingTrialConvertingEmail = ({
   link,
   locale,
 }: BillingTrialConvertingEmailProps) => {
-  const i18n = createI18nInstance(locale);
+  const i18n = createI18nInstance('es-ES');
   const formattedDate = i18n.date(trialEndsAt, {
     day: 'numeric',
     month: 'long',
