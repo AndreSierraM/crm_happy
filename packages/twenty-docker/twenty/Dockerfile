@@ -51,7 +51,7 @@ COPY ./packages/twenty-client-sdk/package.json /app/packages/twenty-client-sdk/
 COPY ./packages/twenty-oxlint-rules/package.json /app/packages/twenty-oxlint-rules/
 COPY ./packages/twenty-ui/package.json /app/packages/twenty-ui/
 
-RUN NODE_OPTIONS="--max-old-space-size=${FOCUS_NODE_MEM}" yarn workspaces focus crm_happy twenty-server twenty-emails twenty-shared twenty-client-sdk twenty-ui && yarn cache clean && npx nx reset
+RUN NODE_OPTIONS="--max-old-space-size=${FOCUS_NODE_MEM}" yarn workspaces focus crm_happy twenty-server twenty-emails twenty-shared twenty-client-sdk twenty-ui twenty-sdk && yarn cache clean && npx nx reset
 
 
 FROM server-deps AS twenty-server-build
@@ -66,6 +66,8 @@ COPY ./packages/twenty-server /app/packages/twenty-server
 # so its sources must exist in this stage (otherwise vite falls back to app
 # mode and fails with "Cannot resolve entry module index.html").
 COPY ./packages/twenty-ui /app/packages/twenty-ui
+# Same for twenty-sdk:build, also pulled via ^build.
+COPY ./packages/twenty-sdk /app/packages/twenty-sdk
 
 RUN npx nx run twenty-server:lingui:extract && \
     npx nx run twenty-server:lingui:compile && \
