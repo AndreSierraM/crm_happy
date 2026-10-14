@@ -271,17 +271,6 @@ export const SettingsAdminAI = () => {
                 </TableCell>
               </TableRow>
             </Card.Root>
-          ) : (
-            <Card.Root rounded>
-              <TableRow gridTemplateColumns="1fr">
-                <TableCell
-                  color={themeCssVariables.font.color.tertiary}
-                  align="center"
-                >
-                  {t`No AI usage data recorded yet.`}
-                </TableCell>
-              </TableRow>
-            </Card.Root>
           )}
       </Section.Root>
     </>
