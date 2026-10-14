@@ -1,5 +1,8 @@
-# Development infrastructure services only (Postgres + Redis).
-# Use this when developing locally against the source code.
+# Happy CRM — compose de DESARROLLO: solo infra (Postgres + Redis).
+# El código corre en el host desde el fuente (`yarn start`), NUNCA la imagen
+# de producción. Este archivo no referencia ninguna imagen de la app y no
+# debe usarse en prod (para prod ver docker-compose.yml / .dokploy.yml).
+# Lo usa también packages/twenty-utils/setup-dev-env.sh (servicios `db`/`redis`).
 #
 # Usage:
 #   docker compose -f docker-compose.dev.yml up -d

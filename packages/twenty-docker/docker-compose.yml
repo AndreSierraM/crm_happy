@@ -1,11 +1,24 @@
-# Happy CRM — compose de PRODUCCIÓN (único).
-# - En Dokploy: composePath = packages/twenty-docker/docker-compose.yml,
-#   Postgres/Redis los da Dokploy vía PG_DATABASE_URL / REDIS_URL del Environment.
-#   Los tres servicios comparten la red externa dokploy-network.
-# - Self-host sin Dokploy: levanta primero la infra con
-#     docker compose -f docker-compose.dev.yml up -d
-#   y luego este archivo (o pásale PG_DATABASE_URL / REDIS_URL externos).
-# Sin dominio: SERVER_URL=http://10.20.50.102:3100 (Dokploy ocupa :3000).
+# Happy CRM — compose de PRODUCCIÓN.
+# Estructura alineada con la documentación oficial de Twenty (self-host con
+# Docker Compose): server + worker + db + redis autocontenidos.
+# Doc oficial: https://twenty.com/developers/self-host/capabilities/docker-compose
+#
+# Self-host (igual que la doc oficial):
+#   cp .env.example .env   # generar ENCRYPTION_KEY y PG_DATABASE_PASSWORD
+#   docker compose up -d --build
+#   (usa Postgres/Redis internos; la imagen se construye del target `twenty`,
+#   que solo lleva dist compilado + node_modules de producción, NODE_ENV=production)
+#
+# Imagen prebuilt (p. ej. fallback a upstream sin compilar):
+#   docker compose pull && DOCKER_IMAGE=twentycrm/twenty TAG=latest docker compose up -d --no-build
+#
+# Dokploy con Postgres/Redis externos (los datos de prod viven ahí):
+#   composePath = packages/twenty-docker/docker-compose.dokploy.yml
+#   (ese overlay incluye este archivo, une server/worker a dokploy-network
+#   y exige PG_DATABASE_URL / REDIS_URL del Environment de Dokploy).
+#
+# Desarrollo local: NO usar este archivo. Usar docker-compose.dev.yml
+# (infra db+redis) + `yarn start` desde el código fuente.
 name: crm_happy
 
 services:
@@ -26,14 +39,16 @@ services:
     mem_limit: 1536m
     mem_reservation: 768m
     ports:
-      - "${HOST_PORT:-3100}:3000"
+      - "${HOST_PORT:-3000}:3000"
     volumes:
       - server-local-data:/app/packages/twenty-server/.local-storage
     environment:
+      NODE_ENV: production
       NODE_PORT: 3000
-      PG_DATABASE_URL: ${PG_DATABASE_URL}
+      # Sin PG_DATABASE_URL externo (Dokploy) se usan los servicios internos.
+      PG_DATABASE_URL: ${PG_DATABASE_URL:-postgres://${PG_DATABASE_USER:-postgres}:${PG_DATABASE_PASSWORD:-postgres}@${PG_DATABASE_HOST:-db}:${PG_DATABASE_PORT:-5432}/${PG_DATABASE_NAME:-default}}
       SERVER_URL: ${SERVER_URL}
-      REDIS_URL: ${REDIS_URL}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
       REDIS_CACHE_PREFIX: ${REDIS_CACHE_PREFIX:-}
       DISABLE_DB_MIGRATIONS: ${DISABLE_DB_MIGRATIONS}
       DISABLE_CRON_JOBS_REGISTRATION: ${DISABLE_CRON_JOBS_REGISTRATION}
@@ -59,16 +74,27 @@ services:
       EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
       EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
       EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     healthcheck:
       test: curl --fail http://localhost:3000/healthz
       interval: 5s
       timeout: 5s
       retries: 20
     restart: always
-    networks:
-      - dokploy-network
 
   worker:
+    build:
+      context: ../..
+      dockerfile: packages/twenty-docker/twenty/Dockerfile
+      target: twenty
+      args:
+        FOCUS_NODE_MEM: ${FOCUS_NODE_MEM:-2048}
+        SERVER_BUILD_MEM: ${SERVER_BUILD_MEM:-3072}
+        FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-4096}
     image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
     mem_limit: 1024m
     mem_reservation: 512m
@@ -76,9 +102,10 @@ services:
       - server-local-data:/app/packages/twenty-server/.local-storage
     command: ["yarn", "worker:prod"]
     environment:
-      PG_DATABASE_URL: ${PG_DATABASE_URL}
+      NODE_ENV: production
+      PG_DATABASE_URL: ${PG_DATABASE_URL:-postgres://${PG_DATABASE_USER:-postgres}:${PG_DATABASE_PASSWORD:-postgres}@${PG_DATABASE_HOST:-db}:${PG_DATABASE_PORT:-5432}/${PG_DATABASE_NAME:-default}}
       SERVER_URL: ${SERVER_URL}
-      REDIS_URL: ${REDIS_URL}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
       REDIS_CACHE_PREFIX: ${REDIS_CACHE_PREFIX:-}
       DISABLE_DB_MIGRATIONS: "true" # it already runs on the server
       DISABLE_CRON_JOBS_REGISTRATION: "true" # it already runs on the server
@@ -92,15 +119,38 @@ services:
       FALLBACK_ENCRYPTION_KEY: ${FALLBACK_ENCRYPTION_KEY}
       APP_SECRET: ${APP_SECRET:-}
     depends_on:
+      db:
+        condition: service_healthy
       server:
         condition: service_healthy
     restart: always
-    networks:
-      - dokploy-network
+
+  db:
+    image: postgres:16
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${PG_DATABASE_NAME:-default}
+      POSTGRES_PASSWORD: ${PG_DATABASE_PASSWORD:-postgres}
+      POSTGRES_USER: ${PG_DATABASE_USER:-postgres}
+    healthcheck:
+      test: pg_isready -U ${PG_DATABASE_USER:-postgres} -h localhost -d postgres
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: always
+
+  redis:
+    # Misma versión que la infra de desarrollo (docker-compose.dev.yml).
+    image: redis:7
+    restart: always
+    command: ["--maxmemory-policy", "noeviction"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
+  db-data:
   server-local-data:
-
-networks:
-  dokploy-network:
-    external: true

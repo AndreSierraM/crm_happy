@@ -106,8 +106,9 @@ import { isDefined } from 'happy-shared/utils';
 source happy/happy-env-compat.sh
 node happy/scripts/happy-license.mjs status --key "$HAPPY_LICENSE_KEY"
 
-# docker Happy por defecto, fallback Twenty si lo necesitas
-DOCKER_IMAGE=twentycrm/twenty TAG=latest docker compose -f packages/twenty-docker/docker-compose.yml up -d
+# docker Happy por defecto (construye del repo), fallback Twenty prebuilt sin compilar
+docker compose -f packages/twenty-docker/docker-compose.yml up -d --build
+DOCKER_IMAGE=twentycrm/twenty TAG=latest docker compose -f packages/twenty-docker/docker-compose.yml pull && DOCKER_IMAGE=twentycrm/twenty TAG=latest docker compose -f packages/twenty-docker/docker-compose.yml up -d --no-build
 ```
 
 ## 7. Deuda y próximos pasos (fork duro)

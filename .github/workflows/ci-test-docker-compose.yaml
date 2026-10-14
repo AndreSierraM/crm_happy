@@ -39,7 +39,6 @@ jobs:
       - name: Run compose
         run: |
           echo "Patching docker-compose.yml..."
-          yq eval 'del(.services.server.image)' -i docker-compose.yml
           yq eval '.services.server.build.context = "../../"' -i docker-compose.yml
           yq eval '.services.server.build.dockerfile = "./packages/twenty-docker/twenty/Dockerfile"' -i docker-compose.yml
           yq eval '.services.server.build.target = "twenty"' -i docker-compose.yml
@@ -64,10 +63,10 @@ jobs:
 
           echo "Waiting for database to start..."
           count=0
-          while [ ! $(docker inspect --format='{{.State.Health.Status}}' twenty-db-1) = "healthy" ]; do
+          while [ ! $(docker inspect --format='{{.State.Health.Status}}' crm_happy-db-1) = "healthy" ]; do
               sleep 1;
               count=$((count+1));
-              if [ $(docker inspect --format='{{.State.Status}}' twenty-db-1) = "exited" ]; then
+              if [ $(docker inspect --format='{{.State.Status}}' crm_happy-db-1) = "exited" ]; then
                   echo "Database exited"
                   docker compose logs db
                   exit 1
@@ -82,10 +81,10 @@ jobs:
 
           echo "Waiting for server to start..."
           count=0
-          while [ ! $(docker inspect --format='{{.State.Health.Status}}' twenty-server-1) = "healthy" ]; do
+          while [ ! $(docker inspect --format='{{.State.Health.Status}}' crm_happy-server-1) = "healthy" ]; do
               sleep 1;
               count=$((count+1));
-              if [ $(docker inspect --format='{{.State.Status}}' twenty-server-1) = "exited" ]; then
+              if [ $(docker inspect --format='{{.State.Status}}' crm_happy-server-1) = "exited" ]; then
                   echo "Server exited"
                   docker compose logs server
                   exit 1
