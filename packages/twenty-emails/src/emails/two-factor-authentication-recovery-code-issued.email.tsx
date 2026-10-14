@@ -27,21 +27,21 @@ export const TwoFactorAuthenticationRecoveryCodeIssuedEmail = ({
 
   return (
     <BaseEmail locale={locale}>
-      <Title value={i18n._('Two-factor authentication recovery code issued')} />
+      <Title value={i18n._('Código de recuperación emitido')} />
       <MainText>
         <Trans
-          id="{actorName} generated a recovery code that lets you sign in to {workspaceDisplayName} without your authenticator app."
+          id="{actorName} generó un código de recuperación para entrar a {workspaceDisplayName} sin tu app de autenticación."
           values={{ actorName, workspaceDisplayName }}
         />
         <br />
         <br />
         <Trans
-          id="The code can be used once and expires on {formattedExpiresAt}. Using it removes your current authenticator for this workspace and signs you out of your other sessions there."
+          id="El código es de un solo uso y vence el {formattedExpiresAt}. Al usarlo se elimina tu autenticador actual y se cierran tus otras sesiones."
           values={{ formattedExpiresAt }}
         />
         <br />
         <br />
-        <Trans id="If you did not ask for this, contact your workspace administrator and change your password." />
+        <Trans id="Si no lo pediste tú, contacta al administrador de tu espacio de trabajo y cambia tu contraseña." />
         <br />
       </MainText>
       <br />

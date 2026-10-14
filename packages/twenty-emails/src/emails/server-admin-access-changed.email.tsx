@@ -23,8 +23,8 @@ export const ServerAdminAccessChangedEmail = ({
   locale,
 }: ServerAdminAccessChangedEmailProps) => {
   const i18n = createI18nInstance(locale);
-  const enabledLabel = i18n._('Enabled');
-  const disabledLabel = i18n._('Disabled');
+  const enabledLabel = i18n._('Activado');
+  const disabledLabel = i18n._('Desactivado');
   const fullAdminStatus = canAccessFullAdminPanel
     ? enabledLabel
     : disabledLabel;
@@ -32,26 +32,26 @@ export const ServerAdminAccessChangedEmail = ({
 
   return (
     <BaseEmail locale={locale}>
-      <Title value={i18n._('Server administrator access changed')} />
+      <Title value={i18n._('Cambió el acceso de administración del servidor')} />
       <MainText>
         <Trans
-          id="{actorName} updated server administrator access for {targetName} ({targetEmail})."
+          id="{actorName} actualizó el acceso de administración del servidor para {targetName} ({targetEmail})."
           values={{ actorName, targetName, targetEmail }}
         />
         <br />
         <br />
         <Trans
-          id="Full admin panel access: {fullAdminStatus}"
+          id="Acceso total al panel de administración: {fullAdminStatus}"
           values={{ fullAdminStatus }}
         />
         <br />
         <Trans
-          id="Impersonation: {impersonateStatus}"
+          id="Suplantación de identidad: {impersonateStatus}"
           values={{ impersonateStatus }}
         />
         <br />
         <br />
-        <Trans id="If you did not expect this change, review your server administrators immediately." />
+        <Trans id="Si no esperabas este cambio, revisa de inmediato quiénes administran el servidor." />
         <br />
       </MainText>
       <br />

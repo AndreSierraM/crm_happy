@@ -19,17 +19,17 @@ export const SendEmailVerificationLinkEmail = ({
 }: SendEmailVerificationLinkEmailProps) => {
   const i18n = createI18nInstance(locale);
   const title = isEmailUpdate
-    ? i18n._('Confirm your new email address')
-    : i18n._('Confirm your email address');
+    ? i18n._('Confirma tu nuevo correo electrónico')
+    : i18n._('Confirma tu correo electrónico');
   const bodyId = isEmailUpdate
-    ? 'We received a request to change the email address associated with your Happy CRM account. Click below to confirm this change.'
-    : 'Thanks for registering for an account on Happy CRM! Before we get started, we just need to confirm that this is you. Click below to verify your email address.';
+    ? 'Recibimos una solicitud para cambiar el correo de tu cuenta de Happy CRM. Haz clic abajo para confirmar el cambio.'
+    : '¡Gracias por crear tu cuenta en Happy CRM! Antes de empezar, solo necesitamos confirmar que eres tú. Haz clic abajo para verificar tu correo.';
   const ctaLabel = isEmailUpdate
-    ? i18n._('Confirm new email')
-    : i18n._('Verify Email');
+    ? i18n._('Confirmar correo')
+    : i18n._('Verificar correo');
 
   return (
-    <BaseEmail width={333} locale={locale}>
+    <BaseEmail locale={locale}>
       <Title value={title} />
       <MainText>
         <Trans id={bodyId} />

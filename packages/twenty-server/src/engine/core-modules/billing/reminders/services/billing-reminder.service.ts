@@ -320,7 +320,7 @@ export class BillingReminderService {
     switch (reminder.type) {
       case 'trial-ending':
         return {
-          subject: msg`Your Happy CRM trial is ending soon`,
+          subject: msg`Tu prueba de Happy CRM termina pronto`,
           emailTemplate: BillingTrialEndingEmail({
             userName,
             workspaceDisplayName,
@@ -334,7 +334,7 @@ export class BillingReminderService {
         };
       case 'trial-converting':
         return {
-          subject: msg`A heads up before your Happy CRM trial ends`,
+          subject: msg`Un aviso antes de que termine tu prueba de Happy CRM`,
           emailTemplate: BillingTrialConvertingEmail({
             userName,
             workspaceDisplayName,
@@ -346,7 +346,7 @@ export class BillingReminderService {
         };
       case 'subscription-renewing':
         return {
-          subject: msg`Your Happy CRM plan renews soon`,
+          subject: msg`Tu plan de Happy CRM se renueva pronto`,
           emailTemplate: BillingSubscriptionRenewingEmail({
             userName,
             workspaceDisplayName,

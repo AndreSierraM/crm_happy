@@ -123,7 +123,7 @@ export class ApprovedAccessDomainService {
     await this.emailService.send({
       from: `${sender.name.firstName} ${sender.name.lastName} (via Happy CRM) <${this.twentyConfigService.get('EMAIL_FROM_ADDRESS')}>`,
       to,
-      subject: 'Approve your access domain',
+      subject: 'Aprueba tu dominio de acceso',
       text,
       html,
     });

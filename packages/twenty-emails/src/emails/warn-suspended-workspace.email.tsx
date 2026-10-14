@@ -25,37 +25,37 @@ export const WarnSuspendedWorkspaceEmail = ({
 }: WarnSuspendedWorkspaceEmailProps) => {
   const i18n = createI18nInstance(locale);
   const daysLeft = inactiveDaysBeforeDelete - daysSinceInactive;
-  const dayOrDays = daysLeft > 1 ? 'days' : 'day';
+  const dayOrDays = daysLeft > 1 ? 'días' : 'día';
   const remainingDays = daysLeft > 0 ? daysLeft : 0;
 
   return (
-    <BaseEmail width={333} locale={locale}>
-      <Title value={i18n._('Your workspace is paused')} />
+    <BaseEmail locale={locale}>
+      <Title value={i18n._('Tu espacio de trabajo está en pausa')} />
       <MainText>
         {userName?.length > 1 ? (
-          <Trans id="Hi {userName}," values={{ userName }} />
+          <Trans id="Hola {userName}," values={{ userName }} />
         ) : (
-          <Trans id="Hello," />
+          <Trans id="Hola," />
         )}
         <br />
         <br />
         <Trans
-          id="Good news first: your workspace <0>{workspaceDisplayName}</0> is only paused — none of your data is gone."
+          id="Primero lo bueno: tu espacio de trabajo <0>{workspaceDisplayName}</0> solo está en pausa, no se perdió nada."
           values={{ workspaceDisplayName }}
           components={{ 0: <b /> }}
         />
         <br />
         <br />
         <Trans
-          id="Reactivate it within the next {remainingDays} {dayOrDays} and you'll pick up exactly where you left off, with every record, view and setting right where you left it."
+          id="Reactívalo en los próximos {remainingDays} {dayOrDays} y seguirás donde quedaste, con cada registro, vista y ajuste en su lugar."
           values={{ remainingDays, dayOrDays }}
         />
         <br />
         <br />
-        <Trans id="After that, the workspace and all of its data will be permanently deleted — and we won't be able to bring it back." />
+        <Trans id="Después de eso, el espacio de trabajo y todos sus datos se eliminarán para siempre, sin posibilidad de recuperarlos." />
       </MainText>
       <br />
-      <CallToAction href={link} value={i18n._('Reactivate workspace')} />
+      <CallToAction href={link} value={i18n._('Reactivar espacio de trabajo')} />
       <br />
       <br />
     </BaseEmail>

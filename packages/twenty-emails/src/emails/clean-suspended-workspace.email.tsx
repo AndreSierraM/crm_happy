@@ -22,32 +22,32 @@ export const CleanSuspendedWorkspaceEmail = ({
   const i18n = createI18nInstance(locale);
 
   return (
-    <BaseEmail width={333} locale={locale}>
-      <Title value={i18n._('Your workspace has been deleted')} />
+    <BaseEmail locale={locale}>
+      <Title value={i18n._('Tu espacio de trabajo fue eliminado')} />
       <MainText>
         {userName?.length > 1 ? (
-          <Trans id="Hi {userName}," values={{ userName }} />
+          <Trans id="Hola {userName}," values={{ userName }} />
         ) : (
-          <Trans id="Hello," />
+          <Trans id="Hola," />
         )}
         <br />
         <br />
         <Trans
-          id="Your workspace <0>{workspaceDisplayName}</0> has now been permanently deleted — it was paused {daysSinceInactive} days ago and wasn't reactivated in time."
+          id="Tu espacio de trabajo <0>{workspaceDisplayName}</0> fue eliminado definitivamente: llevaba en pausa {daysSinceInactive} días y no se reactivó a tiempo."
           values={{ workspaceDisplayName, daysSinceInactive }}
           components={{ 0: <b /> }}
         />
         <br />
         <br />
-        <Trans id="Its data has been removed and can no longer be recovered." />
+        <Trans id="Sus datos fueron eliminados y ya no se pueden recuperar." />
         <br />
         <br />
-        <Trans id="If you'd ever like to give Happy CRM another try, you can start a fresh workspace in minutes — we'd love to have you back." />
+        <Trans id="Si algún día quieres volver a Happy CRM, puedes crear un espacio de trabajo nuevo en minutos. ¡Aquí te esperamos!" />
       </MainText>
       <br />
       <CallToAction
         href="https://app.happy.local/"
-        value={i18n._('Start a new workspace')}
+        value={i18n._('Crear un espacio de trabajo')}
       />
       <br />
       <br />

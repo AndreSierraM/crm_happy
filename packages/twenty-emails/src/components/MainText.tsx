@@ -1,18 +1,17 @@
 import { type JSX } from 'react';
 import { Text } from 'react-email';
 
-import { canvasTheme } from 'src/common-style';
-
 type MainTextProps = {
   children: JSX.Element | JSX.Element[] | string;
 };
 
 const mainTextStyle = {
-  fontFamily: canvasTheme.font.family,
-  fontSize: canvasTheme.font.size.md,
-  fontWeight: canvasTheme.font.weight.regular,
-  color: canvasTheme.font.colors.primary,
-  lineHeight: canvasTheme.font.lineHeight,
+  fontFamily: "'Trebuchet MS', Verdana, sans-serif",
+  fontSize: '14px',
+  fontWeight: 400,
+  color: '#344054',
+  lineHeight: '24px',
+  margin: '0 0 12px 0',
 };
 
 export const MainText = ({ children }: MainTextProps) => {

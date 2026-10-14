@@ -394,7 +394,7 @@ export class WorkspaceInvitationService {
           plainText: true,
         });
 
-        const joinTeamMsg = msg`Join your team on Happy CRM`;
+        const joinTeamMsg = msg`Únete a tu equipo en Happy CRM`;
         const i18n = this.i18nService.getI18nInstance(sender.locale);
         const subject = i18n._(joinTeamMsg);
 

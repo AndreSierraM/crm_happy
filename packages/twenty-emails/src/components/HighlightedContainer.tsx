@@ -1,17 +1,15 @@
 import { Column, Container, Row } from 'react-email';
 import React, { type JSX } from 'react';
 
-import { canvasTheme } from 'src/common-style';
-
 type HighlightedContainerProps = {
   children: JSX.Element | JSX.Element[] | string;
 };
 
 const highlightedContainerStyle = {
-  background: canvasTheme.background.colors.highlight,
-  border: `1px solid ${canvasTheme.border.color.highlighted}`,
-  borderRadius: canvasTheme.border.radius.md,
-  padding: '24px 48px',
+  background: '#eef3ff',
+  border: '1px solid #d7e2ff',
+  borderRadius: '16px',
+  padding: '24px 20px',
 } as React.CSSProperties;
 
 export const HighlightedContainer = ({

@@ -45,11 +45,11 @@ export const SendApprovedAccessDomainValidation = ({
   const senderEmail = sender.email;
 
   return (
-    <BaseEmail width={333} locale={locale}>
-      <Title value={i18n._('Validate domain')} />
+    <BaseEmail locale={locale}>
+      <Title value={i18n._('Valida el dominio')} />
       <MainText>
         <Trans
-          id="{senderName} (<0>{senderEmail}</0>): Please validate this domain to allow users with <1>@{domain}</1> email addresses to join your workspace without requiring an invitation."
+          id="{senderName} (<0>{senderEmail}</0>): valida este dominio para que las cuentas <1>@{domain}</1> entren a tu espacio de trabajo sin invitación."
           values={{ senderName, senderEmail, domain }}
           components={{
             0: (
@@ -69,10 +69,10 @@ export const SendApprovedAccessDomainValidation = ({
           src={workspaceLogo ?? DEFAULT_WORKSPACE_LOGO}
           width={40}
           height={40}
-          alt={workspace.name ?? 'Workspace logo'}
+          alt={workspace.name ?? 'Logo del espacio de trabajo'}
         />
         {workspace.name ? <HighlightedText value={workspace.name} /> : <></>}
-        <CallToAction href={link} value={i18n._('Validate domain')} />
+        <CallToAction href={link} value={i18n._('Valida el dominio')} />
       </HighlightedContainer>
       <br />
     </BaseEmail>

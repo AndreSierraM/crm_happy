@@ -30,30 +30,30 @@ export const BillingSubscriptionRenewingEmail = ({
   });
 
   return (
-    <BaseEmail width={333} locale={locale}>
-      <Title value={i18n._('Your plan renews soon')} />
+    <BaseEmail locale={locale}>
+      <Title value={i18n._('Tu plan se renueva pronto')} />
       <MainText>
         {userName?.length > 1 ? (
-          <Trans id="Hi {userName}," values={{ userName }} />
+          <Trans id="Hola {userName}," values={{ userName }} />
         ) : (
-          <Trans id="Hello," />
+          <Trans id="Hola," />
         )}
         <br />
         <br />
-        <Trans id="Just so it's never a surprise, here's a heads up about your annual plan." />
+        <Trans id="Para que nunca te tome por sorpresa, te avisamos sobre tu plan anual." />
         <br />
         <br />
         <Trans
-          id="Your annual plan for <0>{workspaceDisplayName}</0> renews on {formattedDate}."
+          id="Tu plan anual de <0>{workspaceDisplayName}</0> se renueva el {formattedDate}."
           values={{ workspaceDisplayName, formattedDate }}
           components={{ 0: <b /> }}
         />
         <br />
         <br />
-        <Trans id="No action is needed if you'd like to continue. If you'd rather not renew, you can cancel anytime before then." />
+        <Trans id="Si quieres continuar, no tienes que hacer nada. Si prefieres no renovar, puedes cancelar cuando quieras antes de esa fecha." />
       </MainText>
       <br />
-      <CallToAction href={link} value={i18n._('Manage subscription')} />
+      <CallToAction href={link} value={i18n._('Gestionar suscripción')} />
       <br />
       <br />
     </BaseEmail>

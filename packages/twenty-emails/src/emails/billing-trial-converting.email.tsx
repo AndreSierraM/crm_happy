@@ -32,38 +32,38 @@ export const BillingTrialConvertingEmail = ({
   });
 
   return (
-    <BaseEmail width={333} locale={locale}>
-      <Title value={i18n._('A heads up before your trial ends')} />
+    <BaseEmail locale={locale}>
+      <Title value={i18n._('Un aviso antes de que termine tu prueba')} />
       <MainText>
         {userName?.length > 1 ? (
-          <Trans id="Hi {userName}," values={{ userName }} />
+          <Trans id="Hola {userName}," values={{ userName }} />
         ) : (
-          <Trans id="Hello," />
+          <Trans id="Hola," />
         )}
         <br />
         <br />
-        <Trans id="We don't like surprise charges, so here's a friendly heads up." />
+        <Trans id="No nos gustan los cargos sorpresa, así que te avisamos con tiempo." />
         <br />
         <br />
         {interval === 'year' ? (
           <Trans
-            id="Your free trial of <0>{workspaceDisplayName}</0> ends on {formattedDate}. Unless you cancel before then, the card on file will be charged for your annual plan."
+            id="Tu prueba gratis de <0>{workspaceDisplayName}</0> termina el {formattedDate}. Si no cancelas antes, se cobrará tu plan anual a la tarjeta registrada."
             values={{ workspaceDisplayName, formattedDate }}
             components={{ 0: <b /> }}
           />
         ) : (
           <Trans
-            id="Your free trial of <0>{workspaceDisplayName}</0> ends on {formattedDate}. Unless you cancel before then, the card on file will be charged for your monthly plan."
+            id="Tu prueba gratis de <0>{workspaceDisplayName}</0> termina el {formattedDate}. Si no cancelas antes, se cobrará tu plan mensual a la tarjeta registrada."
             values={{ workspaceDisplayName, formattedDate }}
             components={{ 0: <b /> }}
           />
         )}
         <br />
         <br />
-        <Trans id="If Happy CRM is working for you, you're all set — there's nothing to do. If it's not the right fit, you can cancel in one click before then and you won't be charged." />
+        <Trans id="Si Happy CRM te funciona, ya está todo listo y no tienes que hacer nada. Si no es para ti, cancela con un clic antes de esa fecha y no se te cobrará nada." />
       </MainText>
       <br />
-      <CallToAction href={link} value={i18n._('Manage subscription')} />
+      <CallToAction href={link} value={i18n._('Gestionar suscripción')} />
       <br />
       <br />
     </BaseEmail>

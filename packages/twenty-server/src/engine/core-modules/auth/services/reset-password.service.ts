@@ -212,17 +212,14 @@ export class ResetPasswordService {
       pathname: resetPasswordPath,
     });
 
+    const durationMs = differenceInMilliseconds(
+      resetToken.passwordResetTokenExpiresAt,
+      new Date(),
+    );
+
     const emailData = {
       link: link.toString(),
-      duration: ms(
-        differenceInMilliseconds(
-          resetToken.passwordResetTokenExpiresAt,
-          new Date(),
-        ),
-        {
-          long: true,
-        },
-      ),
+      duration: formatDurationInSpanish(durationMs),
       hasPassword,
       locale,
     };
@@ -326,3 +323,15 @@ export class ResetPasswordService {
     });
   }
 }
+
+const formatDurationInSpanish = (durationMs: number): string => {
+  const totalMinutes = Math.max(1, Math.round(durationMs / 60000));
+
+  if (totalMinutes >= 60) {
+    const hours = Math.round(totalMinutes / 60);
+
+    return `${hours} ${hours === 1 ? 'hora' : 'horas'}`;
+  }
+
+  return `${totalMinutes} ${totalMinutes === 1 ? 'minuto' : 'minutos'}`;
+};

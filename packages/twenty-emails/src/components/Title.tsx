@@ -1,17 +1,17 @@
 import { type JSX } from 'react';
 import { Heading } from 'react-email';
 
-import { canvasTheme } from 'src/common-style';
-
 type TitleProps = {
   value: JSX.Element | JSX.Element[] | string;
 };
 
 const titleStyle = {
-  fontFamily: canvasTheme.font.family,
-  fontSize: canvasTheme.font.size.xl,
-  fontWeight: canvasTheme.font.weight.bold,
-  color: canvasTheme.font.colors.highlighted,
+  fontFamily: "'Trebuchet MS', Verdana, sans-serif",
+  fontSize: '22px',
+  lineHeight: '28px',
+  fontWeight: 700,
+  color: '#101828',
+  margin: '8px 0 12px 0',
 };
 
 export const Title = ({ value }: TitleProps) => {

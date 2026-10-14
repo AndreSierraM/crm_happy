@@ -1,64 +1,22 @@
 import { type I18n } from '@lingui/core';
-import { Column, Container, Row } from 'react-email';
-import { Link } from 'src/components/Link';
-import { ShadowText } from 'src/components/ShadowText';
-
-const footerContainerStyle = {
-  marginTop: '12px',
-};
+import { Text } from 'react-email';
 
 type FooterProps = {
   i18n: I18n;
 };
 
+const footerStyle = {
+  textAlign: 'center' as const,
+  fontSize: '12px',
+  lineHeight: '18px',
+  color: '#9aa0ae',
+  marginTop: '28px',
+};
+
 export const Footer = ({ i18n }: FooterProps) => {
   return (
-    <Container style={footerContainerStyle}>
-      <Row>
-        <Column>
-          <ShadowText>
-            <Link
-              href="https://happybpo.co/"
-              value={i18n._('Website')}
-              aria-label={i18n._("Visit Happy BPO's website")}
-            />
-          </ShadowText>
-        </Column>
-        <Column>
-          <ShadowText>
-            <Link
-              href="https://github.com/AndreSierraM/crm_happy"
-              value={i18n._('Github')}
-              aria-label={i18n._("Visit Happy CRM's GitHub repository")}
-            />
-          </ShadowText>
-        </Column>
-        <Column>
-          <ShadowText>
-            <Link
-              href="https://docs.twenty.com/getting-started/introduction"
-              value={i18n._('User guide')}
-              aria-label={i18n._("Read Happy CRM's user guide")}
-            />
-          </ShadowText>
-        </Column>
-        <Column>
-          <ShadowText>
-            <Link
-              href="https://docs.twenty.com/"
-              value={i18n._('Developers')}
-              aria-label={i18n._("Visit Happy CRM's developer documentation")}
-            />
-          </ShadowText>
-        </Column>
-      </Row>
-      <ShadowText>
-        <>
-          {i18n._('Happy CRM')}
-          <br />
-          {i18n._('Colombia')}
-        </>
-      </ShadowText>
-    </Container>
+    <Text style={footerStyle}>
+      {i18n._('Happy CRM · Colombia')}
+    </Text>
   );
 };

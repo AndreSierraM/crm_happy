@@ -12,6 +12,11 @@ export const BaseHead = () => {
         fontStyle="normal"
         fontWeight={canvasTheme.font.weight.regular}
       />
+      <style>{`.happy-card-inner { width: 100% !important; }
+@media only screen and (max-width: 480px) {
+  .happy-card-inner { padding-left: 20px !important; padding-right: 20px !important; }
+  .happy-cta a { display: block !important; text-align: center !important; }
+}`}</style>
     </Head>
   );
 };

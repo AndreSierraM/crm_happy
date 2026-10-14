@@ -18,18 +18,18 @@ export const TwoFactorAuthenticationResetEmail = ({
 
   return (
     <BaseEmail locale={locale}>
-      <Title value={i18n._('Two-factor authentication reset')} />
+      <Title value={i18n._('Verificación en dos pasos restablecida')} />
       <MainText>
         <Trans
-          id="A recovery code was used to sign in to {workspaceDisplayName}. Your authenticator for this workspace was removed and your other sessions there were signed out."
+          id="Se usó un código de recuperación para entrar a {workspaceDisplayName}. Se eliminó tu autenticador de ese espacio de trabajo y se cerraron tus otras sesiones."
           values={{ workspaceDisplayName }}
         />
         <br />
         <br />
-        <Trans id="Set up two-factor authentication again under Settings, Profile." />
+        <Trans id="Vuelve a configurar la verificación en dos pasos en Ajustes, Perfil." />
         <br />
         <br />
-        <Trans id="If this was not you, contact your workspace administrator and change your password." />
+        <Trans id="Si no fuiste tú, contacta al administrador de tu espacio de trabajo y cambia tu contraseña." />
         <br />
       </MainText>
       <br />

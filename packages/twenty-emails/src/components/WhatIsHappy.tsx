@@ -9,10 +9,10 @@ type WhatIsHappyProps = {
 export const WhatIsHappy = ({ i18n }: WhatIsHappyProps) => {
   return (
     <>
-      <SubTitle value={i18n._('What is Happy CRM?')} />
+      <SubTitle value={i18n._('¿Qué es Happy CRM?')} />
       <MainText>
         {i18n._(
-          "It's a CRM, a software to help businesses manage their customer data and relationships efficiently.",
+          'Es el CRM de Happy BPO para gestionar clientes, ventas y relaciones desde un solo lugar.',
         )}
       </MainText>
     </>

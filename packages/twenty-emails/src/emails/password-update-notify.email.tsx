@@ -24,26 +24,26 @@ export const PasswordUpdateNotifyEmail = ({
 
   return (
     <BaseEmail locale={locale}>
-      <Title value={i18n._('Password updated')} />
+      <Title value={i18n._('Contraseña actualizada')} />
       <MainText>
         {userName?.length > 1 ? (
-          <Trans id="Dear {userName}," values={{ userName }} />
+          <Trans id="Hola {userName}," values={{ userName }} />
         ) : (
-          <Trans id="Hello," />
+          <Trans id="Hola," />
         )}
         <br />
         <br />
         <Trans
-          id="This is a confirmation that password for your account ({email}) was successfully changed on {formattedDate}."
+          id="Te confirmamos que la contraseña de tu cuenta ({email}) se cambió correctamente el {formattedDate}."
           values={{ email, formattedDate }}
         />
         <br />
         <br />
-        <Trans id="If you did not initiate this change, please contact your workspace owner immediately." />
+        <Trans id="Si no fuiste tú quien hizo este cambio, avisa de inmediato al propietario de tu espacio de trabajo." />
         <br />
       </MainText>
       <br />
-      <CallToAction value={i18n._('Connect to Happy CRM')} href={link} />
+      <CallToAction value={i18n._('Entrar a Happy CRM')} href={link} />
       <br />
       <br />
     </BaseEmail>

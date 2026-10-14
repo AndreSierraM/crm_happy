@@ -137,7 +137,7 @@ export class CleanerWorkspaceService {
     const html = await renderEmail(emailTemplate, { pretty: true });
     const text = await renderEmail(emailTemplate, { plainText: true });
 
-    const workspaceDeletionMsg = msg`Your workspace is paused — reactivate to keep your data`;
+    const workspaceDeletionMsg = msg`Tu espacio de trabajo está en pausa: reactívalo para conservar tus datos`;
     const i18n = this.i18nService.getI18nInstance(workspaceMember.locale);
     const subject = i18n._(workspaceDeletionMsg);
 
@@ -222,7 +222,7 @@ export class CleanerWorkspaceService {
       from: `${this.twentyConfigService.get(
         'EMAIL_FROM_NAME',
       )} <${this.twentyConfigService.get('EMAIL_FROM_ADDRESS')}>`,
-      subject: 'Your workspace has been deleted',
+      subject: 'Tu espacio de trabajo fue eliminado',
       html,
       text,
     });

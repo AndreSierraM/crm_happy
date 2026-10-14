@@ -32,33 +32,33 @@ export const BillingTrialEndingEmail = ({
   });
 
   return (
-    <BaseEmail width={333} locale={locale}>
-      <Title value={i18n._('Your trial is ending soon')} />
+    <BaseEmail locale={locale}>
+      <Title value={i18n._('Tu prueba termina pronto')} />
       <MainText>
         {userName?.length > 1 ? (
-          <Trans id="Hi {userName}," values={{ userName }} />
+          <Trans id="Hola {userName}," values={{ userName }} />
         ) : (
-          <Trans id="Hello," />
+          <Trans id="Hola," />
         )}
         <br />
         <br />
         <Trans
-          id="Your free trial of <0>{workspaceDisplayName}</0> ends on {formattedDate}."
+          id="Tu prueba gratis de <0>{workspaceDisplayName}</0> termina el {formattedDate}."
           values={{ workspaceDisplayName, formattedDate }}
           components={{ 0: <b /> }}
         />
         <br />
         <br />
-        <Trans id="To keep your workspace and everything you've built, add a payment method and pick a plan." />
+        <Trans id="Para conservar tu espacio de trabajo y todo lo que construiste, agrega un método de pago y elige un plan." />
         <br />
         <br />
         <Trans
-          id="If you do nothing, we'll pause your workspace and keep your data safe for {dataRetentionDays} days in case you change your mind — no card will be charged."
+          id="Si no haces nada, pausaremos tu espacio de trabajo y cuidaremos tus datos por {dataRetentionDays} días por si cambias de opinión, sin cobrarte nada."
           values={{ dataRetentionDays }}
         />
       </MainText>
       <br />
-      <CallToAction href={link} value={i18n._('Add a payment method')} />
+      <CallToAction href={link} value={i18n._('Agregar método de pago')} />
       <br />
       <br />
     </BaseEmail>

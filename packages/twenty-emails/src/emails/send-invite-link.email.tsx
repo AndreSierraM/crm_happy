@@ -44,11 +44,11 @@ export const SendInviteLinkEmail = ({
   const workspaceName = workspace.name;
 
   return (
-    <BaseEmail width={333} locale={locale}>
-      <Title value={i18n._('Join your team on Happy CRM')} />
+    <BaseEmail locale={locale}>
+      <Title value={i18n._('Únete a tu equipo en Happy CRM')} />
       <MainText>
         <Trans
-          id="{senderName} (<0>{senderEmail}</0>) has invited you to join a workspace called <1>{workspaceName}</1>."
+          id="{senderName} (<0>{senderEmail}</0>) te invitó a unirte al espacio de trabajo <1>{workspaceName}</1>."
           values={{ senderName, senderEmail, workspaceName }}
           components={{
             0: (
@@ -69,13 +69,13 @@ export const SendInviteLinkEmail = ({
             src={workspaceLogo}
             width={40}
             height={40}
-            alt="Workspace logo"
+            alt="Logo del espacio de trabajo"
           />
         ) : (
           <></>
         )}
         {workspace.name ? <HighlightedText value={workspace.name} /> : <></>}
-        <CallToAction href={link} value={i18n._('Accept invite')} />
+        <CallToAction href={link} value={i18n._('Aceptar invitación')} />
       </HighlightedContainer>
       <WhatIsHappy i18n={i18n} />
     </BaseEmail>
