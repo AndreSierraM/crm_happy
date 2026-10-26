@@ -5,6 +5,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { type ReactNode } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
+import { ConnectedAccountScope } from '~/generated-metadata/graphql';
 import { SettingsApplicationConnectionDetail } from '~/pages/settings/applications/SettingsApplicationConnectionDetail';
 import { useFindApplicationConnectionProviders } from '~/pages/settings/applications/hooks/useFindApplicationConnectionProviders';
 import { useApplicationConnectedAccounts } from '~/pages/settings/applications/hooks/useApplicationConnectedAccounts';
@@ -125,6 +126,7 @@ describe('SettingsApplicationConnectionDetail', () => {
           type: 'oauth',
           name: 'google-calendar',
           displayName: 'Google Calendar',
+          scope: 'WORKSPACE',
           logoUrl: null,
           oauth: {
             scopes: ['calendar.readonly'],
@@ -146,7 +148,7 @@ describe('SettingsApplicationConnectionDetail', () => {
           lastSignedInAt: null,
           connectionProviderId: 'provider-1',
           name: 'Original name',
-          visibility: 'user',
+          scope: ConnectedAccountScope.WORKSPACE,
           lastCredentialsRefreshedAt: null,
           createdAt: '2026-05-01T00:00:00.000Z',
           updatedAt: '2026-05-01T00:00:00.000Z',
@@ -154,34 +156,6 @@ describe('SettingsApplicationConnectionDetail', () => {
       ],
       loading: false,
       refetch: jest.fn(),
-    });
-  });
-
-  it('changes visibility by reconnecting with the opposite visibility', () => {
-    renderDetailPage();
-
-    fireEvent.click(
-      screen.getByRole('button', {
-        name: /Share with workspace/,
-      }),
-    );
-
-    expect(mockOpenModal).toHaveBeenCalledWith(
-      'share-application-connection-with-workspace-modal-account-1',
-    );
-
-    fireEvent.click(
-      screen.getByRole('button', {
-        name: 'Reconnect and share',
-      }),
-    );
-
-    expect(mockTriggerAppOAuth).toHaveBeenCalledWith({
-      applicationId: 'app-1',
-      providerName: 'google-calendar',
-      visibility: 'workspace',
-      reconnectingConnectedAccountId: 'account-1',
-      redirectLocation: '/settings/applications/app-1/connections/account-1',
     });
   });
 
@@ -197,7 +171,7 @@ describe('SettingsApplicationConnectionDetail', () => {
           lastSignedInAt: null,
           connectionProviderId: 'provider-1',
           name: 'Shared connection',
-          visibility: 'workspace',
+          scope: ConnectedAccountScope.WORKSPACE,
           lastCredentialsRefreshedAt: null,
           createdAt: '2026-05-01T00:00:00.000Z',
           updatedAt: '2026-05-01T00:00:00.000Z',
@@ -218,7 +192,6 @@ describe('SettingsApplicationConnectionDetail', () => {
     expect(mockTriggerAppOAuth).toHaveBeenCalledWith({
       applicationId: 'app-1',
       providerName: 'google-calendar',
-      visibility: 'workspace',
       reconnectingConnectedAccountId: 'account-1',
       redirectLocation: '/settings/applications/app-1/connections/account-1',
     });

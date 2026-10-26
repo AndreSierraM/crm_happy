@@ -1,4 +1,4 @@
-
+/* @license Enterprise */
 
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,27 +14,29 @@ import { CoreEntityCacheService } from 'src/engine/core-entity-cache/services/co
 import { transformStripeSubscriptionEventToDatabaseCustomer } from 'src/engine/core-modules/billing-webhook/utils/transform-stripe-subscription-event-to-database-customer.util';
 import { transformStripeSubscriptionEventToDatabaseSubscriptionItem } from 'src/engine/core-modules/billing-webhook/utils/transform-stripe-subscription-event-to-database-subscription-item.util';
 import {
-    getSubscriptionStatus,
-    transformStripeSubscriptionEventToDatabaseSubscription,
+  getSubscriptionStatus,
+  transformStripeSubscriptionEventToDatabaseSubscription,
 } from 'src/engine/core-modules/billing-webhook/utils/transform-stripe-subscription-event-to-database-subscription.util';
 import {
-    BillingException,
-    BillingExceptionCode,
+  BillingException,
+  BillingExceptionCode,
 } from 'src/engine/core-modules/billing/billing.exception';
-import { WORKSPACE_ACTIVATING_SUBSCRIPTION_STATUSES } from 'src/engine/core-modules/billing/constants/workspace-activating-subscription-statuses.constant';
 import { BillingEntitlementDTO } from 'src/engine/core-modules/billing/dtos/billing-entitlement.dto';
 import { BillingCustomerEntity } from 'src/engine/core-modules/billing/entities/billing-customer.entity';
 import { BillingSubscriptionItemEntity } from 'src/engine/core-modules/billing/entities/billing-subscription-item.entity';
 import { BillingSubscriptionEntity } from 'src/engine/core-modules/billing/entities/billing-subscription.entity';
 import { BillingEntitlementKey } from 'src/engine/core-modules/billing/enums/billing-entitlement-key.enum';
+import { WORKSPACE_ACTIVATING_SUBSCRIPTION_STATUSES } from 'src/engine/core-modules/billing/constants/workspace-activating-subscription-statuses.constant';
 import { SubscriptionStatus } from 'src/engine/core-modules/billing/enums/billing-subscription-status.enum';
 import { BillingPriceService } from 'src/engine/core-modules/billing/services/billing-price.service';
 import { StripeCustomerService } from 'src/engine/core-modules/billing/stripe/services/stripe-customer.service';
 import { StripeSubscriptionScheduleService } from 'src/engine/core-modules/billing/stripe/services/stripe-subscription-schedule.service';
 import { StripeSubscriptionService } from 'src/engine/core-modules/billing/stripe/services/stripe-subscription.service';
+import { isEntitlementActive } from 'src/engine/core-modules/billing/utils/is-entitlement-active.util';
+import { isSendInvoiceSubscription } from 'src/engine/core-modules/billing/utils/is-send-invoice-subscription.util';
 import { resolveBillingPeriodBoundaryUpdate } from 'src/engine/core-modules/billing/utils/resolve-billing-period-boundary-update.util';
+import { EnterprisePlanService } from 'src/engine/core-modules/enterprise/services/enterprise-plan.service';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
-import { UsageLimitQuotaService } from 'src/engine/core-modules/usage-limit/services/usage-limit-quota.service';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { InjectWorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/inject-workspace-scoped-repository.decorator';
 import { WorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/workspace-scoped-repository';
@@ -63,8 +65,8 @@ export class BillingSubscriptionService {
     private readonly stripeSubscriptionScheduleService: StripeSubscriptionScheduleService,
     @InjectWorkspaceScopedRepository(BillingCustomerEntity)
     private readonly billingCustomerRepository: WorkspaceScopedRepository<BillingCustomerEntity>,
+    private readonly enterprisePlanService: EnterprisePlanService,
     private readonly workspaceCacheService: WorkspaceCacheService,
-    private readonly usageLimitQuotaService: UsageLimitQuotaService,
   ) {}
 
   async getBillingSubscriptions(workspaceId: string) {
@@ -222,11 +224,25 @@ export class BillingSubscriptionService {
   }
 
   async getWorkspaceEntitlements(
-    _workspaceId: string,
+    workspaceId: string,
   ): Promise<BillingEntitlementDTO[]> {
+    const isBillingEnabled = this.twentyConfigService.get('IS_BILLING_ENABLED');
+    const hasValidEnterprisePlan = this.enterprisePlanService.isValid();
+
+    const { billingEntitlements } = isBillingEnabled
+      ? await this.workspaceCacheService.getOrRecompute(workspaceId, [
+          'billingEntitlements',
+        ])
+      : { billingEntitlements: {} };
+
     return Object.values(BillingEntitlementKey).map((key) => ({
       key,
-      value: true,
+      value: isEntitlementActive({
+        key,
+        hasValidEnterprisePlan,
+        isBillingEnabled,
+        stripeEntitlementValue: billingEntitlements[key] ?? false,
+      }),
     }));
   }
 
@@ -243,10 +259,23 @@ export class BillingSubscriptionService {
   }
 
   async getWorkspaceEntitlementValue(
-    _workspaceId: string,
-    _key: BillingEntitlementKey,
+    workspaceId: string,
+    key: BillingEntitlementKey,
   ): Promise<boolean> {
-    return true;
+    const hasValidEnterprisePlan = this.enterprisePlanService.isValid();
+    const isBillingEnabled = this.twentyConfigService.get('IS_BILLING_ENABLED');
+
+    const stripeEntitlementValue =
+      hasValidEnterprisePlan && isBillingEnabled
+        ? await this.getWorkspaceEntitlementByKey(workspaceId, key)
+        : false;
+
+    return isEntitlementActive({
+      key,
+      hasValidEnterprisePlan,
+      isBillingEnabled,
+      stripeEntitlementValue,
+    });
   }
 
   async endTrialPeriod(workspace: WorkspaceEntity) {
@@ -261,21 +290,24 @@ export class BillingSubscriptionService {
       );
     }
 
-    const hasPaymentMethod = await this.stripeCustomerService.hasPaymentMethod(
-      billingSubscription.stripeCustomerId,
-    );
+    if (!isSendInvoiceSubscription(billingSubscription)) {
+      const hasPaymentMethod =
+        await this.stripeCustomerService.hasPaymentMethod(
+          billingSubscription.stripeCustomerId,
+        );
 
-    if (!hasPaymentMethod) {
-      return {
-        hasPaymentMethod: false,
-        status: undefined,
-        stripeCustomerId: billingSubscription.stripeCustomerId,
-      };
+      if (!hasPaymentMethod) {
+        return {
+          hasPaymentMethod: false,
+          status: undefined,
+          stripeCustomerId: billingSubscription.stripeCustomerId,
+        };
+      }
+
+      await this.stripeCustomerService.ensureDefaultPaymentMethod(
+        billingSubscription.stripeCustomerId,
+      );
     }
-
-    await this.stripeCustomerService.ensureDefaultPaymentMethod(
-      billingSubscription.stripeCustomerId,
-    );
 
     const updatedSubscription =
       await this.stripeSubscriptionService.updateSubscription(
@@ -290,12 +322,6 @@ export class BillingSubscriptionService {
       billingSubscription.workspaceId,
       updatedSubscription.id,
     );
-
-    await this.workspaceCacheService.invalidateAndRecompute(workspace.id, [
-      'currentBillingSubscription',
-    ]);
-
-    await this.usageLimitQuotaService.dropAllowanceCounter(workspace.id);
 
     return {
       status: getSubscriptionStatus(updatedSubscription.status),
@@ -339,7 +365,12 @@ export class BillingSubscriptionService {
           id: true,
           currentPeriodStart: true,
           currentPeriodEnd: true,
+          currentPeriodMaxSeats: true,
         },
+        relations: [
+          'billingSubscriptionItems',
+          'billingSubscriptionItems.billingProduct',
+        ],
       },
     );
 
@@ -438,6 +469,10 @@ export class BillingSubscriptionService {
         );
       }
     }
+
+    await this.workspaceCacheService.invalidateAndRecompute(workspaceId, [
+      'currentBillingSubscription',
+    ]);
 
     return currentBillingSubscription;
   }

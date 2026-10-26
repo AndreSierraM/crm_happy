@@ -37,10 +37,6 @@ import {
 } from 'src/engine/core-modules/auth/auth.util';
 import { getSignUpWithoutWorkspaceDecision } from 'src/engine/core-modules/auth/utils/get-sign-up-without-workspace-decision.util';
 import { hasProvisionedSignUpDestination } from 'src/engine/core-modules/auth/utils/has-provisioned-sign-up-destination.util';
-import { DEFAULT_DPA_REGION } from 'src/engine/core-modules/dpa/config/dpa-region-config.constant';
-import { DpaAgreementEntity } from 'src/engine/core-modules/dpa/entities/dpa-agreement.entity';
-import { DpaAgreementType } from 'src/engine/core-modules/dpa/enums/dpa-agreement-type.enum';
-import { buildDpaAgreementRecord } from 'src/engine/core-modules/dpa/utils/build-dpa-agreement-record.util';
 import {
   type AuthProviderWithPasswordType,
   type ExistingUserOrPartialUserWithPicture,
@@ -184,6 +180,7 @@ export class SignInUpService {
       throw new AuthException(
         'Invitation not found',
         AuthExceptionCode.FORBIDDEN_EXCEPTION,
+        { userFriendlyMessage: msg`Invitation not found` },
       );
     }
 
@@ -212,6 +209,7 @@ export class SignInUpService {
       throw new AuthException(
         'Invitation not found',
         AuthExceptionCode.FORBIDDEN_EXCEPTION,
+        { userFriendlyMessage: msg`Invitation not found` },
       );
     }
 
@@ -432,6 +430,7 @@ export class SignInUpService {
       throw new AuthException(
         'New workspace setup is disabled',
         AuthExceptionCode.SIGNUP_DISABLED,
+        { userFriendlyMessage: msg`New workspace setup is disabled` },
       );
     }
   }
@@ -464,6 +463,7 @@ export class SignInUpService {
     throw new AuthException(
       'New workspace setup is disabled',
       AuthExceptionCode.SIGNUP_DISABLED,
+      { userFriendlyMessage: msg`New workspace setup is disabled` },
     );
   }
 
@@ -622,7 +622,7 @@ export class SignInUpService {
 
   async signUpOnNewWorkspace(
     userData: ExistingUserOrPartialUserWithPicture['userData'],
-    options?: { displayName?: string; subdomain?: string },
+    options?: { displayName?: string; subdomain?: string; partner?: string },
   ) {
     const email =
       userData.type === 'newUserWithPicture'
@@ -744,26 +744,6 @@ export class SignInUpService {
             queryRunner,
           );
 
-          // Click-through DPA, recorded with the workspace as proof: only on managed cloud, where Twenty is the Processor
-          // Billing is an independent flag and must not be used to detect cloud
-          if (
-            this.twentyConfigService.get('IS_MULTIWORKSPACE_ENABLED') === true
-          ) {
-            await queryRunner.manager.save(
-              DpaAgreementEntity,
-              buildDpaAgreementRecord({
-                workspaceId: workspace.id,
-                type: DpaAgreementType.CLICK_THROUGH,
-                region:
-                  this.twentyConfigService.get('DPA_DEPLOYMENT_REGION') ??
-                  DEFAULT_DPA_REGION,
-                acceptedAt: new Date(),
-                acceptedByUserId: user.id,
-                acceptedByEmail: email,
-              }),
-            );
-          }
-
           return {
             user,
             workspace,
@@ -793,6 +773,7 @@ export class SignInUpService {
           userEmail: email,
           workspaceId: workspace.id,
           workspaceDisplayName: workspace.displayName,
+          partner: options?.partner,
         });
       }
 

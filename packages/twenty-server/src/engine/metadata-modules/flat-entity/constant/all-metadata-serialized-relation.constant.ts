@@ -49,7 +49,9 @@ export const ALL_METADATA_SERIALIZED_RELATION = {
   rowLevelPermissionPredicateGroup: {},
   viewFilterGroup: {},
   viewSort: {},
-  frontComponent: {},
+  frontComponent: {
+    objectMetadata: true,
+  },
   webhook: {},
   applicationVariable: {},
   connectionProvider: {},
@@ -59,6 +61,8 @@ export const ALL_METADATA_SERIALIZED_RELATION = {
   settingsMenuItem: {},
   workflow: {},
   workflowVersion: {},
+  agentChatChannel: {},
+  agentChatChannelRole: {},
 } as const satisfies MetadataSerializedRelationProperties;
 
 // satisfies with complex mapped types involving nested generics doesn't always catch missing required keys

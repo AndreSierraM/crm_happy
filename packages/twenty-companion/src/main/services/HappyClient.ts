@@ -4,11 +4,12 @@ import { type Credentials } from '../types/Credentials';
 import { refreshCredentials } from '../utils/refreshCredentials';
 import { requestJson } from '../utils/requestJson';
 import { validateServerUrl } from '../utils/validateServerUrl';
-import { HappyRequestError } from '../errors/HappyRequestError';
+import { TwentyRequestError } from '../errors/TwentyRequestError';
 import { DesktopRecorderUnavailableError } from '../errors/DesktopRecorderUnavailableError';
 import { type RecordingConfiguration } from '../../shared/types/RecordingConfiguration';
 import { type Agenda } from '../../shared/types/Agenda';
 import { getImageAbsoluteURI } from '../../../../twenty-shared/src/utils/image/getImageAbsoluteURI';
+import { i18n } from '../../shared/i18n';
 
 type ConnectionContext = {
   endpoint: string;
@@ -30,7 +31,7 @@ const resolveImageUrl = (
   }
 };
 
-export class HappyClient {
+export class TwentyClient {
   private credentials: Credentials | null = null;
   private context: ConnectionContext | null = null;
   get workspaceUrl() {
@@ -82,13 +83,13 @@ export class HappyClient {
       );
       validateServerUrl(configuration.apiUrl);
     } catch (error) {
-      if (error instanceof HappyRequestError && error.status === 404)
+      if (error instanceof TwentyRequestError && error.status === 404)
         throw new DesktopRecorderUnavailableError(credentials.serverUrl);
       throw error;
     }
     signal?.throwIfAborted();
     if (previousConnectionVersion !== this.connectionVersion)
-      throw new Error('Your workspace connection changed. Try again.');
+      throw new Error(i18n._('Your workspace connection changed. Try again.'));
     const connectionVersion = ++this.connectionVersion;
     const previous = this.credentials;
     const previousContext = this.context;
@@ -149,7 +150,7 @@ export class HappyClient {
   async companion<TResponse>(body: object): Promise<TResponse> {
     const connectionVersion = this.connectionVersion;
     if (!this.credentials)
-      throw new Error('Connect your Happy CRM workspace first.');
+      throw new Error(i18n._('Connect your Twenty workspace first.'));
     if (this.credentials.expiresAt < Date.now() + 60_000) {
       if (!this.refreshing) {
         const refreshing = this.refresh().finally(() => {
@@ -160,7 +161,7 @@ export class HappyClient {
       await this.refreshing;
     }
     if (!this.credentials || connectionVersion !== this.connectionVersion)
-      throw new Error('Reconnect your Happy CRM workspace.');
+      throw new Error(i18n._('Reconnect your Twenty workspace.'));
     if (!this.context) {
       const context = await this.discoverEndpoint(this.credentials);
       if (connectionVersion === this.connectionVersion) this.context = context;
@@ -170,7 +171,7 @@ export class HappyClient {
       !this.credentials ||
       connectionVersion !== this.connectionVersion
     )
-      throw new Error('Reconnect your Happy CRM workspace.');
+      throw new Error(i18n._('Reconnect your Twenty workspace.'));
     const serverUrl = this.credentials.serverUrl;
     try {
       const response = await requestJson<TResponse>(this.context.endpoint, {
@@ -182,10 +183,12 @@ export class HappyClient {
         body: JSON.stringify(body),
       });
       if (connectionVersion !== this.connectionVersion)
-        throw new Error('Your workspace connection changed. Try again.');
+        throw new Error(
+          i18n._('Your workspace connection changed. Try again.'),
+        );
       return response;
     } catch (error) {
-      if (error instanceof HappyRequestError && error.status === 404) {
+      if (error instanceof TwentyRequestError && error.status === 404) {
         throw new DesktopRecorderUnavailableError(serverUrl);
       }
       throw error;
@@ -227,7 +230,9 @@ export class HappyClient {
     ]);
     if (metadata.errors?.length) {
       throw new Error(
-        'Happy CRM could not load your workspace. Try refreshing, or reconnect in Settings if this continues.',
+        i18n._(
+          'Twenty could not load your workspace. Try refreshing, or reconnect in Settings if this continues.',
+        ),
       );
     }
     const { publicFunctionDomain } = configuration;

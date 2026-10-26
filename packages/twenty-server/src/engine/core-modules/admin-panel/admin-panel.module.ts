@@ -7,6 +7,7 @@ import { CoreEntityCacheModule } from 'src/engine/core-entity-cache/core-entity-
 import { AdminPanelAiProviderResolver } from 'src/engine/core-modules/admin-panel/admin-panel-ai-provider.resolver';
 import { AdminPanelApplicationRegistrationResolver } from 'src/engine/core-modules/admin-panel/admin-panel-application-registration.resolver';
 import { AdminPanelUsageLimitResolver } from 'src/engine/core-modules/admin-panel/admin-panel-usage-limit.resolver';
+import { AdminPanelWorkspaceDataExportResolver } from 'src/engine/core-modules/admin-panel/admin-panel-workspace-data-export.resolver';
 import { AdminPanelHealthService } from 'src/engine/core-modules/admin-panel/admin-panel-health.service';
 import { AdminPanelQueueService } from 'src/engine/core-modules/admin-panel/admin-panel-queue.service';
 import { AdminPanelResolver } from 'src/engine/core-modules/admin-panel/admin-panel.resolver';
@@ -20,7 +21,6 @@ import { AdminPanelAiProviderService } from 'src/engine/core-modules/admin-panel
 import { AdminPanelUsageLimitService } from 'src/engine/core-modules/admin-panel/services/admin-panel-usage-limit.service';
 import { AdminPanelBillingService } from 'src/engine/core-modules/admin-panel/services/admin-panel-billing.service';
 import { AdminPanelChatService } from 'src/engine/core-modules/admin-panel/services/admin-panel-chat.service';
-import { AdminPanelGlobalChatThreadsService } from 'src/engine/core-modules/admin-panel/services/admin-panel-global-chat-threads.service';
 import { AdminPanelConfigService } from 'src/engine/core-modules/admin-panel/services/admin-panel-config.service';
 import { AdminPanelServerAdminService } from 'src/engine/core-modules/admin-panel/services/admin-panel-server-admin.service';
 import { AdminPanelSigningKeyService } from 'src/engine/core-modules/admin-panel/services/admin-panel-signing-key.service';
@@ -49,6 +49,7 @@ import { UserWorkspaceEntity } from 'src/engine/core-modules/user-workspace/user
 import { UserVarsModule } from 'src/engine/core-modules/user/user-vars/user-vars.module';
 import { UserEntity } from 'src/engine/core-modules/user/user.entity';
 import { UserModule } from 'src/engine/core-modules/user/user.module';
+import { WorkspaceDataExportModule } from 'src/engine/core-modules/workspace-data-export/workspace-data-export.module';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { PermissionsModule } from 'src/engine/metadata-modules/permissions/permissions.module';
 import { provideWorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/provide-workspace-scoped-repository';
@@ -83,12 +84,14 @@ import { provideWorkspaceScopedRepository } from 'src/engine/twenty-orm/workspac
     EventLogEmitterModule,
     EnterpriseModule,
     TwoFactorAuthenticationModule,
+    WorkspaceDataExportModule,
   ],
   providers: [
     AdminPanelResolver,
     AdminPanelAiProviderResolver,
     AdminPanelApplicationRegistrationResolver,
     AdminPanelUsageLimitResolver,
+    AdminPanelWorkspaceDataExportResolver,
     AdminPanelUsageLimitService,
     AdminPanelAiProviderService,
     AdminPanelUserLookupService,
@@ -96,7 +99,6 @@ import { provideWorkspaceScopedRepository } from 'src/engine/twenty-orm/workspac
     AdminPanelStatisticsService,
     AdminPanelBillingService,
     AdminPanelChatService,
-    AdminPanelGlobalChatThreadsService,
     AdminPanelConfigService,
     AdminPanelSigningKeyService,
     AdminPanelVersionService,

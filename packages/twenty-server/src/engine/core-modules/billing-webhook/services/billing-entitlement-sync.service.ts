@@ -9,6 +9,7 @@ import { buildBillingEntitlementStateLockKey } from 'src/engine/core-modules/bil
 import { buildBillingEntitlementsFromLookupKeys } from 'src/engine/core-modules/billing/utils/build-billing-entitlements-from-lookup-keys.util';
 import { CacheLockService } from 'src/engine/core-modules/cache-lock/cache-lock.service';
 import { UsageLimitQuotaService } from 'src/engine/core-modules/usage-limit/services/usage-limit-quota.service';
+import { UsageLimitStockService } from 'src/engine/core-modules/usage-limit/services/usage-limit-stock.service';
 import { RowLevelPermissionPredicateGroupService } from 'src/engine/metadata-modules/row-level-permission-predicate/services/row-level-permission-predicate-group.service';
 import { InjectWorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/inject-workspace-scoped-repository.decorator';
 import { WorkspaceScopedRepository } from 'src/engine/twenty-orm/workspace-scoped-repository/workspace-scoped-repository';
@@ -30,6 +31,7 @@ export class BillingEntitlementSyncService {
     private readonly billingEntitlementRepository: WorkspaceScopedRepository<BillingEntitlementEntity>,
     private readonly rowLevelPermissionPredicateGroupService: RowLevelPermissionPredicateGroupService,
     private readonly usageLimitQuotaService: UsageLimitQuotaService,
+    private readonly usageLimitStockService: UsageLimitStockService,
     private readonly cacheLockService: CacheLockService,
     private readonly workspaceCacheService: WorkspaceCacheService,
   ) {}
@@ -80,6 +82,9 @@ export class BillingEntitlementSyncService {
       isGranted(BillingEntitlementKey.USAGE_LIMIT)
     ) {
       await this.usageLimitQuotaService.dropIntraWorkspaceLimitCounters(
+        workspaceId,
+      );
+      await this.usageLimitStockService.dropIntraWorkspaceLimitCounters(
         workspaceId,
       );
     }

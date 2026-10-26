@@ -7,8 +7,11 @@ import { styled } from '@linaria/react';
 import { t } from '@lingui/core/macro';
 import { Section } from 'twenty-ui/components/layout';
 import {
+  IconBrandX,
   IconBriefcase,
   IconTransform,
+  type IconComponent,
+  useIcons,
 } from 'twenty-ui/icon';
 import { SettingsPath } from 'twenty-shared/types';
 import { getSettingsPath } from 'twenty-shared/utils';
@@ -17,12 +20,6 @@ import coverDark from '~/pages/settings/community/assets/cover-dark.png';
 import coverLight from '~/pages/settings/community/assets/cover-light.png';
 
 const SETTINGS_COMMUNITY_HERO_INSTANCE_ID_PREFIX = 'settings-community-hero';
-
-const StyledCardLink = styled.a`
-  display: block;
-  min-width: 0;
-  text-decoration: none;
-`;
 
 const StyledCardsGrid = styled.div`
   display: grid;
@@ -39,8 +36,32 @@ const StyledFeaturesContent = styled.div`
   gap: ${themeCssVariables.spacing[4]};
 `;
 
+type SettingsCommunityLink = {
+  href: string;
+  Icon: IconComponent;
+  iconColor: string;
+  cardTitle: string;
+};
+
 export const SettingsCommunity = () => {
   const theme = useTheme();
+  const { getIcon } = useIcons();
+  const IconBrandDiscord = getIcon('IconBrandDiscord');
+
+  const socialLinks: SettingsCommunityLink[] = [
+    {
+      href: 'https://discord.com/invite/cx5n4Jzs57',
+      Icon: IconBrandDiscord,
+      iconColor: themeCssVariables.color.blue9,
+      cardTitle: t`Join our Discord`,
+    },
+    {
+      href: 'https://x.com/twentycrm',
+      Icon: IconBrandX,
+      iconColor: themeCssVariables.font.color.primary,
+      cardTitle: t`Follow us on X`,
+    },
+  ];
 
   return (
     <SettingsPageLayout
@@ -63,28 +84,44 @@ export const SettingsCommunity = () => {
           />
         </Section.Root>
 
-
+        <Section.Root>
+          <Section.Header
+            title={t`Join the community`}
+            description={t`Stay up to date with product news and community updates.`}
+          />
+          <StyledCardsGrid>
+            {socialLinks.map(({ href, Icon, iconColor, cardTitle }) => (
+              <SettingsCard
+                key={href}
+                href={href}
+                Icon={
+                  <Icon
+                    size={theme.icon.size.md}
+                    stroke={theme.icon.stroke.sm}
+                  />
+                }
+                iconColor={iconColor}
+                title={cardTitle}
+              />
+            ))}
+          </StyledCardsGrid>
+        </Section.Root>
 
         <Section.Root>
           <Section.Header
             title={t`Partners`}
-            description={t`Hire a partner to help you implement and customize Happy CRM.`}
+            description={t`Hire a partner to help you implement and customize Twenty.`}
           />
-          <StyledCardLink
-            href="https://happybpo.co/#contacto"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <SettingsCard
-              Icon={
-                <IconBriefcase
-                  size={theme.icon.size.md}
-                  stroke={theme.icon.stroke.sm}
-                />
-              }
-              title={t`Browse partners`}
-            />
-          </StyledCardLink>
+          <SettingsCard
+            href="https://twenty.com/partners/list"
+            Icon={
+              <IconBriefcase
+                size={theme.icon.size.md}
+                stroke={theme.icon.stroke.sm}
+              />
+            }
+            title={t`Browse partners`}
+          />
         </Section.Root>
 
         <Section.Root>
@@ -94,21 +131,16 @@ export const SettingsCommunity = () => {
           />
           <StyledFeaturesContent>
             <SettingsLabContent />
-            <StyledCardLink
-              href="https://happybpo.co/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SettingsCard
-                Icon={
-                  <IconTransform
-                    size={theme.icon.size.md}
-                    stroke={theme.icon.stroke.sm}
-                  />
-                }
-                title={t`Read changelog`}
-              />
-            </StyledCardLink>
+            <SettingsCard
+              href="https://twenty.com/releases"
+              Icon={
+                <IconTransform
+                  size={theme.icon.size.md}
+                  stroke={theme.icon.stroke.sm}
+                />
+              }
+              title={t`Read changelog`}
+            />
           </StyledFeaturesContent>
         </Section.Root>
       </SettingsPageContainer>

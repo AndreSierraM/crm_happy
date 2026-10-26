@@ -1,10 +1,21 @@
-
+/* @license Enterprise */
 
 import { Injectable } from '@nestjs/common';
 
+import { isDefined } from 'twenty-shared/utils';
+
 import {
-    type CustomAiProviderAccess,
-    CustomAiProviderAccessService,
+  AdminPanelException,
+  AdminPanelExceptionCode,
+} from 'src/engine/core-modules/admin-panel/admin-panel.exception';
+import { MAX_SEATS_WITHOUT_ENTERPRISE_KEY } from 'src/engine/core-modules/enterprise/constants/max-seats-without-organization-key.constant';
+import {
+  EnterpriseException,
+  EnterpriseExceptionCode,
+} from 'src/engine/core-modules/enterprise/enterprise.exception';
+import {
+  type CustomAiProviderAccess,
+  CustomAiProviderAccessService,
 } from 'src/engine/core-modules/enterprise/services/custom-ai-provider-access.service';
 import { UserInputError } from 'src/engine/core-modules/graphql/utils/graphql-errors.util';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
@@ -32,7 +43,16 @@ export class AdminPanelAiProviderService {
   }
 
   private async assertCustomAiProviderAccess(): Promise<void> {
-    return;
+    const { hasAccess, seatCount } = await this.getCustomAiProviderAccess();
+
+    if (hasAccess) {
+      return;
+    }
+
+    throw new EnterpriseException(
+      `Custom AI providers require a valid enterprise key above ${MAX_SEATS_WITHOUT_ENTERPRISE_KEY} seats (this instance has ${seatCount})`,
+      EnterpriseExceptionCode.ENTERPRISE_SEAT_THRESHOLD_EXCEEDED,
+    );
   }
 
   getMaskedProviders(): Record<string, unknown> {
@@ -40,10 +60,12 @@ export class AdminPanelAiProviderService {
       this.aiModelRegistryService.getResolvedProvidersForAdmin();
     const catalogNames = this.aiModelRegistryService.getCatalogProviderNames();
     const rawCatalog = this.defaultAiCatalogService.getDefaultAiCatalog();
+    const customProviders = this.twentyConfigService.get('AI_PROVIDERS');
     const masked: Record<string, Record<string, unknown>> = {};
 
     for (const [key, config] of Object.entries(providers)) {
-      const isCatalog = catalogNames.has(key);
+      const isCatalog =
+        catalogNames.has(key) && !isDefined(customProviders[key]);
       const rawConfig = isCatalog ? rawCatalog[key] : undefined;
       const apiKeyConfigVariable = rawConfig
         ? extractConfigVariableName(rawConfig.apiKey)
@@ -80,6 +102,17 @@ export class AdminPanelAiProviderService {
 
     if (!PROVIDER_NAME_PATTERN.test(providerName)) {
       throw new UserInputError('Invalid provider name');
+    }
+
+    if (
+      this.aiModelRegistryService.getCatalogProviderNames().has(providerName)
+    ) {
+      throw new UserInputError(
+        new AdminPanelException(
+          `Provider "${providerName}" is built in and cannot be added as a custom provider`,
+          AdminPanelExceptionCode.BUILT_IN_AI_PROVIDER_NAME,
+        ),
+      );
     }
 
     // An invalid config would otherwise break model resolution for every provider on the instance

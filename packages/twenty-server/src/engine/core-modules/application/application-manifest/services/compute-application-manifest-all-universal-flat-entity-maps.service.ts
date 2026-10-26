@@ -48,8 +48,6 @@ import {
 } from 'src/engine/core-modules/application/application.exception';
 import { type FlatApplication } from 'src/engine/core-modules/application/types/flat-application.type';
 import { fromAgentManifestToUniversalFlatAgent } from 'src/engine/core-modules/application/utils/from-agent-manifest-to-universal-flat-agent.util';
-import { type PlaintextString } from 'src/engine/core-modules/secret-encryption/branded-strings/plaintext-string.type';
-import { SecretEncryptionService } from 'src/engine/core-modules/secret-encryption/secret-encryption.service';
 import { createEmptyAllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-all-flat-entity-maps.constant';
 import { type AllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/all-flat-entity-maps.type';
 import { type UniversalFlatFieldMetadata } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/universal-flat-field-metadata.type';
@@ -57,22 +55,16 @@ import { addUniversalFlatEntityToUniversalFlatEntityMapsThroughMutationOrThrow }
 
 @Injectable()
 export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
-  constructor(
-    private readonly secretEncryptionService: SecretEncryptionService,
-  ) {}
-
   compute({
     manifest,
     ownerFlatApplication,
     fromAllFlatEntityMaps,
     now,
-    workspaceId,
   }: {
     manifest: Manifest;
     ownerFlatApplication: FlatApplication;
     fromAllFlatEntityMaps: AllFlatEntityMaps;
     now: string;
-    workspaceId: string;
   }): AllFlatEntityMaps {
     const allUniversalFlatEntityMaps = createEmptyAllFlatEntityMaps();
 
@@ -212,6 +204,16 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
       });
     }
 
+    const identifyAccountLogicFunctionUniversalIdentifiers = new Set(
+      (manifest.connectionProviders ?? [])
+        .map(
+          (connectionProviderManifest) =>
+            connectionProviderManifest.identifyAccountLogicFunction
+              ?.universalIdentifier,
+        )
+        .filter(isDefined),
+    );
+
     for (const logicFunctionManifest of manifest.logicFunctions) {
       addUniversalFlatEntityToUniversalFlatEntityMapsThroughMutationOrThrow({
         universalFlatEntity:
@@ -221,6 +223,7 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
             applicationSourceType,
             existingFlatLogicFunctionMaps:
               fromAllFlatEntityMaps.flatLogicFunctionMaps,
+            identifyAccountLogicFunctionUniversalIdentifiers,
             now,
           }),
         universalFlatEntityMapsToMutate:
@@ -228,8 +231,15 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
       });
     }
 
-    const settingsFrontComponentUniversalIdentifier =
-      manifest.application.settingsFrontComponent?.universalIdentifier;
+    const settingsFrontComponentUniversalIdentifiers = new Set(
+      [
+        manifest.application.settingsFrontComponent?.universalIdentifier,
+        ...(manifest.settingsMenuItems ?? []).map(
+          (settingsMenuItemManifest) =>
+            settingsMenuItemManifest.frontComponentUniversalIdentifier,
+        ),
+      ].filter(isDefined),
+    );
 
     for (const frontComponentManifest of manifest.frontComponents) {
       addUniversalFlatEntityToUniversalFlatEntityMapsThroughMutationOrThrow({
@@ -238,8 +248,9 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
             frontComponentManifest,
             applicationUniversalIdentifier,
             isSettingsFrontComponent:
-              frontComponentManifest.universalIdentifier ===
-              settingsFrontComponentUniversalIdentifier,
+              settingsFrontComponentUniversalIdentifiers.has(
+                frontComponentManifest.universalIdentifier,
+              ),
             now,
           }),
         universalFlatEntityMapsToMutate:
@@ -607,23 +618,12 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
             )
           : null;
 
-      // A user variable's values belong to each member, so it has no
-      // workspace value: the manifest value is only its default.
-      const encryptedValue =
-        applicationVariableManifest.scope === 'USER'
-          ? null
-          : this.secretEncryptionService.encryptVersioned(
-              (defaultValue ?? '') as PlaintextString,
-              { workspaceId },
-            );
-
       addUniversalFlatEntityToUniversalFlatEntityMapsThroughMutationOrThrow({
         universalFlatEntity:
           fromApplicationVariableManifestToUniversalFlatApplicationVariable({
             key,
             universalIdentifier:
               applicationVariableManifest.universalIdentifier,
-            encryptedValue,
             defaultValue,
             description: applicationVariableManifest.description,
             label: applicationVariableManifest.label,

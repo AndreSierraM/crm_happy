@@ -8,7 +8,7 @@ import { SettingsPath } from 'twenty-shared/types';
 import { getSettingsPath } from 'twenty-shared/utils';
 import { Section } from 'twenty-ui/components/layout';
 import { Status, Tag } from 'twenty-ui/primitives/data-display';
-import { IconRefresh, IconTrash, IconUsers } from 'twenty-ui/icon';
+import { IconRefresh, IconTrash } from 'twenty-ui/icon';
 import { Button } from 'twenty-ui/primitives/input';
 import { themeCssVariables } from 'twenty-ui/theme';
 
@@ -135,7 +135,6 @@ export const SettingsApplicationConnectionDetail = () => {
       ? connection.name
       : (connection?.handle ?? t`Connection`);
   const deleteModalId = `delete-application-connection-modal-${connectedAccountId}`;
-  const shareWithWorkspaceModalId = `share-application-connection-with-workspace-modal-${connectedAccountId}`;
   const applicationSettingsPath = getSettingsPath(
     SettingsPath.ApplicationDetail,
     { applicationId },
@@ -155,21 +154,6 @@ export const SettingsApplicationConnectionDetail = () => {
     triggerAppOAuth({
       applicationId,
       providerName: provider.name,
-      visibility: connection.visibility === 'workspace' ? 'workspace' : 'user',
-      reconnectingConnectedAccountId: connection.id,
-      redirectLocation: detailPath,
-    });
-  };
-
-  const handleShareWithWorkspace = () => {
-    if (connection === undefined || provider === undefined) {
-      return;
-    }
-
-    triggerAppOAuth({
-      applicationId,
-      providerName: provider.name,
-      visibility: 'workspace',
       reconnectingConnectedAccountId: connection.id,
       redirectLocation: detailPath,
     });
@@ -214,13 +198,11 @@ export const SettingsApplicationConnectionDetail = () => {
         value: <StyledMonoText>{connection.handle}</StyledMonoText>,
       },
       {
-        key: 'visibility',
+        key: 'scope',
         label: t`Visibility`,
         value: (
-          <Status
-            color={connection.visibility === 'workspace' ? 'blue' : 'gray'}
-          >
-            {connection.visibility === 'workspace'
+          <Status color={connection.scope === 'WORKSPACE' ? 'blue' : 'gray'}>
+            {connection.scope === 'WORKSPACE'
               ? t`Workspace shared`
               : t`Just for me`}
           </Status>
@@ -336,13 +318,6 @@ export const SettingsApplicationConnectionDetail = () => {
                     color="accent"
                   >{t`Reconnect`}</Button>
                 )}
-                {connection.visibility !== 'workspace' && (
-                  <Button
-                    startIcon={<IconUsers />}
-                    onClick={() => openDialog(shareWithWorkspaceModalId)}
-                    variant="outline"
-                  >{t`Share with workspace`}</Button>
-                )}
                 <Button
                   startIcon={<IconTrash />}
                   onClick={() => openDialog(deleteModalId)}
@@ -389,19 +364,6 @@ export const SettingsApplicationConnectionDetail = () => {
               onConfirmClick={handleDelete}
               confirmButtonText={t`Disconnect`}
               loading={isDeleting}
-            />
-            <ConfirmationDialog
-              dialogId={shareWithWorkspaceModalId}
-              title={t`Share with workspace?`}
-              subtitle={
-                <Trans>
-                  Sharing this connection with the workspace requires
-                  reconnecting it. You will be redirected to authorize it again.
-                </Trans>
-              }
-              onConfirmClick={handleShareWithWorkspace}
-              confirmButtonText={t`Reconnect and share`}
-              confirmButtonColor="accent"
             />
           </>
         )}

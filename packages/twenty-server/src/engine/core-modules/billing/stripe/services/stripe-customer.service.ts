@@ -1,9 +1,10 @@
-
+/* @license Enterprise */
 
 import { Injectable, Logger } from '@nestjs/common';
 
-import type Stripe from 'stripe';
+import { isNonEmptyString } from '@sniptt/guards';
 import { isDefined } from 'twenty-shared/utils';
+import type Stripe from 'stripe';
 
 import { BillingCustomerEntity } from 'src/engine/core-modules/billing/entities/billing-customer.entity';
 import { StripeSDKService } from 'src/engine/core-modules/billing/stripe/stripe-sdk/services/stripe-sdk.service';
@@ -98,16 +99,23 @@ export class StripeCustomerService {
     });
   }
 
-  async createStripeCustomer(
-    userEmail: string,
-    workspaceId: string,
-    customerName: string | undefined,
-  ) {
+  async createStripeCustomer({
+    userEmail,
+    workspaceId,
+    customerName,
+    partner,
+  }: {
+    userEmail: string;
+    workspaceId: string;
+    customerName: string | undefined;
+    partner?: string;
+  }) {
     const customer = await this.stripe.customers.create({
       name: customerName,
       email: userEmail,
       metadata: {
         workspaceId,
+        ...(isNonEmptyString(partner) ? { partner } : {}),
       },
     });
 
