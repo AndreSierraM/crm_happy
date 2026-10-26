@@ -13,7 +13,14 @@
 #   HOST_PORT=3100
 #   PG_DATABASE_URL=postgres://user:pass@host:puerto/db   (base externa)
 #   REDIS_URL=redis://host:puerto                          (redis externo)
-#   SERVER_URL, APP_SECRET/ENCRYPTION_KEY, STORAGE_*, EMAIL_*, HAPPY_* ...
+#   SERVER_URL, FRONTEND_URL (dominio base con DNS wildcard; opcional para
+#   mantener el arranque, pero necesario para redirecciones multiworkspace),
+#   IS_MULTIWORKSPACE_ENABLED=true, DEFAULT_SUBDOMAIN=app,
+#   APP_SECRET/ENCRYPTION_KEY, STORAGE_*, EMAIL_*, HAPPY_* ...
+# Multiworkspace: FRONTEND_URL debe ser el dominio base (p. ej. https://crm.example.com)
+# con DNS/proxy wildcard (*.crm.example.com). No usar una IP ni incluir "app"
+# en FRONTEND_URL: el servidor antepone el subdominio del workspace. Si no se
+# define, se conserva SERVER_URL como fallback para que el despliegue no falle.
 # server/worker van a la red externa dokploy-network para resolver por DNS
 # interno los hostnames de las bases de Dokploy.
 name: crm_happy
@@ -46,6 +53,9 @@ services:
       # internos a los que caer.
       PG_DATABASE_URL: ${PG_DATABASE_URL:?PG_DATABASE_URL debe venir del Environment de Dokploy (Postgres externo)}
       SERVER_URL: ${SERVER_URL}
+      FRONTEND_URL: ${FRONTEND_URL:-${SERVER_URL}}
+      IS_MULTIWORKSPACE_ENABLED: ${IS_MULTIWORKSPACE_ENABLED:-true}
+      DEFAULT_SUBDOMAIN: ${DEFAULT_SUBDOMAIN:-app}
       REDIS_URL: ${REDIS_URL:?REDIS_URL debe venir del Environment de Dokploy (Redis externo)}
       REDIS_CACHE_PREFIX: ${REDIS_CACHE_PREFIX:-}
       DISABLE_DB_MIGRATIONS: ${DISABLE_DB_MIGRATIONS}
@@ -102,6 +112,9 @@ services:
       NODE_ENV: production
       PG_DATABASE_URL: ${PG_DATABASE_URL:?PG_DATABASE_URL debe venir del Environment de Dokploy (Postgres externo)}
       SERVER_URL: ${SERVER_URL}
+      FRONTEND_URL: ${FRONTEND_URL:-${SERVER_URL}}
+      IS_MULTIWORKSPACE_ENABLED: ${IS_MULTIWORKSPACE_ENABLED:-true}
+      DEFAULT_SUBDOMAIN: ${DEFAULT_SUBDOMAIN:-app}
       REDIS_URL: ${REDIS_URL:?REDIS_URL debe venir del Environment de Dokploy (Redis externo)}
       REDIS_CACHE_PREFIX: ${REDIS_CACHE_PREFIX:-}
       DISABLE_DB_MIGRATIONS: "true" # it already runs on the server
