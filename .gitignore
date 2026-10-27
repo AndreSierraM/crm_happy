@@ -4,6 +4,7 @@
 .claude/*
 !.claude/settings.json
 !.claude/skills/
+.commandcode/
 **/**/node_modules/
 .cache
 
