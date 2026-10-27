@@ -28268,6 +28268,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"crm_happy@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "crm_happy@workspace:."
+  dependencies:
+    "@nx/jest": "npm:22.7.12"
+    "@nx/js": "npm:22.7.12"
+    "@nx/react": "npm:22.7.12"
+    "@nx/storybook": "npm:22.7.12"
+    "@nx/vite": "npm:22.7.12"
+    "@nx/web": "npm:22.7.12"
+    "@types/react": "npm:^19.2.0"
+    "@types/react-dom": "npm:^19.2.0"
+    "@yarnpkg/types": "npm:^4.0.0"
+    concurrently: "npm:^8.2.2"
+    eslint-plugin-lingui: "npm:^0.16.0"
+    http-server: "npm:^14.1.1"
+    knip: "npm:^6.37.0"
+    nx: "npm:22.7.12"
+    oxfmt: "npm:0.72.0"
+    tsx: "npm:^4.17.0"
+    verdaccio: "npm:^6.10.7"
+  languageName: unknown
+  linkType: soft
+
 "cron-parser@npm:4.9.0":
   version: 4.9.0
   resolution: "cron-parser@npm:4.9.0"
@@ -50250,30 +50274,6 @@ __metadata:
     y-protocols: "npm:^1.0.6"
     yjs: "npm:^13.6.27"
     zod: "npm:^4.1.11"
-  languageName: unknown
-  linkType: soft
-
-"crm_happy@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "crm_happy@workspace:."
-  dependencies:
-    "@nx/jest": "npm:22.7.12"
-    "@nx/js": "npm:22.7.12"
-    "@nx/react": "npm:22.7.12"
-    "@nx/storybook": "npm:22.7.12"
-    "@nx/vite": "npm:22.7.12"
-    "@nx/web": "npm:22.7.12"
-    "@types/react": "npm:^19.2.0"
-    "@types/react-dom": "npm:^19.2.0"
-    "@yarnpkg/types": "npm:^4.0.0"
-    concurrently: "npm:^8.2.2"
-    eslint-plugin-lingui: "npm:^0.16.0"
-    http-server: "npm:^14.1.1"
-    knip: "npm:^6.37.0"
-    nx: "npm:22.7.12"
-    oxfmt: "npm:0.72.0"
-    tsx: "npm:^4.17.0"
-    verdaccio: "npm:^6.10.7"
   languageName: unknown
   linkType: soft
 
