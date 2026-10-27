@@ -990,8 +990,9 @@ export class AuthResolver {
     tokenWorkspaceId: string,
   ): Promise<WorkspaceEntity> {
     const workspace =
-      await this.workspaceDomainsService.getWorkspaceByOriginOrDefaultWorkspace(
+      await this.workspaceDomainsService.getWorkspaceForToken(
         origin,
+        tokenWorkspaceId,
       );
 
     assertIsDefinedOrThrow(
@@ -1001,13 +1002,6 @@ export class AuthResolver {
         AuthExceptionCode.WORKSPACE_NOT_FOUND,
       ),
     );
-
-    if (tokenWorkspaceId !== workspace.id) {
-      throw new AuthException(
-        'Token is not valid for this workspace',
-        AuthExceptionCode.FORBIDDEN_EXCEPTION,
-      );
-    }
 
     return workspace;
   }

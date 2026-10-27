@@ -109,6 +109,29 @@ export class WorkspaceDomainsService {
     return workspace;
   }
 
+  async getWorkspaceForToken(
+    origin: string,
+    tokenWorkspaceId: string,
+  ): Promise<WorkspaceEntity | undefined> {
+    if (!this.twentyConfigService.get('IS_MULTIWORKSPACE_ENABLED')) {
+      const workspace = await this.workspaceRepository.findOne({
+        where: { id: tokenWorkspaceId },
+        relations: ['workspaceSsoIdentityProviders'],
+      });
+
+      return workspace ?? undefined;
+    }
+
+    const workspace =
+      await this.getWorkspaceByOriginOrDefaultWorkspace(origin);
+
+    if (workspace && workspace.id !== tokenWorkspaceId) {
+      return undefined;
+    }
+
+    return workspace;
+  }
+
   async resolveWorkspaceAndPublicDomain(origin: string): Promise<{
     workspace: WorkspaceEntity | undefined;
     publicDomain: PublicDomainEntity | null;
