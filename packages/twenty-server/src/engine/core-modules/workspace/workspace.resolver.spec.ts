@@ -7,6 +7,9 @@ import { type WorkspaceEntity } from 'src/engine/core-modules/workspace/workspac
 import { WorkspaceResolver } from './workspace.resolver';
 
 describe('WorkspaceResolver', () => {
+  const workspaceService = {
+    findOneWorkspaceById: jest.fn(),
+  };
   const workspaceDomainsService = {
     getWorkspaceByOriginOrDefaultWorkspace: jest.fn(),
     getWorkspaceUrls: jest.fn(),
@@ -16,7 +19,7 @@ describe('WorkspaceResolver', () => {
   const fileUrlService = { signFileByIdUrl: jest.fn() };
 
   const resolver = new WorkspaceResolver(
-    {} as never,
+    workspaceService as never,
     workspaceDomainsService as never,
     {} as never,
     twentyConfigService as never,
@@ -162,6 +165,43 @@ describe('WorkspaceResolver', () => {
           password: false,
           microsoft: false,
         },
+      });
+    });
+
+    it('returns neutral branding by id when several workspaces share single-workspace mode', async () => {
+      setSystemConfig(false);
+      workspaceDomainsService.hasMultipleWorkspaces.mockResolvedValue(true);
+      workspaceService.findOneWorkspaceById.mockResolvedValue(
+        defaultWorkspace,
+      );
+
+      const result = await resolver.getPublicWorkspaceDataById(
+        defaultWorkspace.id,
+      );
+
+      expect(result).toEqual({
+        id: defaultWorkspace.id,
+        logo: undefined,
+        displayName: undefined,
+      });
+      expect(fileUrlService.signFileByIdUrl).not.toHaveBeenCalled();
+    });
+
+    it('returns workspace branding by id when a single workspace exists', async () => {
+      setSystemConfig(false);
+      workspaceDomainsService.hasMultipleWorkspaces.mockResolvedValue(false);
+      workspaceService.findOneWorkspaceById.mockResolvedValue(
+        defaultWorkspace,
+      );
+
+      const result = await resolver.getPublicWorkspaceDataById(
+        defaultWorkspace.id,
+      );
+
+      expect(result).toEqual({
+        id: defaultWorkspace.id,
+        logo: 'signed-logo-url',
+        displayName: 'Company A',
       });
     });
 

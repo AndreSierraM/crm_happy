@@ -3,6 +3,7 @@ import {
   AuthExceptionCode,
 } from 'src/engine/core-modules/auth/auth.exception';
 import {
+  DUMMY_PASSWORD_HASH,
   compareHash,
   hashPassword,
 } from 'src/engine/core-modules/auth/auth.util';
@@ -224,6 +225,21 @@ describe('AuthService', () => {
           'Wrong password',
           AuthExceptionCode.FORBIDDEN_EXCEPTION,
         ),
+      );
+    });
+
+    it('should burn bcrypt time for unknown emails to match real checks', async () => {
+      userRepositoryMock.findOne.mockResolvedValue(null);
+
+      await expect(
+        buildService().findUserByEmailForPasswordLoginOrThrow(
+          'unknown@example.com',
+        ),
+      ).rejects.toThrow(AuthException);
+
+      expect(compareHashMock).toHaveBeenCalledWith(
+        'unknown@example.com',
+        DUMMY_PASSWORD_HASH,
       );
     });
   });

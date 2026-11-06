@@ -557,6 +557,14 @@ export class WorkspaceResolver {
 
       assertIsDefinedOrThrow(workspace, WorkspaceNotFoundDefaultError);
 
+      if (await this.shouldNeutralizeBranding()) {
+        return {
+          id: workspace.id,
+          logo: undefined,
+          displayName: undefined,
+        };
+      }
+
       const logo = isDefined(workspace.logoFileId)
         ? await this.fileUrlService.signFileByIdUrl({
             fileId: workspace.logoFileId,

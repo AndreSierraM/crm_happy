@@ -88,7 +88,7 @@ const PUBLIC_ENDPOINT_ALLOWLIST: PublicEndpointEntry[] = [
   {
     file: 'engine/core-modules/workspace/workspace.resolver.ts',
     control:
-      'origin-query branding neutralized on shared DNS; login methods untouched',
+      'branding neutralized on shared DNS (origin and by-id queries); login methods untouched',
   },
   {
     file: 'engine/core-modules/cloudflare/controllers/dns-cloudflare.controller.ts',

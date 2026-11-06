@@ -11,6 +11,11 @@ export const PASSWORD_REGEX = /^.{8,50}$/;
 
 const saltRounds = 10;
 
+// Cost matches saltRounds: comparing against it burns the same bcrypt time
+// as a real password check, so unknown emails take as long as wrong passwords.
+export const DUMMY_PASSWORD_HASH =
+  '$2b$10$Q2n/xUgKUkGlLnzDCEEOA.y5syi0LfCId6nVaznoTv.5i6qC91iCy';
+
 export const hashPassword = async (password: string) => {
   return await bcrypt.hash(password, saltRounds);
 };

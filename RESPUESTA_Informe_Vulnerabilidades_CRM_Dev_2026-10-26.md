@@ -117,6 +117,6 @@ El endpoint (`/healthz`, `ApiPath.Health`) ejecuta `health.check([])` — cero i
 
 - [ ] Commit + despliegue a dev de DEV-05 y los endurecimientos del §4, con retest en runtime.
 - [x] Endurecimiento CORS fail-closed (omitir `Access-Control-Allow-Origin` en orígenes no permitidos), pendiente de commit + despliegue y retest.
-- [ ] Decidir tratamiento de `getPublicWorkspaceDataById` (expone logo/displayName por ID sin neutralizar en DNS compartido) — UX de invitaciones vs. misma clase de leak que DEV-01; ver backlog.
+- [x] Neutralización de branding extendida a `getPublicWorkspaceDataById` (misma clase de leak en DNS compartido), pendiente de commit + despliegue y retest.
 - [ ] Cierre del puerto 3100 público + TLS válido + restricción de Dokploy **antes de producción** (bloqueantes, owner: infraestructura).
 - [ ] Fase 2 autenticada con usuario de prueba (cubre CVE-2026-73069/85055/55583 pendientes).

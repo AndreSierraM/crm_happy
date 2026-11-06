@@ -24,7 +24,9 @@ import {
   AuthExceptionCode,
 } from 'src/engine/core-modules/auth/auth.exception';
 import {
+  DUMMY_PASSWORD_HASH,
   PASSWORD_REGEX,
+  compareHash,
   hashPassword,
 } from 'src/engine/core-modules/auth/auth.util';
 import { type AuthTokens } from 'src/engine/core-modules/auth/dto/auth-tokens.dto';
@@ -129,7 +131,8 @@ export class AuthService {
 
   // Unknown email maps to the wrong-password error so unauthenticated login
   // never reveals whether an email exists. Reuses the exact wrong-password
-  // strings so no new i18n catalog entry is created.
+  // strings so no new i18n catalog entry is created. The dummy bcrypt
+  // comparison keeps the timing indistinguishable from a real password check.
   async findUserByEmailForPasswordLoginOrThrow(email: string) {
     try {
       return await this.findUserByEmailOrThrow(email);
@@ -138,6 +141,8 @@ export class AuthService {
         error instanceof AuthException &&
         error.code === AuthExceptionCode.USER_NOT_FOUND
       ) {
+        await compareHash(email, DUMMY_PASSWORD_HASH);
+
         throw new AuthException(
           'Wrong password',
           AuthExceptionCode.FORBIDDEN_EXCEPTION,
