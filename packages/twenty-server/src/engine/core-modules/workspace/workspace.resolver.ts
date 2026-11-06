@@ -468,6 +468,13 @@ export class WorkspaceResolver {
 
       assertIsDefinedOrThrow(workspace, WorkspaceNotFoundDefaultError);
 
+      if (await this.shouldNeutralizeBranding()) {
+        return this.getNeutralizedWorkspaceData({
+          workspace,
+          systemEnabledProviders,
+        });
+      }
+
       let workspaceLogoWithToken = '';
 
       if (isDefined(workspace.logoFileId)) {
@@ -495,6 +502,44 @@ export class WorkspaceResolver {
     } catch (err) {
       workspaceGraphqlApiExceptionHandler(err);
     }
+  }
+
+  private async shouldNeutralizeBranding(): Promise<boolean> {
+    return (
+      !this.twentyConfigService.get('IS_MULTIWORKSPACE_ENABLED') &&
+      (await this.workspaceDomainsService.hasMultipleWorkspaces())
+    );
+  }
+
+  // Single DNS serves every workspace, so default-workspace branding would leak to other companies.
+  // Only branding is neutralized: login methods stay untouched so SSO and bypass buttons keep working.
+  private getNeutralizedWorkspaceData({
+    workspace,
+    systemEnabledProviders,
+  }: {
+    workspace: WorkspaceEntity;
+    systemEnabledProviders: AuthProvidersDTO;
+  }): PublicWorkspaceDataDTO {
+    return {
+      id: workspace.id,
+      logo: undefined,
+      displayName: undefined,
+      workspaceUrls: {
+        ...this.workspaceDomainsService.getWorkspaceUrls(workspace),
+        customUrl: undefined,
+      },
+      authProviders: {
+        ...systemEnabledProviders,
+        sso: getAuthProvidersByWorkspace({
+          workspace,
+          systemEnabledProviders,
+        }).sso,
+      },
+      authBypassProviders: getAuthBypassProvidersByWorkspace({
+        workspace,
+        systemEnabledProviders,
+      }),
+    };
   }
 
   @Query(() => PublicWorkspaceDataSummaryDTO)

@@ -7,7 +7,6 @@ import { EmailField } from '@/settings/profile/components/EmailField';
 import { NameFields } from '@/settings/profile/components/NameFields';
 import { SetOrChangePassword } from '@/settings/profile/components/SetOrChangePassword';
 import { SettingsProfileDevicesSection } from '@/settings/profile/devices/components/SettingsProfileDevicesSection';
-import { useCanChangePassword } from '@/settings/profile/hooks/useCanChangePassword';
 import { useCurrentUserWorkspaceTwoFactorAuthentication } from '@/settings/two-factor-authentication/hooks/useCurrentUserWorkspaceTwoFactorAuthentication';
 import { WorkspaceMemberPictureUploader } from '@/settings/workspace-member/components/WorkspaceMemberPictureUploader';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
@@ -28,8 +27,6 @@ export const SettingsProfile = () => {
   const has2FAMethod =
     currentUserWorkspaceTwoFactorAuthenticationMethods['TOTP']?.status ===
     'VERIFIED';
-
-  const { canChangePassword } = useCanChangePassword();
 
   if (!currentWorkspaceMember?.id) {
     return null;
@@ -88,11 +85,9 @@ export const SettingsProfile = () => {
             }
           />
         </Section.Root>
-        {canChangePassword && (
-          <Section.Root>
-            <SetOrChangePassword />
-          </Section.Root>
-        )}
+        <Section.Root>
+          <SetOrChangePassword />
+        </Section.Root>
         <SettingsProfileDevicesSection />
         <Section.Root>
           <DeleteAccount />

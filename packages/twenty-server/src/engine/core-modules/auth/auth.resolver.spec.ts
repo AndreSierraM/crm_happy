@@ -56,6 +56,7 @@ describe('AuthResolver', () => {
     findWorkspaceForSignInUp: jest.Mock;
     formatUserDataPayload: jest.Mock;
     signInUp: jest.Mock;
+    updatePasswordWithCurrentPassword: jest.Mock;
   };
   let emailVerificationService: { sendVerificationEmail: jest.Mock };
   let emailVerificationTokenService: {
@@ -73,6 +74,7 @@ describe('AuthResolver', () => {
   let workspaceDomainsService: {
     buildWorkspaceURL: jest.Mock;
     getWorkspaceByOriginOrDefaultWorkspace: jest.Mock;
+    getWorkspaceForUserLogin: jest.Mock;
     getWorkspaceUrls: jest.Mock;
   };
   const mock_CaptchaGuard: CanActivate = { canActivate: jest.fn(() => true) };
@@ -103,6 +105,7 @@ describe('AuthResolver', () => {
             formatUserDataPayload: jest.fn(),
             joinWorkspaceIfInvited: jest.fn(),
             signInUp: jest.fn(),
+            updatePasswordWithCurrentPassword: jest.fn(),
           },
         },
         {
@@ -124,6 +127,7 @@ describe('AuthResolver', () => {
               .fn()
               .mockResolvedValue(new URL('http://localhost:3001')),
             getWorkspaceByOriginOrDefaultWorkspace: jest.fn(),
+            getWorkspaceForUserLogin: jest.fn(),
             getWorkspaceUrls: jest.fn(),
           },
         },
@@ -296,7 +300,7 @@ describe('AuthResolver', () => {
         appToken,
       );
       userService.markEmailAsVerified.mockResolvedValue(user);
-      workspaceDomainsService.getWorkspaceByOriginOrDefaultWorkspace.mockResolvedValue(
+      workspaceDomainsService.getWorkspaceForUserLogin.mockResolvedValue(
         workspace,
       );
       workspaceDomainsService.getWorkspaceUrls.mockReturnValue({
@@ -318,6 +322,9 @@ describe('AuthResolver', () => {
         AuthProviderEnum.Password,
       );
       expect(appTokenRepository.remove).toHaveBeenCalledWith(appToken);
+      expect(
+        workspaceDomainsService.getWorkspaceForUserLogin,
+      ).toHaveBeenCalledWith('https://workspace.example.com', user.id);
     });
 
     it('uses the password provider when signing up in a workspace', async () => {
@@ -459,6 +466,64 @@ describe('AuthResolver', () => {
       ).rejects.toThrow('cache down');
       expect(
         resetPasswordService.generateAndSendPasswordResetLink,
+      ).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('updatePassword', () => {
+    const user = { id: 'user-id', email: 'test@example.com' };
+    const workspace = { id: 'workspace-id' };
+
+    it('should throttle and update the password', async () => {
+      authService.updatePasswordWithCurrentPassword.mockResolvedValue({
+        success: true,
+      });
+
+      const result = await resolver.updatePassword(
+        { currentPassword: 'current-password', newPassword: 'new-password-1' },
+        user as never,
+        workspace as never,
+      );
+
+      expect(result).toEqual({ success: true });
+      expect(throttlerService.tokenBucketThrottleOrThrow).toHaveBeenCalledWith(
+        'update-password:user-id',
+        1,
+        expect.any(Number),
+        expect.any(Number),
+      );
+      expect(
+        authService.updatePasswordWithCurrentPassword,
+      ).toHaveBeenCalledWith({
+        userId: user.id,
+        workspace,
+        currentPassword: 'current-password',
+        newPassword: 'new-password-1',
+      });
+    });
+
+    it('should surface the throttling error without updating the password', async () => {
+      (
+        throttlerService.tokenBucketThrottleOrThrow as jest.Mock
+      ).mockRejectedValue(
+        new ThrottlerException(
+          'Limit reached',
+          ThrottlerExceptionCode.LIMIT_REACHED,
+        ),
+      );
+
+      await expect(
+        resolver.updatePassword(
+          {
+            currentPassword: 'current-password',
+            newPassword: 'new-password-1',
+          },
+          user as never,
+          workspace as never,
+        ),
+      ).rejects.toThrow(ThrottlerException);
+      expect(
+        authService.updatePasswordWithCurrentPassword,
       ).not.toHaveBeenCalled();
     });
   });

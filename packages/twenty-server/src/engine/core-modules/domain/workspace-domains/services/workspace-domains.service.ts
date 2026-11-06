@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { isNonEmptyString } from '@sniptt/guards';
@@ -80,23 +80,18 @@ export class WorkspaceDomainsService {
       );
     }
 
-    const workspaces = await this.workspaceRepository.find({
-      order: {
-        createdAt: 'DESC',
-      },
-      relations: ['workspaceSsoIdentityProviders'],
-    });
-
-    if (workspaces.length > 1) {
-      Logger.warn(
-        `${workspaces.length} workspaces found in database. In single-workspace mode, there should be only one workspace. The Apple seed workspace will be used as fallback if present.`,
-      );
-    }
-
+    // Multiple workspaces on one DNS are intended here, so no warning.
     const foundWorkspace =
-      workspaces.find(
-        (workspace) => workspace.id === SEED_APPLE_WORKSPACE_ID,
-      ) ?? workspaces[0];
+      (await this.workspaceRepository.findOne({
+        where: { id: SEED_APPLE_WORKSPACE_ID },
+        relations: ['workspaceSsoIdentityProviders'],
+      })) ??
+      (await this.workspaceRepository.findOne({
+        order: {
+          createdAt: 'DESC',
+        },
+        relations: ['workspaceSsoIdentityProviders'],
+      }));
 
     assertIsDefinedOrThrow(foundWorkspace, WorkspaceNotFoundDefaultError);
 
@@ -107,6 +102,41 @@ export class WorkspaceDomainsService {
     const { workspace } = await this.resolveWorkspaceAndPublicDomain(origin);
 
     return workspace;
+  }
+
+  async hasMultipleWorkspaces() {
+    return (await this.workspaceRepository.count()) > 1;
+  }
+
+  async getWorkspaceForUserLogin(
+    origin: string,
+    userId: string,
+  ): Promise<WorkspaceEntity | undefined> {
+    if (this.twentyConfigService.get('IS_MULTIWORKSPACE_ENABLED')) {
+      return this.getWorkspaceByOriginOrDefaultWorkspace(origin);
+    }
+
+    const defaultWorkspace = await this.getDefaultWorkspace();
+
+    const isDefaultWorkspaceMember = await this.workspaceRepository.exists({
+      where: {
+        id: defaultWorkspace.id,
+        workspaceUsers: { user: { id: userId } },
+      },
+    });
+
+    if (isDefaultWorkspaceMember) {
+      return defaultWorkspace;
+    }
+
+    // Non-members fall back to the default workspace so pending invitations can still join them there.
+    return (
+      (await this.workspaceRepository.findOne({
+        where: { workspaceUsers: { user: { id: userId } } },
+        order: { createdAt: 'ASC' },
+        relations: ['workspaceSsoIdentityProviders'],
+      })) ?? defaultWorkspace
+    );
   }
 
   async getWorkspaceForToken(
@@ -122,8 +152,7 @@ export class WorkspaceDomainsService {
       return workspace ?? undefined;
     }
 
-    const workspace =
-      await this.getWorkspaceByOriginOrDefaultWorkspace(origin);
+    const workspace = await this.getWorkspaceByOriginOrDefaultWorkspace(origin);
 
     if (workspace && workspace.id !== tokenWorkspaceId) {
       return undefined;

@@ -48,7 +48,7 @@ const createMockUserService = () => ({
 });
 
 const createMockWorkspaceDomainsService = () => ({
-  getWorkspaceByOriginOrDefaultWorkspace: jest.fn(),
+  getWorkspaceForToken: jest.fn(),
 });
 
 describe('TwoFactorAuthenticationResolver', () => {
@@ -167,7 +167,7 @@ describe('TwoFactorAuthenticationResolver', () => {
         sub: mockUser.email,
         workspaceId: mockWorkspace.id,
       });
-      workspaceDomainsService.getWorkspaceByOriginOrDefaultWorkspace.mockResolvedValue(
+      workspaceDomainsService.getWorkspaceForToken.mockResolvedValue(
         mockWorkspace,
       );
       userService.findUserByEmailOrThrow.mockResolvedValue(
@@ -187,9 +187,10 @@ describe('TwoFactorAuthenticationResolver', () => {
       expect(loginTokenService.verifyLoginToken).toHaveBeenCalledWith(
         mockInput.loginToken,
       );
-      expect(
-        workspaceDomainsService.getWorkspaceByOriginOrDefaultWorkspace,
-      ).toHaveBeenCalledWith(origin);
+      expect(workspaceDomainsService.getWorkspaceForToken).toHaveBeenCalledWith(
+        origin,
+        mockWorkspace.id,
+      );
       expect(userService.findUserByEmailOrThrow).toHaveBeenCalledWith(
         mockUser.email,
       );
@@ -246,9 +247,7 @@ describe('TwoFactorAuthenticationResolver', () => {
     });
 
     it('should throw WORKSPACE_NOT_FOUND when workspace is not found', async () => {
-      workspaceDomainsService.getWorkspaceByOriginOrDefaultWorkspace.mockResolvedValue(
-        null,
-      );
+      workspaceDomainsService.getWorkspaceForToken.mockResolvedValue(null);
 
       await expect(
         resolver.initiateOTPProvisioning(mockInput, origin),
@@ -260,19 +259,24 @@ describe('TwoFactorAuthenticationResolver', () => {
       );
     });
 
-    it('should throw FORBIDDEN_EXCEPTION when token workspace does not match', async () => {
+    it('should throw WORKSPACE_NOT_FOUND when token workspace does not match', async () => {
       loginTokenService.verifyLoginToken.mockResolvedValue({
         sub: mockUser.email,
         workspaceId: 'different-workspace-id',
       });
+      workspaceDomainsService.getWorkspaceForToken.mockResolvedValue(undefined);
 
       await expect(
         resolver.initiateOTPProvisioning(mockInput, origin),
       ).rejects.toThrow(
         new AuthException(
-          'Token is not valid for this workspace',
-          AuthExceptionCode.FORBIDDEN_EXCEPTION,
+          'Workspace not found',
+          AuthExceptionCode.WORKSPACE_NOT_FOUND,
         ),
+      );
+      expect(workspaceDomainsService.getWorkspaceForToken).toHaveBeenCalledWith(
+        origin,
+        'different-workspace-id',
       );
     });
 

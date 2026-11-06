@@ -127,6 +127,30 @@ export class AuthService {
     return user;
   }
 
+  // Unknown email maps to the wrong-password error so unauthenticated login
+  // never reveals whether an email exists. Reuses the exact wrong-password
+  // strings so no new i18n catalog entry is created.
+  async findUserByEmailForPasswordLoginOrThrow(email: string) {
+    try {
+      return await this.findUserByEmailOrThrow(email);
+    } catch (error) {
+      if (
+        error instanceof AuthException &&
+        error.code === AuthExceptionCode.USER_NOT_FOUND
+      ) {
+        throw new AuthException(
+          'Wrong password',
+          AuthExceptionCode.FORBIDDEN_EXCEPTION,
+          {
+            userFriendlyMessage: msg`Wrong password.`,
+          },
+        );
+      }
+
+      throw error;
+    }
+  }
+
   private async assertPasswordAuthAllowedOnWorkspaceOrThrow(
     user: UserEntity,
     workspace: WorkspaceEntity,
@@ -187,7 +211,7 @@ export class AuthService {
   }
 
   async validateLoginWithPassword(input: UserCredentialsInput) {
-    const user = await this.findUserByEmailOrThrow(input.email);
+    const user = await this.findUserByEmailForPasswordLoginOrThrow(input.email);
 
     await this.validatePasswordCredentialsOrThrow(user, input.password);
 
@@ -198,7 +222,7 @@ export class AuthService {
     input: UserCredentialsInput,
     workspace: WorkspaceEntity,
   ): Promise<UserEntity> {
-    const user = await this.findUserByEmailOrThrow(input.email);
+    const user = await this.findUserByEmailForPasswordLoginOrThrow(input.email);
 
     await this.assertPasswordAuthAllowedOnWorkspaceOrThrow(user, workspace);
 
@@ -790,6 +814,33 @@ export class AuthService {
     });
 
     return { success: true };
+  }
+
+  async updatePasswordWithCurrentPassword({
+    userId,
+    workspace,
+    currentPassword,
+    newPassword,
+  }: {
+    userId: string;
+    workspace: WorkspaceEntity;
+    currentPassword: string;
+    newPassword: string;
+  }): Promise<UpdatePasswordDTO> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: { userWorkspaces: true },
+    });
+
+    assertIsDefinedOrThrow(
+      user,
+      new AuthException('User not found', AuthExceptionCode.USER_NOT_FOUND),
+    );
+
+    await this.assertPasswordAuthAllowedOnWorkspaceOrThrow(user, workspace);
+    await assertUserPasswordIsValidOrThrow({ user, password: currentPassword });
+
+    return await this.updatePassword(user.id, newPassword);
   }
 
   async findWorkspaceFromInviteHashOrFail(

@@ -112,6 +112,8 @@ import { streamToBuffer } from 'src/utils/stream-to-buffer';
 import { ApiKeyToken } from './dto/api-key-token.dto';
 import { AuthToken } from './dto/auth-token.dto';
 import { AuthTokens } from './dto/auth-tokens.dto';
+import { UpdatePasswordDTO } from './dto/update-password.dto';
+import { UpdatePasswordInput } from './dto/update-password.input';
 import { GetAuthTokensFromLoginTokenInput } from './dto/get-auth-tokens-from-login-token.input';
 import { GetAuthTokensFromSsoExchangeTokenInput } from './dto/get-auth-tokens-from-sso-exchange-token.input';
 import { LoginTokenDTO } from './dto/login-token.dto';
@@ -126,6 +128,8 @@ import { AuthService } from './services/auth.service';
 
 const PASSWORD_RESET_EMAIL_RATE_LIMIT_MAX = 3;
 const PASSWORD_RESET_EMAIL_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+const UPDATE_PASSWORD_RATE_LIMIT_MAX = 5;
+const UPDATE_PASSWORD_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 
 @UsePipes(ResolverValidationPipe)
 @MetadataResolver()
@@ -227,9 +231,15 @@ export class AuthResolver {
     getLoginTokenFromCredentialsInput: UserCredentialsInput,
     @Args('origin') origin: string,
   ): Promise<LoginTokenDTO> {
+    const { id: userId } =
+      await this.authService.findUserByEmailForPasswordLoginOrThrow(
+        getLoginTokenFromCredentialsInput.email,
+      );
+
     const workspace =
-      await this.workspaceDomainsService.getWorkspaceByOriginOrDefaultWorkspace(
+      await this.workspaceDomainsService.getWorkspaceForUserLogin(
         origin,
+        userId,
       );
 
     assertIsDefinedOrThrow(
@@ -332,8 +342,9 @@ export class AuthResolver {
     await this.appTokenRepository.remove(appToken);
 
     const workspace =
-      (await this.workspaceDomainsService.getWorkspaceByOriginOrDefaultWorkspace(
+      (await this.workspaceDomainsService.getWorkspaceForUserLogin(
         origin,
+        user.id,
       )) ??
       (await this.userWorkspaceService.findFirstWorkspaceByUserId(user.id));
 
@@ -989,11 +1000,10 @@ export class AuthResolver {
     origin: string,
     tokenWorkspaceId: string,
   ): Promise<WorkspaceEntity> {
-    const workspace =
-      await this.workspaceDomainsService.getWorkspaceForToken(
-        origin,
-        tokenWorkspaceId,
-      );
+    const workspace = await this.workspaceDomainsService.getWorkspaceForToken(
+      origin,
+      tokenWorkspaceId,
+    );
 
     assertIsDefinedOrThrow(
       workspace,
@@ -1302,6 +1312,42 @@ export class AuthResolver {
     await this.authService.updatePassword(id, newPassword);
 
     return await this.resetPasswordService.invalidatePasswordResetToken(id);
+  }
+
+  @Mutation(() => UpdatePasswordDTO)
+  @UseGuards(
+    AuthPrincipalGuard({
+      userSession: {
+        standard: true,
+        impersonated: false,
+        playground: true,
+        workspaceAgnostic: false,
+      },
+      apiKey: false,
+      oauthClient: false,
+      application: false,
+    }),
+    SettingsPermissionGuard(PermissionFlagType.PROFILE_INFORMATION),
+  )
+  async updatePassword(
+    @Args()
+    { currentPassword, newPassword }: UpdatePasswordInput,
+    @AuthUser() user: UserEntity,
+    @AuthWorkspace() workspace: WorkspaceEntity,
+  ): Promise<UpdatePasswordDTO> {
+    await this.throttlerService.tokenBucketThrottleOrThrow(
+      `update-password:${user.id}`,
+      1,
+      UPDATE_PASSWORD_RATE_LIMIT_MAX,
+      UPDATE_PASSWORD_RATE_LIMIT_WINDOW_MS,
+    );
+
+    return await this.authService.updatePasswordWithCurrentPassword({
+      userId: user.id,
+      workspace,
+      currentPassword,
+      newPassword,
+    });
   }
 
   @Query(() => ValidatePasswordResetTokenDTO)

@@ -41,23 +41,19 @@ export class AuthSsoService {
     ) {
       // Multi-workspace enable mode but on non workspace url.
       // so get the first workspace with the current auth method enable
-      const workspace = await this.workspaceRepository.findOne({
-        where: {
-          [this.getAuthProviderColumnNameByProvider(authProvider)]: true,
-          workspaceUsers: {
-            user: {
-              email,
-            },
-          },
-        },
-        relations: [
-          'workspaceUsers',
-          'workspaceUsers.user',
-          'approvedAccessDomains',
-        ],
-      });
+      return await this.findWorkspaceByAuthProvider({ authProvider, email });
+    }
 
-      return workspace ?? undefined;
+    // SSO carries its own workspace via the identity provider, so it always resolves by id.
+    if (
+      !this.twentyConfigService.get('IS_MULTIWORKSPACE_ENABLED') &&
+      authProvider !== AuthProviderEnum.SSO
+    ) {
+      return await this.findWorkspaceForSingleWorkspaceMode({
+        authProvider,
+        email,
+        workspaceId,
+      });
     }
 
     return await this.workspaceRepository.findOne({
@@ -66,5 +62,70 @@ export class AuthSsoService {
       },
       relations: ['approvedAccessDomains'],
     });
+  }
+
+  private async findWorkspaceByAuthProvider({
+    authProvider,
+    email,
+  }: {
+    authProvider: AuthProviderEnum;
+    email: string;
+  }) {
+    const workspace = await this.workspaceRepository.findOne({
+      where: {
+        [this.getAuthProviderColumnNameByProvider(authProvider)]: true,
+        workspaceUsers: {
+          user: {
+            email,
+          },
+        },
+      },
+      relations: [
+        'workspaceUsers',
+        'workspaceUsers.user',
+        'approvedAccessDomains',
+      ],
+    });
+
+    return workspace ?? undefined;
+  }
+
+  private async findWorkspaceForSingleWorkspaceMode({
+    authProvider,
+    email,
+    workspaceId,
+  }: {
+    authProvider: AuthProviderEnum;
+    email: string;
+    workspaceId?: string;
+  }) {
+    const workspaceById = workspaceId
+      ? await this.workspaceRepository.findOne({
+          where: {
+            id: workspaceId,
+          },
+          relations: ['approvedAccessDomains'],
+        })
+      : null;
+
+    if (workspaceById) {
+      const isMember = await this.workspaceRepository.exists({
+        where: {
+          id: workspaceById.id,
+          workspaceUsers: { user: { email } },
+        },
+      });
+
+      if (isMember) {
+        return workspaceById;
+      }
+    }
+
+    // Single-DNS callers pass the default workspace id rather than a user choice.
+    return (
+      (await this.findWorkspaceByAuthProvider({ authProvider, email })) ??
+      workspaceById ??
+      undefined
+    );
   }
 }

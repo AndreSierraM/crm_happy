@@ -79,10 +79,10 @@ export class TwoFactorAuthenticationResolver {
 
     const { sub: userEmail, workspaceId: tokenWorkspaceId } = loginTokenPayload;
 
-    const workspace =
-      await this.workspaceDomainsService.getWorkspaceByOriginOrDefaultWorkspace(
-        origin,
-      );
+    const workspace = await this.workspaceDomainsService.getWorkspaceForToken(
+      origin,
+      tokenWorkspaceId,
+    );
 
     assertIsDefinedOrThrow(
       workspace,
@@ -91,13 +91,6 @@ export class TwoFactorAuthenticationResolver {
         AuthExceptionCode.WORKSPACE_NOT_FOUND,
       ),
     );
-
-    if (tokenWorkspaceId !== workspace.id) {
-      throw new AuthException(
-        'Token is not valid for this workspace',
-        AuthExceptionCode.FORBIDDEN_EXCEPTION,
-      );
-    }
 
     const user = await this.userService.findUserByEmailOrThrow(userEmail);
 

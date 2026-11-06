@@ -2426,6 +2426,7 @@ export interface Mutation {
     updatePageLayoutTab: PageLayoutTab
     updatePageLayoutWidget: PageLayoutWidget
     updatePageLayoutWithTabsAndWidgets: PageLayout
+    updatePassword: UpdatePassword
     updatePasswordViaResetToken: InvalidatePassword
     updateSkill: Skill
     updateTimelineActivityType: TimelineActivityType
@@ -3547,6 +3548,12 @@ export interface UnsubscribeTopic {
 }
 
 export type UnsubscribeTopicVisibility = 'PRIVATE' | 'PUBLIC'
+
+export interface UpdatePassword {
+    /** Boolean that confirms query was dispatched */
+    success: Scalars['Boolean']
+    __typename: 'UpdatePassword'
+}
 
 export interface UpsertRowLevelPermissionPredicatesResult {
     predicateGroups: RowLevelPermissionPredicateGroup[]
@@ -6845,6 +6852,7 @@ export interface MutationGenqlSelection{
     updatePageLayoutTab?: (PageLayoutTabGenqlSelection & { __args: {id: Scalars['String'], input: UpdatePageLayoutTabInput} })
     updatePageLayoutWidget?: (PageLayoutWidgetGenqlSelection & { __args: {id: Scalars['String'], input: UpdatePageLayoutWidgetInput} })
     updatePageLayoutWithTabsAndWidgets?: (PageLayoutGenqlSelection & { __args: {id: Scalars['String'], input: UpdatePageLayoutWithTabsInput} })
+    updatePassword?: (UpdatePasswordGenqlSelection & { __args: {currentPassword: Scalars['String'], newPassword: Scalars['String']} })
     updatePasswordViaResetToken?: (InvalidatePasswordGenqlSelection & { __args: {newPassword: Scalars['String'], passwordResetToken: Scalars['String']} })
     updateSkill?: (SkillGenqlSelection & { __args: {input: UpdateSkillInput} })
     updateTimelineActivityType?: (TimelineActivityTypeGenqlSelection & { __args: {input: UpdateTimelineActivityTypeInput} })
@@ -8184,6 +8192,13 @@ export interface UpdatePageLayoutWidgetInput {conditionalAvailabilityExpression?
 export interface UpdatePageLayoutWidgetWithIdInput {conditionalAvailabilityExpression?: (Scalars['String'] | null),conditionalDisplay?: (Scalars['JSON'] | null),configuration?: (Scalars['JSON'] | null),id: Scalars['UUID'],objectMetadataId?: (Scalars['UUID'] | null),pageLayoutTabId: Scalars['UUID'],position?: (Scalars['JSON'] | null),title: Scalars['String'],type: WidgetType}
 
 export interface UpdatePageLayoutWithTabsInput {isFirstTabPinned?: (Scalars['Boolean'] | null),name: Scalars['String'],objectMetadataId?: (Scalars['UUID'] | null),tabs: UpdatePageLayoutTabWithWidgetsInput[],type: PageLayoutType}
+
+export interface UpdatePasswordGenqlSelection{
+    /** Boolean that confirms query was dispatched */
+    success?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
 
 export interface UpdateRoleInput {
 /** The id of the role to update */
@@ -11340,6 +11355,14 @@ export interface WorkspaceUrlsAndIdGenqlSelection{
     export const isUnsubscribeTopic = (obj?: { __typename?: any } | null): obj is UnsubscribeTopic => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isUnsubscribeTopic"')
       return UnsubscribeTopic_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const UpdatePassword_possibleTypes: string[] = ['UpdatePassword']
+    export const isUpdatePassword = (obj?: { __typename?: any } | null): obj is UpdatePassword => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isUpdatePassword"')
+      return UpdatePassword_possibleTypes.includes(obj.__typename)
     }
     
 
