@@ -10,6 +10,8 @@ import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 
 import { AppModule } from 'src/app.module';
 import { settings } from 'src/engine/constants/settings';
+import { disablePoweredByHeader } from 'src/engine/utils/disable-powered-by-header.util';
+import { applySecurityHeaders } from 'src/engine/utils/apply-security-headers.util';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import { applyCredentialedCors } from 'src/engine/core-modules/user-session/utils/apply-credentialed-cors.util';
 import { StripeSDKMockService } from 'src/engine/core-modules/billing/stripe/stripe-sdk/mocks/stripe-sdk-mock.service';
@@ -63,6 +65,10 @@ export const createApp = async (
   // The production CORS setup, not the Nest wildcard default, so integration
   // tests exercise the credentialed-origin allowlist the deployment runs.
   applyCredentialedCors(app, app.get(TwentyConfigService));
+
+  // The production header hardening, so integration tests fail if it regresses.
+  disablePoweredByHeader(app);
+  app.use(applySecurityHeaders);
 
   app.use(
     '/graphql',

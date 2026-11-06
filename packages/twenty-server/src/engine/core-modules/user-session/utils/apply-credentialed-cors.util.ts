@@ -107,7 +107,9 @@ export const applyCredentialedCors = (
         return callback(null, true);
       }
 
-      return callback(null, '*');
+      // Fail closed: no Access-Control-Allow-Origin header at all, so neither
+      // browsers nor header-based scanners mistake '*' for approval.
+      return callback(null, false);
     },
     credentials: true,
     // Browser-based MCP clients must read the resource_metadata pointer on 401 (MCP authorization spec).

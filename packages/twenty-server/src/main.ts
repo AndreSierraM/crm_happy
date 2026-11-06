@@ -13,6 +13,8 @@ import { ApiPath } from 'twenty-shared/types';
 import { NodeEnvironment } from 'src/engine/core-modules/twenty-config/interfaces/node-environment.interface';
 
 import { setPgDateTypeParser } from 'src/database/pg/set-pg-date-type-parser';
+import { disablePoweredByHeader } from 'src/engine/utils/disable-powered-by-header.util';
+import { applySecurityHeaders } from 'src/engine/utils/apply-security-headers.util';
 import { ApplicationRepeatedEventRecorderService } from 'src/engine/core-modules/event-logs/emit/application-repeated-event-recorder.service';
 import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
 import { LoggerService } from 'src/engine/core-modules/logger/logger.service';
@@ -67,6 +69,10 @@ const bootstrap = async () => {
     : (configTransformers.boolean(trustProxyRaw) ?? trustProxyRaw);
 
   app.set('trust proxy', trustProxy);
+
+  disablePoweredByHeader(app);
+
+  app.use(applySecurityHeaders);
 
   applyCredentialedCors(app, twentyConfigService);
 
