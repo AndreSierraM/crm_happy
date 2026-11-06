@@ -102,6 +102,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+      # El entrypoint ejecuta init/migraciones + upgrade por workspace +
+      # registro de crons antes de levantar Nest; en un host modesto eso
+      # supera los 100s. Sin start_period el server se declara unhealthy en
+      # pleno arranque y el worker (depends_on healthy) nunca arranca.
+      start_period: 300s
     restart: always
 
   worker:
