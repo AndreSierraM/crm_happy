@@ -49,7 +49,7 @@ export class RestApiCoreController {
     @Req() request: AuthenticatedRequest,
     @Res() res: Response,
   ) {
-    this.logger.log(
+    this.logger.debug(
       `[REST API] Processing BATCH request to ${request.path} on workspace ${request.workspaceId}`,
     );
     const result = await this.restApiCoreService.createMany(request);
@@ -62,7 +62,7 @@ export class RestApiCoreController {
     @Req() request: AuthenticatedRequest,
     @Res() res: Response,
   ) {
-    this.logger.log(
+    this.logger.debug(
       `[REST API] Processing DUPLICATES request to ${request.path} on workspace ${request.workspaceId}`,
     );
     const result = await this.restApiCoreService.findDuplicates(request);
@@ -75,7 +75,7 @@ export class RestApiCoreController {
     @Req() request: AuthenticatedRequest,
     @Res() res: Response,
   ) {
-    this.logger.log(
+    this.logger.debug(
       `[REST API] Processing POST request to ${request.path} on workspace ${request.workspaceId}`,
     );
     const result = await this.restApiCoreService.createOne(request);
@@ -88,7 +88,7 @@ export class RestApiCoreController {
     @Req() request: AuthenticatedRequest,
     @Res() res: Response,
   ) {
-    this.logger.log(
+    this.logger.debug(
       `[REST API] Processing GROUP BY request to ${request.path} on workspace ${request.workspaceId}`,
     );
     const result = await this.restApiCoreService.groupBy(request);
@@ -101,7 +101,7 @@ export class RestApiCoreController {
     @Req() request: AuthenticatedRequest,
     @Res() res: Response,
   ) {
-    this.logger.log(
+    this.logger.debug(
       `[REST API] Processing GET request to ${request.path} on workspace ${request.workspaceId}`,
     );
     const result = await this.restApiCoreService.get(request);
@@ -114,7 +114,7 @@ export class RestApiCoreController {
     @Req() request: AuthenticatedRequest,
     @Res() res: Response,
   ) {
-    this.logger.log(
+    this.logger.debug(
       `[REST API] Processing DELETE request to ${request.path} on workspace ${request.workspaceId}`,
     );
     const result = await this.restApiCoreService.delete(request);
@@ -127,7 +127,7 @@ export class RestApiCoreController {
     @Req() request: AuthenticatedRequest,
     @Res() res: Response,
   ) {
-    this.logger.log(
+    this.logger.debug(
       `[REST API] Processing RESTORE request to ${request.path} on workspace ${request.workspaceId}`,
     );
     const result = await this.restApiCoreService.restore(request);
@@ -140,7 +140,7 @@ export class RestApiCoreController {
     @Req() request: AuthenticatedRequest,
     @Res() res: Response,
   ) {
-    this.logger.log(
+    this.logger.debug(
       `[REST API] Processing MERGE request to ${request.path} on workspace ${request.workspaceId}`,
     );
     const result = await this.restApiCoreService.mergeMany(request);
@@ -153,7 +153,7 @@ export class RestApiCoreController {
     @Req() request: AuthenticatedRequest,
     @Res() res: Response,
   ) {
-    this.logger.log(
+    this.logger.debug(
       `[REST API] Processing PATCH request to ${request.path} on workspace ${request.workspaceId}`,
     );
     const result = await this.restApiCoreService.update(request);
@@ -167,7 +167,7 @@ export class RestApiCoreController {
     @Req() request: AuthenticatedRequest,
     @Res() res: Response,
   ) {
-    this.logger.log(
+    this.logger.debug(
       `[REST API] Processing PUT request to ${request.path} on workspace ${request.workspaceId}`,
     );
     const result = await this.restApiCoreService.update(request);

@@ -42,6 +42,8 @@ services:
     # que un pico se lleve al resto de apps del host. Vigilar con docker stats.
     mem_limit: 1536m
     mem_reservation: 768m
+    # En prod con dominio: quitar este publish y rutear solo vía Traefik/443.
+    # Un puerto publicado sigue alcanzable por HTTP plano desde Internet.
     ports:
       - "${HOST_PORT:-3000}:3000"
     volumes:
@@ -54,6 +56,7 @@ services:
       PG_DATABASE_URL: ${PG_DATABASE_URL:?PG_DATABASE_URL debe venir del Environment de Dokploy (Postgres externo)}
       SERVER_URL: ${SERVER_URL}
       FRONTEND_URL: ${FRONTEND_URL:-${SERVER_URL}}
+      AUTH_COOKIE_ALLOWED_ORIGINS: ${AUTH_COOKIE_ALLOWED_ORIGINS:-}
       IS_MULTIWORKSPACE_ENABLED: ${IS_MULTIWORKSPACE_ENABLED:-false}
       IS_CONFIG_VARIABLES_IN_DB_ENABLED: ${IS_CONFIG_VARIABLES_IN_DB_ENABLED:-false}
       DEFAULT_SUBDOMAIN: ${DEFAULT_SUBDOMAIN:-}
@@ -85,6 +88,13 @@ services:
       EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
       EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
       EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+      # Sentry (innovatehc): sin driver explícito cae a CONSOLE (= default del
+      # código); cadena vacía tumbaría la validación del enum.
+      EXCEPTION_HANDLER_DRIVER: ${EXCEPTION_HANDLER_DRIVER:-CONSOLE}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_FRONT_DSN: ${SENTRY_FRONT_DSN:-}
+      SENTRY_ENVIRONMENT: ${SENTRY_ENVIRONMENT:-production}
+      APP_VERSION: ${TAG:-latest}
     networks:
       - dokploy-network
     healthcheck:
@@ -144,6 +154,12 @@ services:
       EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
       EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
       EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+      # Sentry: el worker también bootea exception handler; mismos valores.
+      EXCEPTION_HANDLER_DRIVER: ${EXCEPTION_HANDLER_DRIVER:-CONSOLE}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_FRONT_DSN: ${SENTRY_FRONT_DSN:-}
+      SENTRY_ENVIRONMENT: ${SENTRY_ENVIRONMENT:-production}
+      APP_VERSION: ${TAG:-latest}
     depends_on:
       server:
         condition: service_healthy
