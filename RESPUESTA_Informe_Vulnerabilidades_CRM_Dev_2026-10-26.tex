@@ -1,0 +1,553 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{amssymb}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\hypersetup{colorlinks=true,linkcolor=blue!60!black,urlcolor=blue!60!black}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlist{itemsep=0.3em}
+
+\definecolor{sevCritical}{HTML}{B00020}
+\definecolor{sevHigh}{HTML}{C75100}
+\definecolor{sevMedium}{HTML}{9A6B00}
+\definecolor{sevLow}{HTML}{2E7D32}
+\definecolor{stOk}{HTML}{1B7F3B}
+\definecolor{stPending}{HTML}{B26A00}
+\definecolor{stInfo}{HTML}{1565C0}
+\definecolor{codebg}{HTML}{F5F5F5}
+\definecolor{codenum}{HTML}{9E9E9E}
+
+\newcommand{\badge}[2]{\colorbox{#1}{\textcolor{white}{\strut\footnotesize\bfseries #2}}}
+\newcommand{\CRIT}{\badge{sevCritical}{CRÍTICA}}
+\newcommand{\HIGH}{\badge{sevHigh}{ALTA}}
+\newcommand{\MED}{\badge{sevMedium}{MEDIA}}
+\newcommand{\LOW}{\badge{sevLow}{BAJA}}
+\newcommand{\FIXED}{\badge{stOk}{CORREGIDO}}
+\newcommand{\NREPRO}{\badge{stInfo}{NO REPRODUCE EN FUENTE}}
+\newcommand{\MITIG}{\badge{stInfo}{MITIGADO POR DISEÑO}}
+\newcommand{\PEND}{\badge{stPending}{PENDIENTE INFRAESTRUCTURA}}
+\newcommand{\PVER}{\badge{stPending}{PENDIENTE VERIFICACIÓN}}
+
+\lstdefinestyle{ts}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\footnotesize\ttfamily,
+  breaklines=true,
+  breakatwhitespace=true,
+  columns=fullflexible,
+  commentstyle=\color{green!45!black},
+  frame=single,
+  framerule=0.4pt,
+  keepspaces=true,
+  keywordstyle=\color{blue!60!black}\bfseries,
+  language=Java,
+  morekeywords={string,stringify,readonly,override,async,await},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\scriptsize\color{codenum},
+  showstringspaces=false,
+  stringstyle=\color{red!55!black},
+  xleftmargin=1.2em,
+}
+\lstdefinestyle{sh}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\footnotesize\ttfamily,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  framerule=0.4pt,
+  keepspaces=true,
+  language=bash,
+  showstringspaces=false,
+  xleftmargin=1.2em,
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize Happy CRM --- Respuesta de remediación}
+\fancyhead[R]{\footnotesize Confidencial --- uso interno}
+\fancyfoot[C]{\footnotesize \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\LARGE\bfseries Informe de Remediación\par}
+\vspace{0.4cm}
+{\Large Aplicación CRM (Happy CRM / Twenty)\par}
+\vspace{0.6cm}
+{\large Respuesta al informe de vulnerabilidades del 26 de octubre de 2026\par}
+\vspace{1.2cm}
+\begin{tabular}{rl}
+\toprule
+Para: & Equipo de Seguridad de la Información --- Happy BPO \\
+De: & Equipo de desarrollo --- Happy CRM \\
+Fecha: & 6 de noviembre de 2026 \\
+Referencia: & \texttt{Informe\_Vulnerabilidades\_CRM\_Dev\_2026-10-26.pdf} \\
+Código evaluado: & \texttt{main @ 546b8dc665} + rama de trabajo \\
+Base upstream: & \texttt{twentyhq/twenty @ ba29ee4f5b} (2026-10-26) + 33 commits \\
+Clasificación: & Confidencial --- uso interno / remediación \\
+\bottomrule
+\end{tabular}
+\vfill
+{\small Criterio de estados: \textbf{Corregido en fuente} significa cambio implementado y
+verificado en código con tests, pendiente de despliegue a desarrollo y retest en runtime.
+Ningún estado de este documento sustituye el retest del equipo auditor.\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Resumen Ejecutivo}
+
+El 26 de octubre de 2026 recibimos el informe de vulnerabilidades en caja negra sobre el
+entorno de desarrollo, con 6 hallazgos de configuración y despliegue más 5 CVEs de
+software base pendientes de verificación por versión. Este documento responde punto por
+punto, con evidencia a nivel de código para todo lo que está en manos del equipo de
+desarrollo.
+
+El triaje separó el informe en dos grupos. El primero es \textbf{código de la
+aplicación}, nuestra responsabilidad directa: aquí corregimos 2 hallazgos, verificamos
+que un tercero no reproduce en el fuente actual, confirmamos un cuarto como mitigado por
+diseño, y sumamos 2 endurecimientos adicionales fuera del alcance original. El segundo
+grupo es \textbf{infraestructura de despliegue} (TLS, puertos publicados, panel
+Dokploy): no se puede corregir desde el repositorio, así que dejamos la remediación
+exacta especificada, con responsable y criterio de cierre, marcada como bloqueante para
+producción.
+
+\begin{center}
+\begin{tabular}{lllc}
+\toprule
+ID & Hallazgo & Severidad & Estado \\
+\midrule
+DEV-01 & CORS con credenciales & \CRIT & \NREPRO \\
+DEV-02 & HTTP plano, puerto 3100 & \HIGH & \PEND \\
+DEV-03 & Panel Dokploy expuesto & \MED & \PEND \\
+DEV-04 & Certificado Traefik por defecto & \MED & \PEND \\
+DEV-05 & Cabecera \texttt{X-Powered-By} & \LOW & \FIXED \\
+DEV-06 & Health checks públicos & \LOW & \MITIG \\
+\midrule
+CVE & 5 CVEs Twenty CRM & Varias & 2 remediados en fuente, 3 por verificar \\
+CVE & 5 CVEs Dokploy & Varias & \PVER{} (se requiere versión instalada) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Aceptamos la fase 2 autenticada propuesta (IDOR, control multi-tenant y lógica de
+negocio) una vez redesplegado el entorno con DEV-01 y DEV-02 atendidos.
+
+\section{Alcance y Metodología}
+
+\textbf{Código evaluado.} Rama \texttt{main} en \texttt{546b8dc665} más la rama de
+trabajo con las correcciones de este informe (pendientes de commit a la fecha de
+emisión). La base upstream es \texttt{twentyhq/twenty @ ba29ee4f5b} del 2026-10-26
+---la misma fecha de la auditoría--- más 33 commits propios, por lo que el análisis
+parte de un upstream al día.
+
+\textbf{Método.} Por cada hallazgo: (1) localización del código responsable,
+(2) lectura del flujo completo hasta el punto de decisión, (3) revisión de historial
+para datar el comportamiento, (4) corrección mínima donde correspondía, y
+(5) verificación con la suite del repositorio (jest por archivo, \texttt{oxlint},
+\texttt{oxfmt}, \texttt{tsgo --noEmit}). No se probaron endpoints del host auditado:
+todo lo afirmado sobre el despliegue se marca explícitamente como pendiente de
+verificación en runtime.
+
+\textbf{Fuera de alcance de este documento.} Cambios de infraestructura (se especifican,
+no se ejecutan), versiones instaladas en el host (Dokploy, imagen desplegada) y pruebas
+autenticadas de lógica de negocio (fase 2).
+
+\section{Remediación detallada}
+
+\subsection[DEV-01 --- CORS con credenciales]{DEV-01 --- CORS con credenciales \hfill \CRIT{} \NREPRO}
+
+\textbf{Conclusión.} El código fuente implementa exactamente la remediación recomendada
+(allowlist explícita, sin reflejo dinámico) desde el 2026-08-04. El reflejo observado
+en el host auditado no puede provenir de este código: la hipótesis principal es un
+build desplegado desactualizado. Se requiere verificar el despliegue y repetir la
+prueba (ver acciones al final).
+
+\textbf{Análisis a nivel de código.} El middleware
+(\path{user-session/utils/apply-credentialed-cors.util.ts}) refleja el origen solo si
+pertenece a la allowlist; cualquier otro recibe literalmente \texttt{*}, que con
+\texttt{credentials: true} el navegador bloquea por especificación Fetch:
+
+\begin{lstlisting}[style=ts]
+app.enableCors({
+  origin: (
+    origin: string | undefined,
+    callback: (error: Error | null, allow?: boolean | string) => void,
+  ) => {
+    if (
+      origin &&
+      resolveAllowedCredentialedOrigins(twentyConfigService).has(
+        origin.toLowerCase(),
+      )
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(null, '*');
+  },
+  credentials: true,
+\end{lstlisting}
+
+La allowlist se construye exclusivamente desde configuración, sin ningún valor
+derivado del request (\path{user-session/utils/resolve-allowed-credentialed-origins.util.ts}):
+
+\begin{lstlisting}[style=ts]
+const allowedOriginsSettings: AllowedOriginsSettings = {
+  serverUrl: twentyConfigService.get('SERVER_URL'),
+  frontendUrl: twentyConfigService.get('FRONTEND_URL'),
+  authCookieAllowedOrigins: twentyConfigService.get(
+    'AUTH_COOKIE_ALLOWED_ORIGINS',
+  ),
+  nodeEnvironment: twentyConfigService.get('NODE_ENV'),
+};
+\end{lstlisting}
+
+Cada candidato debe parsear como URL \texttt{http(s)} (un comodín \texttt{*} se
+descarta), los esquemas opacos se rechazan, y en producción los orígenes loopback
+derivados se excluyen salvo declaración explícita. El historial confirma este diseño
+desde el commit \texttt{997b2c38de} (2026-08-04); la versión anterior al refuerzo
+\texttt{51abfb3e40} ya tenía la misma forma. No existe ruta de reflejo dinámico en el
+fuente ni en su historial reciente.
+
+\textbf{Discrepancia con el PoC y acciones.} Ordenadas por probabilidad: (1) build
+desplegado anterior al 2026-08-04; (2) valores de entorno inesperados en Dokploy;
+(3) lectura de \texttt{/healthz} ---público por diseño, donde \texttt{*} es
+correcto--- interpretada como lectura autenticada. Nota metodológica: un PoC basado en
+curl no prueba lectura cross-origin con credenciales, porque curl no aplica la
+política del navegador; solo una prueba en navegador con \texttt{credentials: include}
+es concluyente. Acciones: confirmar TAG/commit desplegado, auditar las tres variables
+de entorno, redesplegar desde la rama actual y repetir la prueba (comando de retest en
+el Anexo~A).
+
+\textbf{Endurecimiento aplicado.} Fallo cerrado: se omite
+\texttt{Access-Control-Allow-Origin} para orígenes no permitidos (antes
+\texttt{*}). En navegador el observable no cambia (ambos bloquean con
+credenciales), pero en runtime ya no existe ninguna cabecera que un escáner
+pueda interpretar como aprobación.
+
+\subsection[DEV-02 --- HTTP plano en puerto 3100]{DEV-02 --- HTTP plano en puerto 3100 \hfill \HIGH{} \PEND}
+
+El puerto 3100 es la publicación directa del servidor (\texttt{HOST\_PORT=3100} en
+\path{packages/twenty-docker/docker-compose.dokploy.yml}). El propio compose
+documenta la remediación pendiente:
+
+\begin{lstlisting}[style=sh]
+# En prod con dominio: quitar este publish y rutear solo via Traefik/443.
+# Un puerto publicado sigue alcanzable por HTTP plano desde Internet.
+ports:
+  - "${HOST_PORT:-3000}:3000"
+\end{lstlisting}
+
+\textbf{Remediación especificada (bloqueante para producción, owner:
+infraestructura):} eliminar el bloque \texttt{ports} del servicio \texttt{server},
+servir exclusivamente vía Traefik con TLS válido, redirección a HTTPS y HSTS. No se
+aplicó en esta pasada por tratarse de un cambio de despliegue, no de código.
+
+\subsection[DEV-03 --- Panel Dokploy expuesto]{DEV-03 --- Panel Dokploy expuesto \hfill \MED{} \PEND}
+
+Fuera del repositorio de la aplicación. Se aceptan las tres recomendaciones del
+informe: restringir por VPN o allowlist de IPs (nunca Internet abierto), confirmar
+versión y parchear según los CVEs aplicables, y activar MFA en cuentas
+administrativas. Constatamos que las APIs probadas devuelven 401 sin autenticación,
+lo cual es correcto pero no sustituye la restricción de red.
+
+\subsection[DEV-04 --- Certificado Traefik por defecto]{DEV-04 --- Certificado Traefik por defecto \hfill \MED{} \PEND}
+
+El certificado \texttt{TRAEFIK DEFAULT CERT} proviene de la configuración TLS de
+Dokploy/Traefik, no del código. Acción: asociar el dominio real con certificado
+válido (Let's Encrypt vía Dokploy) antes de producción. Bloqueante junto con DEV-02.
+
+\subsection[DEV-05 --- Cabecera \texttt{X-Powered-By}]{DEV-05 --- Cabecera \texttt{X-Powered-By} \hfill \LOW{} \FIXED}
+
+\textbf{Solución aplicada} en \path{packages/twenty-server/src/main.ts} durante el
+arranque, antes de registrar el resto de middlewares:
+
+\begin{lstlisting}[style=ts]
+// packages/twenty-server/src/engine/utils/disable-powered-by-header.util.ts,
+// wired in main.ts and the integration-test harness (create-app.ts)
+export const disablePoweredByHeader = (app: INestApplication): void => {
+  app.getHttpAdapter().getInstance().disable('x-powered-by');
+};
+\end{lstlisting}
+
+\textbf{Verificación.} Cambio verificado en fuente; pendiente de commit, despliegue a
+desarrollo y retest en runtime (comando en el Anexo~A: la respuesta no debe incluir
+la cabecera).
+
+\subsection[DEV-06 --- Health checks públicos]{DEV-06 --- Health checks públicos \hfill \LOW{} \MITIG}
+
+\textbf{Análisis.} El endpoint (\texttt{/healthz}, \texttt{ApiPath.Health}) ejecuta
+el chequeo con cero indicadores: devuelve estado \texttt{ok} sin detalle estructurado
+de dependencias, versiones o topología:
+
+\begin{lstlisting}[style=ts]
+@Get()
+@UseGuards(PublicEndpointGuard, NoPermissionGuard)
+@HealthCheck()
+check() {
+  return this.health.check([]);
+}
+\end{lstlisting}
+
+\textbf{Justificación.} Debe permanecer sin autenticación porque lo consumen el
+\texttt{healthcheck} de Docker y las probes del balanceador:
+
+\begin{lstlisting}[style=sh]
+healthcheck:
+  test: curl --fail http://localhost:3000/healthz
+\end{lstlisting}
+
+Quedó registrado en el inventario obligatorio de endpoints públicos con su control
+documentado (Sección~5). Su exposición a Internet desaparece automáticamente con la
+corrección de DEV-02. Riesgo residual aceptado para desarrollo.
+
+\section{CVEs del software base --- verificación}
+
+\subsection{Determinación de versión}
+
+El fork está al día con \texttt{upstream/main} al 2026-10-26
+(\texttt{ba29ee4f5b}, la misma fecha de la auditoría) más 33 commits propios. Los
+tags públicos de upstream con esquema \texttt{v}-prefijado llegan hasta
+\texttt{v2.9.0} (verificado contra el remoto), por lo que las versiones de
+corrección citadas en el informe (\texttt{2.15.0}, \texttt{2.22.0}) no tienen
+correspondencia directa visible desde el repositorio. En el despliegue,
+\texttt{APP\_VERSION} es el \texttt{TAG} de la imagen Dokploy. Para cerrar el mapeo
+se requiere ese TAG más la fuente de versión usada por el informe (Sección~6).
+
+\subsection{Twenty CRM --- evidencia en fuente}
+
+\begin{center}
+\begin{tabular}{lp{8.5cm}c}
+\toprule
+CVE & Evidencia & Estado \\
+\midrule
+CVE-2026-105763 (9.6) &
+La query GraphQL devuelve \texttt{ConnectedAccountPublicDTO}, que omite
+\texttt{connectionParameters} crudos y expone solo la forma pública, con
+\texttt{password} eliminado por protocolo. &
+\FIXED{} \\
+CVE-2026-46624 (RCE) &
+Sin ningún \texttt{COPY TO} SQL en el código de la aplicación
+(búsqueda exhaustiva): la primitiva de RCE descrita no tiene punto de apoyo. &
+\FIXED{} \\
+CVE-2026-73069 (SQLi) &
+Sin verificación puntual en esta pasada. &
+\PVER \\
+CVE-2026-85055 (permisos de campo) &
+Sin verificación puntual; candidato explícito para fase 2 (oráculo de datos). &
+\PVER \\
+CVE-2026-55583 (IDOR cross-workspace) &
+Sin verificación puntual; candidato explícito para fase 2 (multi-tenant). &
+\PVER \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Evidencia CVE-2026-105763.} El resolver expone solo el DTO público
+(\path{connected-account/resolvers/connected-account.resolver.ts}):
+
+\begin{lstlisting}[style=ts]
+@Query(() => [ConnectedAccountPublicDTO])
+\end{lstlisting}
+
+cuyo tipo omite los parámetros crudos
+(\path{connected-account/dtos/connected-account-public.dto.ts}):
+
+\begin{lstlisting}[style=ts]
+export class ConnectedAccountPublicDTO extends OmitType(ConnectedAccountDTO, [
+  'connectionParameters',
+]) {
+\end{lstlisting}
+
+y la construcción de la forma pública elimina secretos
+(\path{imap-smtp-caldav-connection/utils/build-public-connection-parameters.util.ts}):
+
+\begin{lstlisting}[style=ts]
+const { password: _, ...publicParams } = params;
+\end{lstlisting}
+
+\subsection{Dokploy --- pendiente de infraestructura}
+
+Los cinco CVEs (CVE-2026-24841, CVE-2026-72862, CVE-2026-72901, CVE-2026-24840,
+CVE-2025-53376/53375) no son verificables desde este repositorio. Acción: obtener la
+versión instalada (panel Dokploy o CLI en el host) y actualizar como mínimo a
+\texttt{>=0.29.13}. Dada la exposición pública (DEV-03), este punto es prioritario e
+independiente del código del CRM.
+
+\section{Endurecimiento adicional}
+
+Fuera del alcance del informe, aprovechamos la pasada para cerrar dos frentes
+propios del código, ambos verificados con la suite del repositorio.
+
+\subsection[Oráculo de enumeración de usuarios en login]{Oráculo de enumeración de usuarios en login \hfill \FIXED}
+
+\textbf{Problema.} Email inexistente y password incorrecta devolvían códigos
+distintos (\texttt{USER\_NOT\_FOUND} frente a \texttt{FORBIDDEN}), visibles para el
+cliente en \texttt{extensions.subCode} de GraphQL: cualquiera podía enumerar cuentas.
+\textbf{Solución.} Nuevo punto de paso en
+\path{auth/services/auth.service.ts} que mapea el email desconocido al error idéntico
+de password incorrecta (mismo código, mensaje y cadena i18n, sin nuevas entradas de
+catálogo), usado por las dos rutas de login por password y por la resolución de
+workspace en \path{auth/auth.resolver.ts}:
+
+\begin{lstlisting}[style=ts]
+// Unknown email maps to the wrong-password error so unauthenticated login
+// never reveals whether an email exists. Reuses the exact wrong-password
+// strings so no new i18n catalog entry is created.
+async findUserByEmailForPasswordLoginOrThrow(email: string) {
+  try {
+    return await this.findUserByEmailOrThrow(email);
+  } catch (error) {
+    if (
+      error instanceof AuthException &&
+      error.code === AuthExceptionCode.USER_NOT_FOUND
+    ) {
+      throw new AuthException(
+        'Wrong password',
+        AuthExceptionCode.FORBIDDEN_EXCEPTION,
+        {
+          userFriendlyMessage: msg`Wrong password.`,
+        },
+      );
+    }
+
+    throw error;
+  }
+}
+\end{lstlisting}
+
+No se tocó la utilidad compartida de validación de password: en el cambio de
+password autenticado el mensaje específico sigue siendo el UX correcto. Se verificó
+que el front no depende de ninguno de los dos códigos.
+
+\textbf{Verificación.} 2 tests de regresión nuevos; suites
+\texttt{auth.service.spec} (7 tests) y \texttt{auth.resolver.spec} (11 tests) en
+verde, más \texttt{oxlint}, \texttt{oxfmt} y \texttt{tsgo --noEmit} limpios.
+
+\subsection[Inventario obligatorio de endpoints públicos]{Inventario obligatorio de endpoints públicos \hfill \FIXED}
+
+\textbf{Problema.} \texttt{PublicEndpointGuard} es un marcador que siempre pasa: cada
+endpoint público depende de su propio control compensatorio (captcha, firma, token,
+throttle), y nada impedía añadir superficie pública sin ninguno.
+\textbf{Solución.} Nuevo test
+(\path{engine/guards/__tests__/public-endpoint-inventory.spec.ts}) que recorre el
+fuente, detecta todos los usos del guard y falla si alguno no está registrado en la
+allowlist con su control documentado (o si sobra una entrada):
+
+\begin{lstlisting}[style=ts]
+// PublicEndpointGuard always passes, so every file using it must document its
+// compensating control here. Add new public surface to the allowlist with the
+// control that protects it, or the test fails.
+\end{lstlisting}
+
+\begin{lstlisting}[style=ts]
+expect(unregistered).toEqual([]);
+expect(stale).toEqual([]);
+\end{lstlisting}
+
+\textbf{Verificación.} Superficie actual: 32 archivos, 16 con control verificado en
+esta pasada (incluidos webhooks con firma, throttle en 2FA y tracking, tokens de
+256 bits y archivos públicos con doble validación de ruta); el resto queda marcado
+como pendiente de revisión en el propio test, con revisión sugerida de
+\texttt{workflow-trigger.controller.ts} y el OAuth de applications.
+
+\subsection{Verificado sin cambios necesarios}
+
+Throttle existente en 2FA y captura de tracking, tokens de verificación de 256 bits
+con expiración y hash en reposo, firma de webhooks (Stripe sobre \texttt{rawBody};
+Svix/SNS delegadas a drivers), archivos públicos con doble validación de ruta más
+registro en base de datos, y \texttt{isAuthRequired} con default público explícito de
+producto en rutas HTTP (decisión de UX tipo webhook, documentada).
+
+\section{Trabajo pendiente y compromisos}
+
+Lo que está en manos del equipo de desarrollo quedó corregido y verificado en fuente.
+Lo restante es infraestructura y verificación conjunta:
+
+\begin{itemize}
+\item[$\square$] Commit + despliegue a desarrollo de DEV-05 y los endurecimientos
+de la Sección~5, con retest en runtime (Anexo~A). Owner: desarrollo.
+\item[$\boxtimes$] Endurecimiento CORS fail-closed, pendiente de despliegue y
+retest. Owner: desarrollo.
+\item[$\boxtimes$] Neutralización de branding extendida a
+\texttt{getPublicWorkspaceDataById} (misma clase de leak en DNS compartido),
+pendiente de despliegue y retest. Owner: desarrollo.
+\item[$\square$] Cierre del puerto 3100 público + TLS válido + restricción de
+Dokploy \textbf{antes de producción} (bloqueantes). Owner: infraestructura.
+\item[$\square$] Fase 2 autenticada con usuario de prueba (cubre CVE-2026-73069,
+CVE-2026-85055 y CVE-2026-55583 pendientes). Owner: auditoría + desarrollo.
+\end{itemize}
+
+\textbf{Información solicitada para cerrar la verificación:}
+\begin{enumerate}
+\item TAG (o commit) de la imagen \texttt{happy/crm\_happy} desplegada en el host
+auditado el 2026-10-26.
+\item Valores de \texttt{SERVER\_URL}, \texttt{FRONTEND\_URL} y
+\texttt{AUTH\_COOKIE\_ALLOWED\_ORIGINS} del environment Dokploy.
+\item Versión instalada de Dokploy.
+\item Confirmación y credenciales de prueba para la fase 2.
+\end{enumerate}
+
+\appendix
+\section{Comandos de retest}
+
+\begin{lstlisting}[style=sh]
+# DEV-05: la respuesta no debe incluir la cabecera
+curl -sI http://HOST:3100/healthz | grep -i "x-powered-by"
+# Esperado: sin salida
+
+# DEV-01: origen no permitido no debe reflejarse
+curl -s -o /dev/null -D - -H "Origin: https://evil.example" \
+  http://HOST:3100/graphql | grep -i "access-control-allow-origin"
+# Esperado: sin salida (ninguna cabecera ACAO = denegado)
+# Y la prueba en navegador con credentials:include, que debe bloquearse
+
+# DEV-06: health sin detalle estructurado
+curl -s http://HOST:3100/healthz
+# Esperado: solo estado ok, sin indicadores ni versiones
+\end{lstlisting}
+
+\section{Endpoints públicos con control verificado}
+
+Superficie con control verificado en esta pasada (15 de 32 archivos; el resto figura
+como pendiente de revisión en el propio test de inventario):
+
+\begin{center}
+\footnotesize
+\begin{tabular}{p{6.2cm}p{8.3cm}}
+\toprule
+Archivo & Control verificado \\
+\midrule
+\texttt{messaging-webhooks.controller.ts} & Firmas de provider verificadas en drivers SNS/Svix \\
+\texttt{unsubscribe.controller.ts} & Throttle por solicitante y por token \\
+\texttt{campaign-tracking.controller.ts} & Throttle en el servicio de captura \\
+\texttt{connected-account-sync-webhooks.controller.ts} & Tokens de canal validados en handlers \\
+\texttt{route-trigger.controller.ts} & Scope por workspace, auth opcional por ruta, rate limit \\
+\texttt{email-verification.resolver.ts} & Tokens de 256 bits, expirables, de un uso \\
+\texttt{billing-webhook.controller.ts} & Firma Stripe sobre cuerpo crudo \\
+\texttt{two-factor-authentication.resolver.ts} & Login-token + throttle de OTP en servicio \\
+\texttt{file.controller.ts} & Assets públicos por diseño; doble validación de ruta \\
+\texttt{auth.resolver.ts} & CaptchaGuard en credenciales; resto con token \\
+\texttt{google-auth.controller.ts} & Flujo OAuth con guard de provider \\
+\texttt{sso-auth.controller.ts} & Guards SAML/OIDC; metadata pública por diseño \\
+\texttt{google-apis-auth.controller.ts} & Guards OAuth + tokens transitorios \\
+\texttt{server-route-trigger.controller.ts} & Despacho público; rechaza resolvers con auth \\
+\texttt{health.controller.ts} & Chequeo sin indicadores; requerido por Docker \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}
