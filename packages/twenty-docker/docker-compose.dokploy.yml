@@ -94,7 +94,9 @@ services:
       SENTRY_DSN: ${SENTRY_DSN:-}
       SENTRY_FRONT_DSN: ${SENTRY_FRONT_DSN:-}
       SENTRY_ENVIRONMENT: ${SENTRY_ENVIRONMENT:-production}
-      APP_VERSION: ${TAG:-latest}
+      # Sin APP_VERSION a propósito: el campo exige semver válido
+      # (IsTwentySemVer) y 'latest' tumba el arranque. Para trazabilidad,
+      # fijar TAG a un semver real en el Environment de Dokploy y cablearlo aquí.
     networks:
       - dokploy-network
     healthcheck:
@@ -164,7 +166,6 @@ services:
       SENTRY_DSN: ${SENTRY_DSN:-}
       SENTRY_FRONT_DSN: ${SENTRY_FRONT_DSN:-}
       SENTRY_ENVIRONMENT: ${SENTRY_ENVIRONMENT:-production}
-      APP_VERSION: ${TAG:-latest}
     depends_on:
       server:
         condition: service_healthy
