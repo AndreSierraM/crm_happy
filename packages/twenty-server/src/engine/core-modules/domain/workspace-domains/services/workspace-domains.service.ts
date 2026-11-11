@@ -80,22 +80,28 @@ export class WorkspaceDomainsService {
       );
     }
 
+    const seededWorkspace = await this.workspaceRepository.findOne({
+      where: { id: SEED_APPLE_WORKSPACE_ID },
+      relations: ['workspaceSsoIdentityProviders'],
+    });
+
+    if (isDefined(seededWorkspace)) {
+      return seededWorkspace;
+    }
+
     // Multiple workspaces on one DNS are intended here, so no warning.
-    const foundWorkspace =
-      (await this.workspaceRepository.findOne({
-        where: { id: SEED_APPLE_WORKSPACE_ID },
-        relations: ['workspaceSsoIdentityProviders'],
-      })) ??
-      (await this.workspaceRepository.findOne({
-        order: {
-          createdAt: 'DESC',
-        },
-        relations: ['workspaceSsoIdentityProviders'],
-      }));
+    // findOne rejects calls without selection conditions, so read the latest row with find.
+    const [latestWorkspace] = await this.workspaceRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+      take: 1,
+      relations: ['workspaceSsoIdentityProviders'],
+    });
 
-    assertIsDefinedOrThrow(foundWorkspace, WorkspaceNotFoundDefaultError);
+    assertIsDefinedOrThrow(latestWorkspace, WorkspaceNotFoundDefaultError);
 
-    return foundWorkspace;
+    return latestWorkspace;
   }
 
   async getWorkspaceByOriginOrDefaultWorkspace(origin: string) {

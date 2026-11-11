@@ -5,6 +5,7 @@ import { DomainServerConfigService } from 'src/engine/core-modules/domain/domain
 import { PublicDomainEntity } from 'src/engine/core-modules/public-domain/public-domain.entity';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
+import { WorkspaceNotFoundDefaultError } from 'src/engine/core-modules/workspace/workspace.exception';
 import { SEED_APPLE_WORKSPACE_ID } from 'src/engine/workspace-manager/dev-seeder/core/constants/seeder-workspaces.constant';
 
 import { WorkspaceDomainsService } from './workspace-domains.service';
@@ -17,6 +18,7 @@ describe('WorkspaceDomainsService', () => {
     getSubdomainAndCustomDomainFromUrl: jest.fn(),
   };
   const workspaceRepositoryMock = {
+    find: jest.fn(),
     findOne: jest.fn(),
     exists: jest.fn(),
     count: jest.fn(),
@@ -24,6 +26,7 @@ describe('WorkspaceDomainsService', () => {
 
   const defaultWorkspace = { id: 'default-workspace-id' } as WorkspaceEntity;
   const memberWorkspace = { id: 'member-workspace-id' } as WorkspaceEntity;
+  const latestWorkspace = { id: 'latest-workspace-id' } as WorkspaceEntity;
   const seedWorkspace = { id: SEED_APPLE_WORKSPACE_ID } as WorkspaceEntity;
 
   beforeEach(async () => {
@@ -74,12 +77,8 @@ describe('WorkspaceDomainsService', () => {
     it('returns the default workspace when the user is a member of it', async () => {
       twentyConfigServiceMock.get.mockReturnValue(false);
       workspaceRepositoryMock.count.mockResolvedValue(2);
-      workspaceRepositoryMock.findOne.mockImplementation(
-        async (options?: { where?: { id?: string } }) =>
-          options?.where?.id === SEED_APPLE_WORKSPACE_ID
-            ? null
-            : defaultWorkspace,
-      );
+      workspaceRepositoryMock.findOne.mockResolvedValue(null);
+      workspaceRepositoryMock.find.mockResolvedValue([defaultWorkspace]);
       workspaceRepositoryMock.exists.mockResolvedValue(true);
 
       await expect(
@@ -90,6 +89,7 @@ describe('WorkspaceDomainsService', () => {
     it('returns a member workspace when the user is not a member of the default workspace', async () => {
       twentyConfigServiceMock.get.mockReturnValue(false);
       workspaceRepositoryMock.count.mockResolvedValue(2);
+      workspaceRepositoryMock.find.mockResolvedValue([defaultWorkspace]);
       workspaceRepositoryMock.findOne.mockImplementation(
         async (options?: {
           where?: { id?: string; workspaceUsers?: object };
@@ -113,6 +113,7 @@ describe('WorkspaceDomainsService', () => {
     it('falls back to the default workspace for non-members with pending invitations', async () => {
       twentyConfigServiceMock.get.mockReturnValue(false);
       workspaceRepositoryMock.count.mockResolvedValue(2);
+      workspaceRepositoryMock.find.mockResolvedValue([defaultWorkspace]);
       workspaceRepositoryMock.findOne.mockImplementation(
         async (options?: {
           where?: { id?: string; workspaceUsers?: object };
@@ -188,6 +189,42 @@ describe('WorkspaceDomainsService', () => {
       await expect(
         service.getWorkspaceForToken('https://acme.app.com', 'other-id'),
       ).resolves.toBeUndefined();
+    });
+  });
+
+  describe('getWorkspaceByOriginOrDefaultWorkspace', () => {
+    beforeEach(() => {
+      twentyConfigServiceMock.get.mockReturnValue(false);
+      domainServerConfigServiceMock.getSubdomainAndCustomDomainFromUrl.mockReturnValue(
+        {
+          subdomain: undefined,
+          customDomain: undefined,
+          isUnderPublicDomainUrl: false,
+        },
+      );
+      workspaceRepositoryMock.findOne.mockResolvedValue(null);
+    });
+
+    it('falls back to the latest workspace when the seed workspace is absent', async () => {
+      workspaceRepositoryMock.find.mockResolvedValue([latestWorkspace]);
+
+      await expect(
+        service.getWorkspaceByOriginOrDefaultWorkspace('https://app.com'),
+      ).resolves.toBe(latestWorkspace);
+      expect(workspaceRepositoryMock.find).toHaveBeenCalledWith(
+        expect.objectContaining({ take: 1 }),
+      );
+      expect(workspaceRepositoryMock.findOne).toHaveBeenCalledWith(
+        expect.objectContaining({ where: expect.anything() }),
+      );
+    });
+
+    it('throws when no workspace exists', async () => {
+      workspaceRepositoryMock.find.mockResolvedValue([]);
+
+      await expect(
+        service.getWorkspaceByOriginOrDefaultWorkspace('https://app.com'),
+      ).rejects.toBe(WorkspaceNotFoundDefaultError);
     });
   });
 });
