@@ -23,7 +23,9 @@ COPY ./packages/twenty-front-component-renderer/package.json /app/packages/twent
 COPY ./packages/twenty-sdk/package.json /app/packages/twenty-sdk/
 COPY ./packages/twenty-client-sdk/package.json /app/packages/twenty-client-sdk/
 
-RUN yarn workspaces focus crm_happy twenty-front twenty-front-component-renderer twenty-ui twenty-shared twenty-sdk twenty-client-sdk && yarn cache clean && npx nx reset
+# Heap cap for installs on small shared hosts (FOCUS_NODE_MEM build arg).
+ARG FOCUS_NODE_MEM=2048
+RUN NODE_OPTIONS="--max-old-space-size=${FOCUS_NODE_MEM}" yarn workspaces focus crm_happy twenty-front twenty-front-component-renderer twenty-ui twenty-shared twenty-sdk twenty-client-sdk && yarn cache clean && npx nx reset
 
 # Serialized after front-deps: one heavy yarn focus at a time on small Dokploy hosts.
 FROM front-deps AS server-deps
@@ -43,7 +45,9 @@ COPY ./packages/twenty-oxlint-rules/package.json /app/packages/twenty-oxlint-rul
 COPY ./packages/twenty-ui/package.json /app/packages/twenty-ui/
 COPY ./packages/twenty-sdk/package.json /app/packages/twenty-sdk/
 
-RUN yarn workspaces focus crm_happy twenty-server twenty-emails twenty-shared twenty-client-sdk twenty-ui twenty-sdk && yarn cache clean && npx nx reset
+# Same heap cap as above (ARGs are scoped per stage, hence redeclared).
+ARG FOCUS_NODE_MEM=2048
+RUN NODE_OPTIONS="--max-old-space-size=${FOCUS_NODE_MEM}" yarn workspaces focus crm_happy twenty-server twenty-emails twenty-shared twenty-client-sdk twenty-ui twenty-sdk && yarn cache clean && npx nx reset
 
 
 FROM server-deps AS twenty-server-build
@@ -60,7 +64,9 @@ RUN npx nx run twenty-server:lingui:extract && \
     npx nx run twenty-emails:lingui:extract && \
     npx nx run twenty-emails:lingui:compile
 
-RUN npx nx run twenty-server:build
+# Heap cap for the tsc server build (SERVER_BUILD_MEM build arg).
+ARG SERVER_BUILD_MEM=3072
+RUN NODE_OPTIONS="--max-old-space-size=${SERVER_BUILD_MEM}" npx nx run twenty-server:build
 
 # Clean server build output (type declarations and compiled tests are not needed at runtime;
 # source maps are kept because twenty-infra extracts them from the image for Sentry uploads)
@@ -83,10 +89,12 @@ RUN npx nx run twenty-front:lingui:extract && \
 # To skip the memory-intensive frontend build, pre-build on the host:
 #   npx nx build twenty-front
 # The check below will use packages/twenty-front/build/ if it already exists.
+# The Vite front build needs 8192 (previous hardcoded value); less breaks it.
+ARG FRONT_BUILD_MEM=8192
 RUN if [ -d /app/packages/twenty-front/build ]; then \
       echo "Using pre-built frontend from host"; \
     else \
-      NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front; \
+      NODE_OPTIONS="--max-old-space-size=${FRONT_BUILD_MEM}" npx nx build twenty-front; \
     fi
 
 

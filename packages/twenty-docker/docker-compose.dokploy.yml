@@ -36,11 +36,13 @@ services:
         # compartido; se sobreescriben en el Environment de Dokploy.
         FOCUS_NODE_MEM: ${FOCUS_NODE_MEM:-2048}
         SERVER_BUILD_MEM: ${SERVER_BUILD_MEM:-3072}
-        FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-4096}
+        FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-8192}
     image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
-    # Guardarraíl en runtime: el server observado usa ~770MB; el límite evita
-    # que un pico se lleve al resto de apps del host. Vigilar con docker stats.
-    mem_limit: 1536m
+    # Guardarraíl en runtime: en régimen usa ~770MB, pero el arranque (codegen
+    # del schema GraphQL) es el pico de memoria. Sin tope de heap, Node crecía
+    # hasta que el kernel mataba el contenedor (OOM) a media línea de log y el
+    # deploy entraba en loop sin pasar el healthcheck. Vigilar con docker stats.
+    mem_limit: 2048m
     mem_reservation: 768m
     # En prod con dominio: quitar este publish y rutear solo vía Traefik/443.
     # Un puerto publicado sigue alcanzable por HTTP plano desde Internet.
@@ -51,6 +53,9 @@ services:
     environment:
       NODE_ENV: production
       NODE_PORT: 3000
+      # Tope de heap ≈75% del mem_limit: V8 recicla antes de que el cgroup
+      # mate el proceso. Aplica también a los command:prod del entrypoint.
+      NODE_OPTIONS: ${SERVER_NODE_OPTIONS:---max-old-space-size=1536}
       # Sin estas dos el deploy falla temprano y explícito: no hay db/redis
       # internos a los que caer.
       PG_DATABASE_URL: ${PG_DATABASE_URL:?PG_DATABASE_URL debe venir del Environment de Dokploy (Postgres externo)}
@@ -119,8 +124,10 @@ services:
       args:
         FOCUS_NODE_MEM: ${FOCUS_NODE_MEM:-2048}
         SERVER_BUILD_MEM: ${SERVER_BUILD_MEM:-3072}
-        FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-4096}
+        FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-8192}
     image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
+    # El worker bootea contexto Nest sin HTTP ni codegen GraphQL (pico menor
+    # que el server), pero aplica la misma regla: heap ≈75% del mem_limit.
     mem_limit: 1024m
     mem_reservation: 512m
     volumes:
@@ -128,6 +135,7 @@ services:
     command: ["yarn", "worker:prod"]
     environment:
       NODE_ENV: production
+      NODE_OPTIONS: ${WORKER_NODE_OPTIONS:---max-old-space-size=768}
       PG_DATABASE_URL: ${PG_DATABASE_URL:?PG_DATABASE_URL debe venir del Environment de Dokploy (Postgres externo)}
       SERVER_URL: ${SERVER_URL}
       FRONTEND_URL: ${FRONTEND_URL:-${SERVER_URL}}
