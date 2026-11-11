@@ -33,7 +33,7 @@ services:
         # compartido; se sobreescriben en el Environment de Dokploy.
         FOCUS_NODE_MEM: ${FOCUS_NODE_MEM:-2048}
         SERVER_BUILD_MEM: ${SERVER_BUILD_MEM:-3072}
-        FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-8192}
+        FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-6144}
     image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
     # Guardarraíl en runtime: en régimen usa ~770MB, pero el arranque (codegen
     # del schema GraphQL) es el pico de memoria. Sin tope de heap, Node crecía
@@ -41,6 +41,8 @@ services:
     # deploy entraba en loop sin pasar el healthcheck. Vigilar con docker stats.
     mem_limit: 2048m
     mem_reservation: 768m
+    # Techo de CPU: limita bajo contienda, no reserva. Ajustable por Environment.
+    cpus: ${SERVER_CPUS:-2}
     ports:
       - "${HOST_PORT:-3000}:3000"
     volumes:
@@ -93,19 +95,14 @@ services:
     restart: always
 
   worker:
-    build:
-      context: ../..
-      dockerfile: packages/twenty-docker/twenty/Dockerfile
-      target: twenty
-      args:
-        FOCUS_NODE_MEM: ${FOCUS_NODE_MEM:-2048}
-        SERVER_BUILD_MEM: ${SERVER_BUILD_MEM:-3072}
-        FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-8192}
+    # No build block on purpose: same image as server. A duplicate block
+    # would run a second concurrent full build of identical content.
     image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
     # El worker bootea contexto Nest sin HTTP ni codegen GraphQL (pico menor
     # que el server), pero aplica la misma regla: heap ≈75% del mem_limit.
     mem_limit: 1024m
     mem_reservation: 512m
+    cpus: ${WORKER_CPUS:-1}
     volumes:
       - server-local-data:/app/packages/twenty-server/.local-storage
     command: ["yarn", "worker:prod"]
@@ -150,6 +147,7 @@ services:
 
   db:
     image: postgres:16
+    cpus: ${DB_CPUS:-1}
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
@@ -166,6 +164,7 @@ services:
   redis:
     # Misma versión que la infra de desarrollo (docker-compose.dev.yml).
     image: redis:7
+    cpus: ${REDIS_CPUS:-0.5}
     restart: always
     command: ["--maxmemory-policy", "noeviction"]
     healthcheck:

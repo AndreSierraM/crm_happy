@@ -13,3 +13,10 @@ happy
 .github
 .vscode
 .claude
+# Salidas de build y cachés locales: nunca son insumo (la imagen compila su
+# propio dist) y sumarían ~1GB al contexto. En Dokploy no existen (van por git).
+**/dist
+.nx
+.cache
+.swc
+node_modules

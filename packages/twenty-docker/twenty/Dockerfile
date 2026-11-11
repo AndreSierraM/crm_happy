@@ -23,9 +23,9 @@ COPY ./packages/twenty-front-component-renderer/package.json /app/packages/twent
 COPY ./packages/twenty-sdk/package.json /app/packages/twenty-sdk/
 COPY ./packages/twenty-client-sdk/package.json /app/packages/twenty-client-sdk/
 
-# Heap cap for installs on small shared hosts (FOCUS_NODE_MEM build arg).
+# Heap cap for installs on small shared hosts (FOCUS_NODE_MEM build arg); nice yields CPU to co-hosted apps.
 ARG FOCUS_NODE_MEM=2048
-RUN NODE_OPTIONS="--max-old-space-size=${FOCUS_NODE_MEM}" yarn workspaces focus crm_happy twenty-front twenty-front-component-renderer twenty-ui twenty-shared twenty-sdk twenty-client-sdk && yarn cache clean && npx nx reset
+RUN NODE_OPTIONS="--max-old-space-size=${FOCUS_NODE_MEM}" nice -n 10 yarn workspaces focus crm_happy twenty-front twenty-front-component-renderer twenty-ui twenty-shared twenty-sdk twenty-client-sdk && yarn cache clean && npx nx reset
 
 # Serialized after front-deps: one heavy yarn focus at a time on small Dokploy hosts.
 FROM front-deps AS server-deps
@@ -47,7 +47,7 @@ COPY ./packages/twenty-sdk/package.json /app/packages/twenty-sdk/
 
 # Same heap cap as above (ARGs are scoped per stage, hence redeclared).
 ARG FOCUS_NODE_MEM=2048
-RUN NODE_OPTIONS="--max-old-space-size=${FOCUS_NODE_MEM}" yarn workspaces focus crm_happy twenty-server twenty-emails twenty-shared twenty-client-sdk twenty-ui twenty-sdk && yarn cache clean && npx nx reset
+RUN NODE_OPTIONS="--max-old-space-size=${FOCUS_NODE_MEM}" nice -n 10 yarn workspaces focus crm_happy twenty-server twenty-emails twenty-shared twenty-client-sdk twenty-ui twenty-sdk && yarn cache clean && npx nx reset
 
 
 FROM server-deps AS twenty-server-build
@@ -66,7 +66,7 @@ RUN npx nx run twenty-server:lingui:extract && \
 
 # Heap cap for the tsc server build (SERVER_BUILD_MEM build arg).
 ARG SERVER_BUILD_MEM=3072
-RUN NODE_OPTIONS="--max-old-space-size=${SERVER_BUILD_MEM}" npx nx run twenty-server:build
+RUN NODE_OPTIONS="--max-old-space-size=${SERVER_BUILD_MEM}" nice -n 10 npx nx run twenty-server:build
 
 # Clean server build output (type declarations and compiled tests are not needed at runtime;
 # source maps are kept because twenty-infra extracts them from the image for Sentry uploads)
@@ -77,6 +77,10 @@ RUN yarn workspaces focus --production twenty-emails twenty-shared twenty-client
 
 
 FROM front-deps AS twenty-front-build
+
+# Barrier: finish the server build first so tsc and Vite (the two heaviest
+# steps) never overlap on small shared hosts. Slower builds, lower peak.
+COPY --from=twenty-server-build /app/packages/twenty-server/package.json /tmp/serialized-after-server-build.json
 
 COPY ./packages/twenty-front /app/packages/twenty-front
 COPY ./packages/twenty-front-component-renderer /app/packages/twenty-front-component-renderer
@@ -89,12 +93,12 @@ RUN npx nx run twenty-front:lingui:extract && \
 # To skip the memory-intensive frontend build, pre-build on the host:
 #   npx nx build twenty-front
 # The check below will use packages/twenty-front/build/ if it already exists.
-# The Vite front build needs 8192 (previous hardcoded value); less breaks it.
-ARG FRONT_BUILD_MEM=8192
+# Vite front build heap cap, verified green at 6144 (previous hardcoded 8192).
+ARG FRONT_BUILD_MEM=6144
 RUN if [ -d /app/packages/twenty-front/build ]; then \
       echo "Using pre-built frontend from host"; \
     else \
-      NODE_OPTIONS="--max-old-space-size=${FRONT_BUILD_MEM}" npx nx build twenty-front; \
+      NODE_OPTIONS="--max-old-space-size=${FRONT_BUILD_MEM}" nice -n 10 npx nx build twenty-front; \
     fi
 
 
