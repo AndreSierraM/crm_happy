@@ -75,6 +75,15 @@ RUN find /app/packages/twenty-server/dist -name '*.d.ts' -delete \
 
 RUN yarn workspaces focus --production twenty-emails twenty-shared twenty-client-sdk twenty-server
 
+# Build attestation: stamp the deployed commit into dist/build-info.json so the
+# boot log proves which code is live. Dokploy must inject --build-arg GIT_SHA
+# with the deployed commit; without it the file and the boot log say unknown.
+# Declared last so a new SHA only invalidates this layer; the file carries no
+# timestamps for the same reason.
+# .git stays out of the build context because it is gigabytes (see .dockerignore).
+ARG GIT_SHA=unknown
+RUN printf '{"gitSha":"%s"}\n' "$GIT_SHA" > /app/packages/twenty-server/dist/build-info.json
+
 
 FROM front-deps AS twenty-front-build
 

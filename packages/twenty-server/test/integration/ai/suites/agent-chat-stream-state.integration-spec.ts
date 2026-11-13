@@ -33,13 +33,23 @@ describe('Agent chat stream state', () => {
     const threadId = v4();
     const streamId = v4();
 
-    await eventPublisherService.startStreamState({ threadId, streamId });
+    await eventPublisherService.startStreamState({
+      threadId,
+      streamId,
+      workspaceId,
+    });
     await publishChunk({ threadId, text: 'partial' });
 
-    await eventPublisherService.resetOwnedStreamState({ threadId, streamId });
+    await eventPublisherService.resetOwnedStreamState({
+      threadId,
+      streamId,
+      workspaceId,
+    });
 
-    const { chunks } =
-      await eventPublisherService.getAccumulatedChunks(threadId);
+    const { chunks } = await eventPublisherService.getAccumulatedChunks(
+      threadId,
+      workspaceId,
+    );
 
     expect(chunks).toEqual([]);
   });
@@ -52,28 +62,60 @@ describe('Agent chat stream state', () => {
     await eventPublisherService.startStreamState({
       threadId,
       streamId: deadStreamId,
+      workspaceId,
     });
     await publishChunk({ threadId, text: 'dead' });
     await eventPublisherService.resetOwnedStreamState({
       threadId,
       streamId: deadStreamId,
+      workspaceId,
     });
 
     await eventPublisherService.startStreamState({
       threadId,
       streamId: nextStreamId,
+      workspaceId,
     });
     await publishChunk({ threadId, text: 'next' });
 
     await eventPublisherService.resetOwnedStreamState({
       threadId,
       streamId: deadStreamId,
+      workspaceId,
     });
 
-    const { chunks, maxSeq } =
-      await eventPublisherService.getAccumulatedChunks(threadId);
+    const { chunks, maxSeq } = await eventPublisherService.getAccumulatedChunks(
+      threadId,
+      workspaceId,
+    );
 
     expect(chunks).toEqual([{ type: 'text-delta', text: 'next' }]);
     expect(maxSeq).toBe(1);
+  });
+
+  it('isolates chunks of colliding thread ids by workspace', async () => {
+    const threadId = v4();
+    const otherWorkspaceId = v4();
+
+    await eventPublisherService.publish({
+      threadId,
+      workspaceId,
+      event: {
+        type: 'stream-chunk',
+        chunk: { type: 'text-delta', text: 'own' },
+      },
+    });
+
+    const { chunks, maxSeq } = await eventPublisherService.getAccumulatedChunks(
+      threadId,
+      workspaceId,
+    );
+
+    expect(chunks).toEqual([{ type: 'text-delta', text: 'own' }]);
+    expect(maxSeq).toBe(1);
+
+    await expect(
+      eventPublisherService.getAccumulatedChunks(threadId, otherWorkspaceId),
+    ).resolves.toEqual({ chunks: [], maxSeq: 0 });
   });
 });

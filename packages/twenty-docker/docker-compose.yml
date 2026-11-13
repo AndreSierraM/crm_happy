@@ -34,6 +34,9 @@ services:
         FOCUS_NODE_MEM: ${FOCUS_NODE_MEM:-2048}
         SERVER_BUILD_MEM: ${SERVER_BUILD_MEM:-3072}
         FRONT_BUILD_MEM: ${FRONT_BUILD_MEM:-6144}
+        # Attestation: se graba en dist/build-info.json y sale en el boot log.
+        # Fijar por deploy (commit) en el Environment de Dokploy; si no, unknown.
+        GIT_SHA: ${GIT_SHA:-unknown}
     image: ${DOCKER_IMAGE:-happy/crm_happy}:${TAG:-latest}
     # Guardarraíl en runtime: en régimen usa ~770MB, pero el arranque (codegen
     # del schema GraphQL) es el pico de memoria. Sin tope de heap, Node crecía

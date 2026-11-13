@@ -19,12 +19,13 @@ export class AgentChatEventPublisherService {
     private readonly redisClientService: RedisClientService,
   ) {}
 
-  private getStreamChunksKey(threadId: string): string {
-    return `agent-chat-stream-chunks:${threadId}`;
+  // Thread ids collide across workspaces, so the workspace scopes every key
+  private getStreamChunksKey(threadId: string, workspaceId: string): string {
+    return `agent-chat-stream-chunks:${workspaceId}:${threadId}`;
   }
 
-  private getStreamOwnerKey(threadId: string): string {
-    return `agent-chat-stream-owner:${threadId}`;
+  private getStreamOwnerKey(threadId: string, workspaceId: string): string {
+    return `agent-chat-stream-owner:${workspaceId}:${threadId}`;
   }
 
   async publish({
@@ -40,7 +41,7 @@ export class AgentChatEventPublisherService {
 
     if (event.type === 'stream-chunk') {
       const redis = this.redisClientService.getClient();
-      const key = this.getStreamChunksKey(threadId);
+      const key = this.getStreamChunksKey(threadId, workspaceId);
 
       // RPUSH returns the new list length — use it as a 1-based sequence number.
       // Sent together on one connection, Redis still runs them in order.
@@ -48,7 +49,7 @@ export class AgentChatEventPublisherService {
         redis.rpush(key, JSON.stringify(event.chunk)),
         redis.expire(key, STREAM_CHUNKS_TTL_SECONDS),
         redis.expire(
-          this.getStreamOwnerKey(threadId),
+          this.getStreamOwnerKey(threadId, workspaceId),
           STREAM_CHUNKS_TTL_SECONDS,
         ),
       ]);
@@ -59,7 +60,7 @@ export class AgentChatEventPublisherService {
       event.type === 'credits-exhausted'
     ) {
       const redis = this.redisClientService.getClient();
-      await redis.del(this.getStreamChunksKey(threadId));
+      await redis.del(this.getStreamChunksKey(threadId, workspaceId));
     }
 
     await this.subscriptionService.publishToAgentChat({
@@ -74,25 +75,27 @@ export class AgentChatEventPublisherService {
     });
   }
 
-  async resetStreamState(threadId: string): Promise<void> {
+  async resetStreamState(threadId: string, workspaceId: string): Promise<void> {
     const redis = this.redisClientService.getClient();
 
-    await redis.del(this.getStreamChunksKey(threadId));
+    await redis.del(this.getStreamChunksKey(threadId, workspaceId));
   }
 
   async startStreamState({
     threadId,
     streamId,
+    workspaceId,
   }: {
     threadId: string;
     streamId: string;
+    workspaceId: string;
   }): Promise<void> {
     await this.redisClientService
       .getClient()
       .multi()
-      .del(this.getStreamChunksKey(threadId))
+      .del(this.getStreamChunksKey(threadId, workspaceId))
       .set(
-        this.getStreamOwnerKey(threadId),
+        this.getStreamOwnerKey(threadId, workspaceId),
         streamId,
         'EX',
         STREAM_CHUNKS_TTL_SECONDS,
@@ -104,28 +107,33 @@ export class AgentChatEventPublisherService {
   async resetOwnedStreamState({
     threadId,
     streamId,
+    workspaceId,
   }: {
     threadId: string;
     streamId: string;
+    workspaceId: string;
   }): Promise<void> {
     await this.redisClientService
       .getClient()
       .eval(
         RESET_OWNED_STREAM_STATE_SCRIPT,
         2,
-        this.getStreamChunksKey(threadId),
-        this.getStreamOwnerKey(threadId),
+        this.getStreamChunksKey(threadId, workspaceId),
+        this.getStreamOwnerKey(threadId, workspaceId),
         streamId,
       );
   }
 
-  async getAccumulatedChunks(threadId: string): Promise<{
+  async getAccumulatedChunks(
+    threadId: string,
+    workspaceId: string,
+  ): Promise<{
     chunks: Record<string, unknown>[];
     maxSeq: number;
   }> {
     const redis = this.redisClientService.getClient();
     const rawChunks = await redis.lrange(
-      this.getStreamChunksKey(threadId),
+      this.getStreamChunksKey(threadId, workspaceId),
       0,
       -1,
     );

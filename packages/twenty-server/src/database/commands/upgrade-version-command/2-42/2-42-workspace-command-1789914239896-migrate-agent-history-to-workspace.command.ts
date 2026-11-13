@@ -199,7 +199,7 @@ export class MigrateAgentHistoryToWorkspaceCommand extends ProvisionedWorkspaceC
       },
     });
 
-    await this.eventPublisherService.resetStreamState(thread.id);
+    await this.eventPublisherService.resetStreamState(thread.id, workspaceId);
     await this.eventPublisherService
       .publish({
         threadId: thread.id,

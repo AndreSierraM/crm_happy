@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
 import { LoggerService } from 'src/engine/core-modules/logger/logger.service';
 import { shouldCaptureException } from 'src/engine/utils/global-exception-handler.util';
+import { getBuildInfo } from 'src/engine/utils/get-build-info.util';
 import 'src/instrument';
 import { QueueWorkerModule } from 'src/queue-worker/queue-worker.module';
 import { enableValidationMetadataCache } from 'src/utils/enable-validation-metadata-cache.util';
@@ -22,6 +23,12 @@ async function bootstrap() {
     exceptionHandlerService = app.get(ExceptionHandlerService);
 
     app.useLogger(loggerService ?? false);
+
+    // Attest which commit the worker runs so live-behavior disputes settle from logs.
+    loggerService?.log(
+      `Deployed commit: ${getBuildInfo().gitSha}`,
+      'Bootstrap',
+    );
 
     app.enableShutdownHooks();
   } catch (err) {

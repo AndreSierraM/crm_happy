@@ -149,7 +149,7 @@ export class AgentTurnStreamService {
     jobAbortSignal?: AbortSignal;
     work: (abortSignal: AbortSignal) => Promise<TResult>;
   }): Promise<TResult> {
-    const { threadId, streamId } = claim;
+    const { threadId, streamId, workspaceId } = claim;
     const abortController = new AbortController();
     const cancelChannel = getCancelChannel(threadId, streamId);
     let stopHeartbeat: (() => void) | undefined;
@@ -160,6 +160,7 @@ export class AgentTurnStreamService {
       await this.eventPublisherService.startStreamState({
         threadId,
         streamId,
+        workspaceId,
       });
       stopHeartbeat = this.streamHeartbeatService.startRunning(streamId);
 

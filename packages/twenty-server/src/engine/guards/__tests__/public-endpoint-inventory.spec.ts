@@ -70,15 +70,15 @@ const PUBLIC_ENDPOINT_ALLOWLIST: PublicEndpointEntry[] = [
   },
   {
     file: 'engine/core-modules/auth/controllers/oauth-propagator.controller.ts',
-    control: 'pending-review',
+    control: 'redirect target restricted to registered workspace domains',
   },
   {
     file: 'engine/core-modules/auth/controllers/microsoft-auth.controller.ts',
-    control: 'pending-review',
+    control: 'Microsoft OAuth guard dance',
   },
   {
     file: 'engine/core-modules/auth/controllers/microsoft-apis-auth.controller.ts',
-    control: 'pending-review',
+    control: 'OAuth request-code guards + transient tokens',
   },
   {
     file: 'engine/core-modules/health/controllers/health.controller.ts',
@@ -92,55 +92,57 @@ const PUBLIC_ENDPOINT_ALLOWLIST: PublicEndpointEntry[] = [
   },
   {
     file: 'engine/core-modules/cloudflare/controllers/dns-cloudflare.controller.ts',
-    control: 'pending-review',
+    control: 'Cloudflare webhook secret header + zone-id check',
   },
   {
     file: 'engine/core-modules/event-logs/emit/event-log-emitter.resolver.ts',
-    control: 'pending-review',
+    control: 'append-only analytics ingestion; typed events, success flag only',
   },
   {
     file: 'engine/core-modules/well-known/controllers/well-known.controller.ts',
-    control: 'pending-review',
+    control: 'static discovery documents public by design',
   },
   {
     file: 'engine/core-modules/workflow/controllers/workflow-trigger.controller.ts',
-    control: 'pending-review',
+    control:
+      'capability URL; active webhook trigger only, run throttle in runner',
   },
   {
     file: 'engine/core-modules/application/application-registration/application-registration.resolver.ts',
-    control: 'pending-review',
+    control: 'client-id lookup returns secret-free public DTO',
   },
   {
     file: 'engine/core-modules/application/application-registration/application-registration-claim.controller.ts',
-    control: 'pending-review',
+    control: 'signed 15-minute JWT state; GitHub + provenance ownership check',
   },
   {
     file: 'engine/core-modules/application/application-oauth/controllers/oauth-registration.controller.ts',
-    control: 'pending-review',
+    control:
+      'RFC 7591 DCR; IP rate limit, validated redirects, secretless clients',
   },
   {
     file: 'engine/core-modules/application/application-oauth/controllers/oauth-discovery.controller.ts',
-    control: 'pending-review',
+    control: 'RFC 8414/9728 discovery metadata public by design',
   },
   {
     file: 'engine/core-modules/application/application-oauth/controllers/oauth-token.controller.ts',
-    control: 'pending-review',
+    control: 'client-secret/PKCE validation, single-use codes, IP rate limit',
   },
   {
     file: 'engine/core-modules/application/connection-provider/connection-provider-oauth.controller.ts',
-    control: 'pending-review',
+    control: 'verified transient token + membership; state-bound callback',
   },
   {
     file: 'engine/core-modules/application/application-marketplace/marketplace-public.resolver.ts',
-    control: 'pending-review',
+    control: 'listed-only sanitized catalog DTOs, no secrets',
   },
   {
     file: 'engine/core-modules/client-config/client-config.controller.ts',
-    control: 'pending-review',
+    control: 'curated public-safe config (flags, publishable keys only)',
   },
   {
     file: 'engine/core-modules/open-api/open-api.controller.ts',
-    control: 'pending-review',
+    control: 'workspace paths require valid access token; base schema only',
   },
 ];
 

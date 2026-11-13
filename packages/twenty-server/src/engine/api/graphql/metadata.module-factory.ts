@@ -73,6 +73,8 @@ export const metadataModuleFactory = async (
       }),
     ],
     path: `/${ApiPath.Metadata}`,
+    // Yoga defaults reflect any Origin with credentials, so Express keeps owning CORS.
+    cors: false,
     context: () => ({
       loaders: dataloaderService.createLoaders(),
     }),

@@ -164,7 +164,10 @@ export class AgentChatResolver {
     await this.reapDeadStream(thread, workspaceId);
 
     const { chunks, maxSeq } =
-      await this.eventPublisherService.getAccumulatedChunks(threadId);
+      await this.eventPublisherService.getAccumulatedChunks(
+        threadId,
+        workspaceId,
+      );
 
     const turnError = await this.turnRecorderService.findLatestTurnError({
       workspaceId,

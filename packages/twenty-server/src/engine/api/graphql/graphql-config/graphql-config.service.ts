@@ -88,6 +88,8 @@ export class GraphQLConfigService implements GqlOptionsFactory<
       resolvers: { JSON: GraphQLJSON },
       plugins: plugins,
       path: `/${ApiPath.GraphQL}`,
+      // Yoga defaults reflect any Origin with credentials, so Express keeps owning CORS.
+      cors: false,
       context: () => ({
         loaders: this.dataloaderService.createLoaders(),
       }),

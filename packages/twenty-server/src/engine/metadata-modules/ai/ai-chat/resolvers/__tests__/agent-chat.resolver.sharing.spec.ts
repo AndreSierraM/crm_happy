@@ -545,6 +545,17 @@ describe('Shared conversation API boundaries', () => {
     ]);
   });
 
+  it('scopes stream catchup reads to the authenticated workspace', async () => {
+    const { resolver, events } = buildResolver();
+
+    await resolver.chatStreamCatchupChunks(THREAD_ID, VIEWER_ID, workspace);
+
+    expect(events.getAccumulatedChunks).toHaveBeenCalledWith(
+      THREAD_ID,
+      WORKSPACE_ID,
+    );
+  });
+
   it('does not read messages or catchup after access is revoked', async () => {
     const { resolver, messages, sharing, events } = buildResolver();
     sharing.getReadableThread.mockRejectedValue(new Error('access revoked'));

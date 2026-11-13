@@ -15,20 +15,26 @@
 
 | ID | Severidad (informe) | Estado | Responsable siguiente paso |
 |---|---|---|---|
-| DEV-01 CORS con credenciales | Crítica | **No reproduce en fuente** — se requiere verificar el despliegue (§2.1) | Desarrollo + Infra |
+| DEV-01 CORS con credenciales | Crítica | **Corregido en fuente**, pendiente despliegue + retest (§2.1) | Desarrollo |
 | DEV-02 HTTP plano puerto 3100 | Alta | **Pendiente** — cambio especificado en el repo, pendiente aplicar en Dokploy | Infra |
 | DEV-03 Dokploy expuesto | Media | **Pendiente** — fuera del repositorio de la app | Infra |
 | DEV-04 Certificado Traefik por defecto | Media | **Pendiente** — configuración Dokploy/Traefik | Infra |
 | DEV-05 `X-Powered-By` | Baja | **Corregido en fuente**, pendiente despliegue + retest | Desarrollo |
 | DEV-06 Health checks públicos | Baja | **Mitigado por diseño** — sin detalle sensible; exposición externa se cierra con DEV-02 | — |
-| CVEs Twenty CRM (5) | Varias | 2 con evidencia de remediación en fuente; 3 pendientes de mapeo de versión / fase 2 | Desarrollo + Auditoría |
+| CVEs Twenty CRM (5) | Varias | 105763+46624 remediados; 55583 corregido en fuente (retest pendiente); 73069/85055 no reproducen en fuente con briefs fase 2 (§3) | Desarrollo + Auditoría |
 | CVEs Dokploy (5) | Varias | **Pendiente** — se requiere versión instalada | Infra |
 
 ## 2. Detalle por hallazgo
 
-### 2.1 DEV-01 — CORS: no reproduce en el código fuente actual
+### 2.1 DEV-01 — CORS: causa raíz en defaults de Yoga, corregido en fuente
 
-**Análisis.** El middleware CORS (`packages/twenty-server/src/engine/core-modules/user-session/utils/apply-credentialed-cors.util.ts`, vigente desde el 2026-08-04, commit `997b2c38de`) implementa exactamente lo recomendado: allowlist explícita construida solo desde `SERVER_URL`, `FRONTEND_URL` y `AUTH_COOKIE_ALLOWED_ORIGINS` (`resolve-allowed-credentialed-origins.util.ts`), sin valores derivados del request y rechazando esquemas opacos. Solo los orígenes de la allowlist se reflejan; cualquier otro recibe literalmente `*`, que con `credentials: true` el navegador bloquea por especificación Fetch (el propio código lo documenta y lo registra en logs). No existe ruta de reflejo dinámico en el fuente actual ni en su historial desde agosto.
+**Addendum 2026-11-13 (corrige la tesis de no-reproduce del 2026-11-06).** El reflejo de `Origin` arbitrario con credenciales **sí reproduce desde el fuente**: el middleware Express (`apply-credentialed-cors.util.ts`) es correcto, pero las 3 configuraciones Yoga no fijaban `cors` y Yoga registra por defecto `useCORS({})` (`graphql-yoga/cjs/server.js`: `options?.cors !== false && useCORS(options?.cors)`). Con opciones vacías, `getCORSHeadersByRequestAndOptions` (`@whatwg-node/server/esm/plugins/useCors.js`) toma la rama `origin == null`, refleja el `Origin` del request y añade `Access-Control-Allow-Credentials: true`; luego `onResponse` aplica `response.headers.set(...)`, pisando lo que Express había resuelto. Esa es la ruta de reflejo dinámico que el análisis del 06-11 no encontró porque está en la capa Yoga, no en el middleware.
+
+**Fix aplicado (pendiente de commit, despliegue y retest en runtime):** `cors: false` en las 3 configs — `graphql-config.service.ts` (`createGqlOptions`, `/graphql`), `metadata.module-factory.ts` (`/metadata`) y `admin-panel.module-factory.ts` (`/admin-panel`) — con lo que Yoga omite su plugin CORS y Express vuelve a ser el único dueño de la allowlist con credenciales. Verificación en fuente: un spec por config que fija `cors === false` (verificado que falla sin el fix) + spec de `applySecurityHeaders` (3 cabeceras); `oxlint` y `oxfmt` limpios.
+
+**Retest en runtime (tras redespliegue):** repetir el `curl` de abajo (esperado: sin `Access-Control-Allow-Origin`), más un caso positivo con un origen de la allowlist (esperado: reflejado con `Allow-Credentials: true`) y, como prueba concluyente, una petición en navegador con `credentials: include` desde un origen no permitido (esperado: bloqueada por el navegador).
+
+**Análisis original (2026-11-06; conclusión de no-reproduce superada por el addendum).** El middleware CORS (`packages/twenty-server/src/engine/core-modules/user-session/utils/apply-credentialed-cors.util.ts`, vigente desde el 2026-08-04, commit `997b2c38de`) implementa exactamente lo recomendado: allowlist explícita construida solo desde `SERVER_URL`, `FRONTEND_URL` y `AUTH_COOKIE_ALLOWED_ORIGINS` (`resolve-allowed-credentialed-origins.util.ts`), sin valores derivados del request y rechazando esquemas opacos. Solo los orígenes de la allowlist se reflejan; cualquier otro recibe literalmente `*`, que con `credentials: true` el navegador bloquea por especificación Fetch (el propio código lo documenta y lo registra en logs). No existe ruta de reflejo dinámico en el fuente actual ni en su historial desde agosto.
 
 **Discrepancia con el PoC.** Dado lo anterior, el reflejo de `https://evil-attacker.com` observado el 26-oct no puede provenir de este código. Hipótesis, en orden de probabilidad: (1) el build desplegado en el puerto 3100 es anterior al 2026-08-04; (2) valores de entorno inesperados en Dokploy (aunque ningún valor puede inyectar un comodín: `*` no parsea como URL y se descarta); (3) lectura de `/healthz` (endpoint público por diseño, donde `*` es correcto) interpretada como lectura autenticada. Nota: un PoC basado en curl no prueba lectura cross-origin con credenciales, porque curl no aplica la política del navegador; solo una prueba en navegador con `credentials: include` es concluyente.
 
@@ -94,9 +100,9 @@ El endpoint (`/healthz`, `ApiPath.Health`) ejecuta `health.check([])` — cero i
 |---|---|
 | CVE-2026-105763 (9.6, fuga de `connectedAccounts`) | **Patrón remediado presente.** La query GraphQL devuelve `ConnectedAccountPublicDTO`, que omite `connectionParameters` crudos (`OmitType`) y expone solo la forma pública construida por `buildPublicConnectionParameters`, que elimina `password` por protocolo (`const { password: _, ...publicParams }`). |
 | CVE-2026-46624 (RCE vía `COPY TO PROGRAM`) | **Primitiva ausente.** No existe ningún `COPY TO` SQL en el código de la aplicación (búsqueda exhaustiva: solo coincidencias en comentarios de otro contexto). Sin esa primitiva, la cadena de RCE descrita no tiene punto de apoyo. |
-| CVE-2026-73069 (SQLi vía metadata) | Sin verificación puntual en esta pasada — se propone validar en fase 2 autenticada. |
-| CVE-2026-85055 (filtros ignoran permisos de campo) | Sin verificación puntual en esta pasada — candidato explícito para fase 2 (oráculo de datos). |
-| CVE-2026-55583 (IDOR cross-workspace en chat IA) | Sin verificación puntual en esta pasada — candidato explícito para fase 2 (multi-tenant). |
+| CVE-2026-73069 (SQLi vía metadata) | **No reproduce en fuente (2026-11-13).** Cadena input→SQL auditada: valores ligados, identificadores escapados o restringidos a `^[a-z][a-zA-Z0-9]*$`; brief fase 2 con stack vivo en el reporte de integración. |
+| CVE-2026-85055 (filtros ignoran permisos de campo) | **No reproduce en fuente (2026-11-13).** Todo filtro/order/read alcanzable respeta `canRead=false` (assert en parser + backstop repo-level + fail-closed); brief fase 2 en el reporte de integración. |
+| CVE-2026-55583 (IDOR cross-workspace en chat IA) | **Corregido en fuente (2026-11-13)**, pendiente despliegue + retest. Claves Redis de stream sin scope permitían leer chunks de otro workspace colisionando `threadId`; ahora van scopeadas por `workspaceId` de contexto + spec de regresión. |
 
 **Dokploy (CVE-2026-24841, CVE-2026-72862, CVE-2026-72901, CVE-2026-24840, CVE-2025-53376/53375):** no verificables desde este repositorio. Acción: obtener la versión instalada (panel Dokploy o CLI en el host) y actualizar como mínimo a `≥0.29.13`. Dada la exposición pública (DEV-03), este punto es prioritario e independiente del código del CRM.
 
@@ -117,6 +123,7 @@ El endpoint (`/healthz`, `ApiPath.Health`) ejecuta `health.check([])` — cero i
 
 - [ ] Commit + despliegue a dev de DEV-05 y los endurecimientos del §4, con retest en runtime.
 - [x] Endurecimiento CORS fail-closed (omitir `Access-Control-Allow-Origin` en orígenes no permitidos), pendiente de commit + despliegue y retest.
+- [x] DEV-01: `cors: false` en las 3 configs Yoga + specs pinning, pendiente de commit + despliegue y retest.
 - [x] Neutralización de branding extendida a `getPublicWorkspaceDataById` (misma clase de leak en DNS compartido), pendiente de commit + despliegue y retest.
 - [ ] Cierre del puerto 3100 público + TLS válido + restricción de Dokploy **antes de producción** (bloqueantes, owner: infraestructura).
-- [ ] Fase 2 autenticada con usuario de prueba (cubre CVE-2026-73069/85055/55583 pendientes).
+- [ ] Fase 2 autenticada con usuario de prueba (73069/85055: briefs listos con stack vivo; 55583: fix en fuente pendiente retest).

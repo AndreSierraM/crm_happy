@@ -52,6 +52,8 @@ export const adminPanelModuleFactory = async (
       }),
     ],
     path: `/${ApiPath.AdminPanel}`,
+    // Yoga defaults reflect any Origin with credentials, so Express keeps owning CORS.
+    cors: false,
     context: () => ({
       loaders: dataloaderService.createLoaders(),
     }),

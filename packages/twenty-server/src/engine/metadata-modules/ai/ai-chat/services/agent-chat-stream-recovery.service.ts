@@ -62,7 +62,7 @@ export class AgentChatStreamRecoveryService {
 
     if (isDefined(turnError)) {
       await this.eventPublisherService
-        .resetOwnedStreamState({ threadId, streamId })
+        .resetOwnedStreamState({ threadId, streamId, workspaceId })
         .catch((error: unknown) =>
           this.logger.warn(
             `Failed to reset the stream state of thread ${threadId} in workspace ${workspaceId}: ${formatErrorWithCause(error)}`,

@@ -24,6 +24,7 @@ import { configTransformers } from 'src/engine/core-modules/twenty-config/utils/
 import { UsageRecorderService } from 'src/engine/core-modules/usage/services/usage-recorder.service';
 import { applyCredentialedCors } from 'src/engine/core-modules/user-session/utils/apply-credentialed-cors.util';
 import { shouldCaptureException } from 'src/engine/utils/global-exception-handler.util';
+import { getBuildInfo } from 'src/engine/utils/get-build-info.util';
 
 import { AppModule } from './app.module';
 import './instrument';
@@ -81,6 +82,9 @@ const bootstrap = async () => {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   app.useLogger(logger);
+
+  // Attest which commit is running so live-behavior disputes settle from logs.
+  logger.log(`Deployed commit: ${getBuildInfo().gitSha}`, 'Bootstrap');
 
   app.useBodyParser('json', { limit: settings.maxRequestBodySize });
   app.useBodyParser('urlencoded', {
