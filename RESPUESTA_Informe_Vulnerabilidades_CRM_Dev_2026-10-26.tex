@@ -4,6 +4,7 @@
 \usepackage{amssymb}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage[spanish,es-tabla]{babel}
+\usepackage{array}
 \usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{fancyhdr}
@@ -33,6 +34,7 @@
 \newcommand{\LOW}{\badge{sevLow}{BAJA}}
 \newcommand{\FIXED}{\badge{stOk}{CORREGIDO}}
 \newcommand{\NREPRO}{\badge{stInfo}{NO REPRODUCE EN FUENTE}}
+\newcommand{\NREPROS}{\badge{stInfo}{NO REPRODUCE}}
 \newcommand{\MITIG}{\badge{stInfo}{MITIGADO POR DISEÑO}}
 \newcommand{\PEND}{\badge{stPending}{PENDIENTE INFRAESTRUCTURA}}
 \newcommand{\PVER}{\badge{stPending}{PENDIENTE VERIFICACIÓN}}
@@ -93,6 +95,7 @@
 Para: & Equipo de Seguridad de la Información --- Happy BPO \\
 De: & Equipo de desarrollo --- Happy CRM \\
 Fecha: & 6 de noviembre de 2026 \\
+Addendum: & 13 de noviembre de 2026 (cambios en \texttt{main @ d5a3b6e099}) \\
 Referencia: & \texttt{Informe\_Vulnerabilidades\_CRM\_Dev\_2026-10-26.pdf} \\
 Código evaluado: & \texttt{main @ 546b8dc665} + rama de trabajo \\
 Base upstream: & \texttt{twentyhq/twenty @ ba29ee4f5b} (2026-10-26) + 33 commits \\
@@ -125,19 +128,24 @@ Dokploy): no se puede corregir desde el repositorio, así que dejamos la remedia
 exacta especificada, con responsable y criterio de cierre, marcada como bloqueante para
 producción.
 
+Addendum 2026-11-13: DEV-01 pasó a corregido en fuente (causa raíz en los
+defaults de Yoga, no un build viejo), el inventario de endpoints quedó 32/32 y
+el CVE-2026-55583 se corrigió en fuente; los CVE-2026-73069 y CVE-2026-85055 no
+reproducen tras auditoría en fuente, con briefs de fase 2 entregados.
+
 \begin{center}
 \begin{tabular}{lllc}
 \toprule
 ID & Hallazgo & Severidad & Estado \\
 \midrule
-DEV-01 & CORS con credenciales & \CRIT & \NREPRO \\
+DEV-01 & CORS con credenciales & \CRIT & \FIXED \\
 DEV-02 & HTTP plano, puerto 3100 & \HIGH & \PEND \\
 DEV-03 & Panel Dokploy expuesto & \MED & \PEND \\
 DEV-04 & Certificado Traefik por defecto & \MED & \PEND \\
 DEV-05 & Cabecera \texttt{X-Powered-By} & \LOW & \FIXED \\
 DEV-06 & Health checks públicos & \LOW & \MITIG \\
 \midrule
-CVE & 5 CVEs Twenty CRM & Varias & 2 remediados en fuente, 3 por verificar \\
+CVE & 5 CVEs Twenty CRM & Varias & 3 corregidos en fuente, 2 no reproducen \\
 CVE & 5 CVEs Dokploy & Varias & \PVER{} (se requiere versión instalada) \\
 \bottomrule
 \end{tabular}
@@ -168,13 +176,24 @@ autenticadas de lógica de negocio (fase 2).
 
 \section{Remediación detallada}
 
-\subsection[DEV-01 --- CORS con credenciales]{DEV-01 --- CORS con credenciales \hfill \CRIT{} \NREPRO}
+\subsection[DEV-01 --- CORS con credenciales]{DEV-01 --- CORS con credenciales \hfill \CRIT{} \FIXED}
 
-\textbf{Conclusión.} El código fuente implementa exactamente la remediación recomendada
-(allowlist explícita, sin reflejo dinámico) desde el 2026-08-04. El reflejo observado
-en el host auditado no puede provenir de este código: la hipótesis principal es un
-build desplegado desactualizado. Se requiere verificar el despliegue y repetir la
-prueba (ver acciones al final).
+\textbf{Addendum 2026-11-13 (corrige la conclusión de no-reproduce).} El reflejo de
+\texttt{Origin} arbitrario con credenciales \textbf{sí reproduce desde el fuente}:
+el middleware Express es correcto, pero las 3 configuraciones Yoga
+(\texttt{graphql-config.service.ts}, \texttt{metadata.module-factory.ts},
+\texttt{admin-panel.module-factory.ts}) no fijaban \texttt{cors} y Yoga registra
+por defecto \texttt{useCORS(\{\})}, que refleja el \texttt{Origin} del request con
+\texttt{Allow-Credentials: true} y pisa en \texttt{onResponse} lo resuelto por
+Express. \textbf{Fix:} \texttt{cors: false} en las 3 configs (Express vuelve a ser
+el único dueño) + un spec por config que fija \texttt{cors === false} + spec de
+integración que pide los 3 endpoints con origen maligno y exige ausencia de
+\texttt{ACAO} (5/5 en verde con stack vivo) + spec de cabeceras de seguridad.
+Pendiente: despliegue y retest en runtime (Anexo~A).
+
+\textbf{Análisis original (2026-11-06; conclusión superada por el addendum).} El
+middleware CORS implementa exactamente la remediación recomendada (allowlist
+explícita) desde el 2026-08-04.
 
 \textbf{Análisis a nivel de código.} El middleware
 (\path{user-session/utils/apply-credentialed-cors.util.ts}) refleja el origen solo si
@@ -218,19 +237,15 @@ const allowedOriginsSettings: AllowedOriginsSettings = {
 Cada candidato debe parsear como URL \texttt{http(s)} (un comodín \texttt{*} se
 descarta), los esquemas opacos se rechazan, y en producción los orígenes loopback
 derivados se excluyen salvo declaración explícita. El historial confirma este diseño
-desde el commit \texttt{997b2c38de} (2026-08-04); la versión anterior al refuerzo
-\texttt{51abfb3e40} ya tenía la misma forma. No existe ruta de reflejo dinámico en el
-fuente ni en su historial reciente.
+desde el commit \texttt{997b2c38de} (2026-08-04). La ruta de reflejo dinámico estaba
+en la capa Yoga (ver addendum), no en este middleware.
 
-\textbf{Discrepancia con el PoC y acciones.} Ordenadas por probabilidad: (1) build
-desplegado anterior al 2026-08-04; (2) valores de entorno inesperados en Dokploy;
-(3) lectura de \texttt{/healthz} ---público por diseño, donde \texttt{*} es
-correcto--- interpretada como lectura autenticada. Nota metodológica: un PoC basado en
-curl no prueba lectura cross-origin con credenciales, porque curl no aplica la
-política del navegador; solo una prueba en navegador con \texttt{credentials: include}
-es concluyente. Acciones: confirmar TAG/commit desplegado, auditar las tres variables
-de entorno, redesplegar desde la rama actual y repetir la prueba (comando de retest en
-el Anexo~A).
+\textbf{Discrepancia resuelta por el addendum.} El reflejo provenía de los defaults
+de Yoga en el código desplegado, no de un build viejo ni del entorno. Nota
+metodológica vigente: un PoC basado en curl no prueba lectura cross-origin con
+credenciales, porque curl no aplica la política del navegador; solo una prueba en
+navegador con \texttt{credentials: include} es concluyente. Acciones: redesplegar
+desde la rama actual y repetir la prueba (matriz de retest en el Anexo~A).
 
 \textbf{Endurecimiento aplicado.} Fallo cerrado: se omite
 \texttt{Access-Control-Allow-Origin} para orígenes no permitidos (antes
@@ -330,7 +345,8 @@ se requiere ese TAG más la fuente de versión usada por el informe (Sección~6)
 \subsection{Twenty CRM --- evidencia en fuente}
 
 \begin{center}
-\begin{tabular}{lp{8.5cm}c}
+\footnotesize
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{8.0cm}c@{}}
 \toprule
 CVE & Evidencia & Estado \\
 \midrule
@@ -344,14 +360,17 @@ Sin ningún \texttt{COPY TO} SQL en el código de la aplicación
 (búsqueda exhaustiva): la primitiva de RCE descrita no tiene punto de apoyo. &
 \FIXED{} \\
 CVE-2026-73069 (SQLi) &
-Sin verificación puntual en esta pasada. &
-\PVER \\
-CVE-2026-85055 (permisos de campo) &
-Sin verificación puntual; candidato explícito para fase 2 (oráculo de datos). &
-\PVER \\
-CVE-2026-55583 (IDOR cross-workspace) &
-Sin verificación puntual; candidato explícito para fase 2 (multi-tenant). &
-\PVER \\
+No reproduce en fuente (2026-11-13): cadena input a SQL auditada, todo ligado o
+allowlistado; brief fase 2 entregado. &
+\NREPROS{} \\
+CVE-2026-85055 (campos) &
+No reproduce en fuente (2026-11-13): todo filtro/order/read respeta
+\texttt{canRead=false}; brief fase 2 entregado. &
+\NREPROS{} \\
+CVE-2026-55583 (IDOR) &
+Corregido en fuente (2026-11-13): claves Redis scopeadas por workspace +
+regresión. Pendiente retest. &
+\FIXED{} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -458,11 +477,9 @@ expect(unregistered).toEqual([]);
 expect(stale).toEqual([]);
 \end{lstlisting}
 
-\textbf{Verificación.} Superficie actual: 32 archivos, 16 con control verificado en
-esta pasada (incluidos webhooks con firma, throttle en 2FA y tracking, tokens de
-256 bits y archivos públicos con doble validación de ruta); el resto queda marcado
-como pendiente de revisión en el propio test, con revisión sugerida de
-\texttt{workflow-trigger.controller.ts} y el OAuth de applications.
+\textbf{Verificación.} Superficie actual: 32 archivos, 16 con control verificado el
+2026-11-06. Addendum 2026-11-13: inventario completo 32/32 (Anexo~B); ningún
+endpoint requirió fix.
 
 \subsection{Verificado sin cambios necesarios}
 
@@ -485,10 +502,17 @@ retest. Owner: desarrollo.
 \item[$\boxtimes$] Neutralización de branding extendida a
 \texttt{getPublicWorkspaceDataById} (misma clase de leak en DNS compartido),
 pendiente de despliegue y retest. Owner: desarrollo.
+\item[$\boxtimes$] DEV-01: \texttt{cors: false} en las 3 configs Yoga + specs
+pinning e integración (2026-11-13), pendiente de despliegue y retest. Owner:
+desarrollo.
+\item[$\boxtimes$] CVE-2026-55583: claves Redis scopeadas por workspace +
+regresión (2026-11-13), pendiente de despliegue y retest. Owner: desarrollo.
+\item[$\boxtimes$] Inventario de endpoints 32/32 (2026-11-13). Owner: desarrollo.
 \item[$\square$] Cierre del puerto 3100 público + TLS válido + restricción de
 Dokploy \textbf{antes de producción} (bloqueantes). Owner: infraestructura.
-\item[$\square$] Fase 2 autenticada con usuario de prueba (cubre CVE-2026-73069,
-CVE-2026-85055 y CVE-2026-55583 pendientes). Owner: auditoría + desarrollo.
+\item[$\square$] Fase 2 autenticada con usuario de prueba (73069/85055: briefs
+listos con stack vivo; 55583: fix en fuente pendiente retest). Owner: auditoría
++ desarrollo.
 \end{itemize}
 
 \textbf{Información solicitada para cerrar la verificación:}
@@ -509,10 +533,16 @@ auditado el 2026-10-26.
 curl -sI http://HOST:3100/healthz | grep -i "x-powered-by"
 # Esperado: sin salida
 
-# DEV-01: origen no permitido no debe reflejarse
-curl -s -o /dev/null -D - -H "Origin: https://evil.example" \
-  http://HOST:3100/graphql | grep -i "access-control-allow-origin"
+# DEV-01: origen no permitido no debe reflejarse (los 3 endpoints GraphQL)
+for path in graphql metadata admin-panel; do
+  curl -s -o /dev/null -D - -H "Origin: https://evil.example" \
+    http://HOST:3100/$path | grep -i "access-control-allow-origin";
+done
 # Esperado: sin salida (ninguna cabecera ACAO = denegado)
+# Caso positivo: un origen de la allowlist sí se refleja con credenciales
+curl -s -o /dev/null -D - -H "Origin: <FRONTEND_URL>" \
+  http://HOST:3100/graphql | grep -i "access-control-allow-"
+# Esperado: allow-origin con ese origen + allow-credentials: true
 # Y la prueba en navegador con credentials:include, que debe bloquearse
 
 # DEV-06: health sin detalle estructurado
@@ -522,30 +552,47 @@ curl -s http://HOST:3100/healthz
 
 \section{Endpoints públicos con control verificado}
 
-Superficie con control verificado en esta pasada (15 de 32 archivos; el resto figura
-como pendiente de revisión en el propio test de inventario):
+Superficie con control verificado (32 de 32 archivos tras el addendum del
+2026-11-13):
 
 \begin{center}
 \footnotesize
-\begin{tabular}{p{6.2cm}p{8.3cm}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.2cm}p{8.3cm}}
 \toprule
 Archivo & Control verificado \\
 \midrule
-\texttt{messaging-webhooks.controller.ts} & Firmas de provider verificadas en drivers SNS/Svix \\
-\texttt{unsubscribe.controller.ts} & Throttle por solicitante y por token \\
-\texttt{campaign-tracking.controller.ts} & Throttle en el servicio de captura \\
-\texttt{connected-account-sync-webhooks.controller.ts} & Tokens de canal validados en handlers \\
-\texttt{route-trigger.controller.ts} & Scope por workspace, auth opcional por ruta, rate limit \\
-\texttt{email-verification.resolver.ts} & Tokens de 256 bits, expirables, de un uso \\
-\texttt{billing-webhook.controller.ts} & Firma Stripe sobre cuerpo crudo \\
-\texttt{two-factor-authentication.resolver.ts} & Login-token + throttle de OTP en servicio \\
-\texttt{file.controller.ts} & Assets públicos por diseño; doble validación de ruta \\
-\texttt{auth.resolver.ts} & CaptchaGuard en credenciales; resto con token \\
-\texttt{google-auth.controller.ts} & Flujo OAuth con guard de provider \\
-\texttt{sso-auth.controller.ts} & Guards SAML/OIDC; metadata pública por diseño \\
-\texttt{google-apis-auth.controller.ts} & Guards OAuth + tokens transitorios \\
-\texttt{server-route-trigger.controller.ts} & Despacho público; rechaza resolvers con auth \\
-\texttt{health.controller.ts} & Chequeo sin indicadores; requerido por Docker \\
+\path{messaging-webhooks.controller.ts} & Firmas de provider verificadas en drivers SNS/Svix \\
+\path{unsubscribe.controller.ts} & Throttle por solicitante y por token \\
+\path{campaign-tracking.controller.ts} & Throttle en el servicio de captura \\
+\path{connected-account-sync-webhooks.controller.ts} & Tokens de canal validados en handlers \\
+\path{route-trigger.controller.ts} & Scope por workspace, auth opcional por ruta, rate limit \\
+\path{email-verification.resolver.ts} & Tokens de 256 bits, expirables, de un uso \\
+\path{billing-webhook.controller.ts} & Firma Stripe sobre cuerpo crudo \\
+\path{two-factor-authentication.resolver.ts} & Login-token + throttle de OTP en servicio \\
+\path{file.controller.ts} & Assets públicos por diseño; doble validación de ruta \\
+\path{auth.resolver.ts} & CaptchaGuard en credenciales; resto con token \\
+\path{google-auth.controller.ts} & Flujo OAuth con guard de provider \\
+\path{sso-auth.controller.ts} & Guards SAML/OIDC; metadata pública por diseño \\
+\path{google-apis-auth.controller.ts} & Guards OAuth + tokens transitorios \\
+\path{server-route-trigger.controller.ts} & Despacho público; rechaza resolvers con auth \\
+\path{health.controller.ts} & Chequeo sin indicadores; requerido por Docker \\
+\path{workspace.resolver.ts} & Branding neutralizado en DNS compartido \\
+\path{oauth-propagator.controller.ts} & Redirect restringido a dominios con workspace \\
+\path{microsoft-auth.controller.ts} & Flujo OAuth con guards de provider \\
+\path{microsoft-apis-auth.controller.ts} & Guards OAuth + tokens transitorios \\
+\path{dns-cloudflare.controller.ts} & Secreto de webhook + allowlist de zonas \\
+\path{event-log-emitter.resolver.ts} & Ingesta append-only; solo flag de éxito \\
+\path{well-known.controller.ts} & Documentos estáticos por diseño \\
+\path{workflow-trigger.controller.ts} & URL con capacidad; throttle por workspace \\
+\path{application-registration.resolver.ts} & DTO público sin secretos \\
+\path{application-registration-claim.controller.ts} & JWT state 15 min + ownership GitHub \\
+\path{oauth-registration.controller.ts} & DCR RFC 7591; rate limit por IP \\
+\path{oauth-discovery.controller.ts} & Metadata RFC 8414/9728 por diseño \\
+\path{oauth-token.controller.ts} & Validación cliente/PKCE; códigos de un uso \\
+\path{connection-provider-oauth.controller.ts} & Token transitorio + membresía \\
+\path{marketplace-public.resolver.ts} & Catálogo sanitizado, solo listados \\
+\path{client-config.controller.ts} & Configuración pública curada \\
+\path{open-api.controller.ts} & Rutas workspace exigen token; resto esquema base \\
 \bottomrule
 \end{tabular}
 \end{center}
