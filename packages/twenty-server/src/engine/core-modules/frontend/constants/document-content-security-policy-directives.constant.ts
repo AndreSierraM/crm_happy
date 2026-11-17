@@ -1,3 +1,2 @@
-// manifest-src keeps the credentialed manifest fetch (index.html) on our own origin, redirects included.
 export const DOCUMENT_CONTENT_SECURITY_POLICY_DIRECTIVES =
-  "object-src 'none'; base-uri 'self'; manifest-src 'self'";
+  "default-src 'self'; script-src 'self' 'sha256-t/DY2AjnzP3/7Ie9oWJ4Nuoeyw8AgIVTI7jUeZ1ighg=' 'sha256-yakQEuWadxN3hmeuvIAkf5RcJd3AsHAjyw5MxQ5Shms='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; font-src 'self' data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; manifest-src 'self'";
