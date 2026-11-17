@@ -10,5 +10,6 @@ export const applySecurityHeaders = (
   response.setHeader('X-Content-Type-Options', 'nosniff');
   response.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  response.setHeader('Strict-Transport-Security', 'max-age=31536000');
   next();
 };
